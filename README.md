@@ -14,9 +14,9 @@ files with the extension .java and appends it to the given filename if
 it does not end with it.
 
 If you want to reuse an existing ocaml library, start by installing it
-with opam. For example, to use colored terminal output you
-use 'opam install ANSITerminal'.
-Then you must inform ocamlbuild to use the ocamlfind tool :
+with opam. For example, to use colored terminal output you use 'opam 
+install ANSITerminal'. Then you must inform ocamlbuild to use the 
+ocamlfind tool : 
 'ocamlbuild -use-ocamlfind Main.byte -- tests/UnFichierDeTest.java'
-et vous devez ajouter au fichier _tags la librairie en question par exemple :
+and you must add the library to the file _tags, for example : 
 true: package(ANSITerminal)
