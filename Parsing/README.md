@@ -1,3 +1,4 @@
 # Parsing repertory
 
-Delete this file as soon as there is a file here. 
+Contains the lexer (lexexpr.mll) and parser (parseexpr.mly) source files.
+
