@@ -67,7 +67,7 @@ branch to integrate your work.
 	By default, you will use Vim. Try to learn basic features of 
 	[Vim](http://www.openvim.com/).
 
-	`git commit -m "message" - To type directly your commit message without opening
+	`git commit -m "message"` - To type directly your commit message without opening
 	text editor. 
 
 	You're allowed to repeat this step many times. It's better to use several single 
@@ -98,6 +98,8 @@ need to fix your code.
 	`git pull` - Your local branch is updated
 
 2. Integrate these changes into your own branch : 
+
+	`git checkout branchname` - To be sure to be in your own branch. 
 
 	`git rebase develop` - Your local branch will be rebased. It means that 
 	the history of its branch will be rewritten. 
