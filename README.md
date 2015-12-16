@@ -24,28 +24,27 @@ and you must add the library to the file `_tags`, for example :
 
 ## Workflow
 
-There is three branches. 
+There is two branches. 
 
 * **master** - it's the main branch. Code here should be always stable.
-* **class** - branch related to parsing of class syntax of Java.
-* **expression** - branch related to parsing of expression syntax of Java.
+* **develop** - branch where we push our development. Can be unstable.
 
-When `class` or `expression` reaches a stable state, it should be merge into
+When `develop` reaches a stable state, it should be merge into
 master branch. For that, using the 
 [pull request feature](https://help.github.com/articles/creating-a-pull-request/).
 Thanks to that, we can review your code and accept or not to integrate into master. 
 
 ### Development
 
-Either you work on class or expression syntax, it should be better to create your own 
-branch based on class branch or expression branch to integrate your work. 
+Even if we work on develop branch, it's better to create your own 
+branch to integrate your work. 
 
 0. Before you start to work, update your local repertory :
 
-	`git checkout class` - To be sure to be in class branch (or expression).
+	`git checkout develop` - To be sure to be in develop branch.
 
-	`git pull` - Incorporates changes from class branch of the remote repository 
-	into the current branch. Now, your class branch is up to date. 
+	`git pull` - Incorporates changes from develop branch of the remote repository 
+	into the current branch. Now, your develop branch is up to date. 
 
 1. Create your own branch
 
@@ -82,10 +81,10 @@ branch based on class branch or expression branch to integrate your work.
 
 	We will review your code and integrate it if it's good. 
 
-### Integrate updates from your parent branch (class or expression)
+### Integrate updates from your parent branch
  
 Sometimes, during you work on a special feature on your own personnal branch, some 
-updates will be pushed into your parent branch, or even in master. You will need to 
+updates will be pushed into develop branch. You will need to 
 integrate these updates into your code. Even if you have already created a pull 
 request, you need to update your code to integrate theses updates. It's something done
 before you, it could be important, so you need to take into account. If you're lucky, 
@@ -94,17 +93,17 @@ need to fix your code.
 
 1. Update your parent branch :
 
-	`git checkout parent_branch` - parent_branch is `class` or `expression`
+	`git checkout develop` - To be sure to be in develop branch.
 
 	`git pull` - Your local branch is updated
 
 2. Integrate these changes into your own branch : 
 
-	`git rebase parent_branch` - Your branch will be rebased. It means that 
+	`git rebase develop` - Your local branch will be rebased. It means that 
 	the history of its branch will be rewritten. 
 
-	`git rebase -i parent_branch` - You can use this command if you want a rebasing 
-	interactive. 
+	`git rebase -i develop` - You can use this command if you want an interactive 
+	rebasing. 
 
 	Git will guide you during the rebasing. Use `git status` to see what's happening. 
 	If you have conflicts, fix them with your text editor. Git will modify your code
@@ -124,23 +123,41 @@ need to fix your code.
 
 	`git push --force origin branchname` - And stay calm ;)
 
+### How to accept pull requests
+
+You can simply use the Github button **Merge pull request**, but it will add in the 
+history a merge commit. When it's unecessary, it's ugly to add a merge commit, so avoid
+it. 
+
+1. From your project repository, bring in the changes and test
+
+		git fetch origin
+		git checkout -b branchname origin/branchname
+		git merge master
+
+2. Merge the changes and update on Github
+
+		git checkout develop
+		git merge branchname
+		git push origin develop	
+	
 ### Example
 
 I will give an illustration of this process. It seems to be unnecesseraly complex, but 
 conflitcs will happen more than you think, so we need to be ready. 
 
-Assume that in master branch, there is only commit `A`. I'm working to implement a new
+Assume that in develop branch, there is only commit `A`. I'm working to implement a new
 feature. I will follow the first guidelines. I add commit `B` in my local branch. 
-But before I create a pull request, parentBranch is updated with commit `C`. 
+But before I create a pull request, `develop` is updated with commit `C`. 
 This is the actual situation : 
 
-parentBranch : A-->C
+develop : A-->C
 
 myBranch : A-->B
 
-I need to follow part 2 of guidelines. After `git rebase parentBranch` we have : 
+I need to follow part 2 of guidelines. After `git rebase develop` we have : 
 
-parentBranch : A-->C
+develop : A-->C
 
 myBranch : A-->C-->B
 
@@ -149,10 +166,10 @@ easier. (It will be a fast-forward merge).
 
 Now, I'm creating a pull request. I'm typing `git push -u origin myBranch` to put my 
 branch into the remote repository. During the review, someone else add commit `D` in the
-parentBranch. I'm asked to update my branch to validate the review. I'm following again 
-part 2. After `git rebase parentBranch`, we have : 
+`develop`. I'm asked to update my branch to validate the review. I'm following again 
+part 2. After `git rebase develop`, we have : 
 
-parentBranch : A-->C-->D
+develop : A-->C-->D
 
 myBranch : A-->C-->D-->B  
 
@@ -167,7 +184,7 @@ remote myBranch : A-->C-->B
 Github can't accept that because the history has changed. As it's your own private branch
 , you can use the option `--force`. So, type `git push --force origin myBranch`. The 
 remote myBranch will be like your local myBranch. The other reviewers can watch your 
-code, and decide to integrate it into parentBranch. At the end, parentBranch will be 
+code, and decide to integrate it into `develop`. At the end, `develop` will be 
 like that : 
 
-parentBranch : A-->C-->D-->B  
+`develop` : A-->C-->D-->B  
