@@ -140,7 +140,7 @@ it.
 
 		git fetch origin
 		git checkout -b branchname origin/branchname
-		git merge master
+		git merge develop
 
 2. Merge the changes and update on Github
 
