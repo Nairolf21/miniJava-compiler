@@ -24,19 +24,19 @@ and you must add the library to the file `_tags`, for example :
 
 ## Workflow
 
-There is two branches. 
+There are two branches. 
 
-* **master** - it's the main branch. Code here should be always stable.
+* **master** - it's the main branch. Code here should always be stable.
 * **develop** - branch where we push our development. Can be unstable.
 
-When `develop` reaches a stable state, it should be merge into
+When `develop` reaches a stable state, it should be merged into
 master branch. For that, using the 
 [pull request feature](https://help.github.com/articles/creating-a-pull-request/).
 Thanks to that, we can review your code and accept or not to integrate into master. 
 
 ### Development
 
-Even if we work on develop branch, it's better to create your own 
+Even if you work on develop branch, it's better to create your own 
 branch to integrate your work. 
 
 0. Before you start to work, update your local repertory :
@@ -58,7 +58,7 @@ branch to integrate your work.
 2. Work hard on the project :
 
 	`git add filename` - To prepare next commit with all new contents
-	in the file.  
+	in the file. 
 
 	`git status` - Optional, but it's still better to check what you're 
 	going to commit.
@@ -72,6 +72,11 @@ branch to integrate your work.
 
 	You're allowed to repeat this step many times. It's better to use several single 
 	commits than a unique big commit. A commit should represent your steps.  
+
+    `git commit --amend` enables you to modify your last commit. Usually used to correct a typo
+    in the commit message. This command will open a text editor (usually Vim, but it depends on
+    your git config): the first line is the commit message. Edit it, and save the file: your commit
+    will be modified.
 
 3. Push your branch into the remote repository :
 
@@ -190,3 +195,15 @@ code, and decide to integrate it into `develop`. At the end, `develop` will be
 like that : 
 
 `develop` : A-->C-->D-->B  
+
+# Resources
+
+## Useful reads
+
+* OCaml in the real World: https://realworldocaml.org/v1/en/html/index.html
+
+## Useful repositories
+
+* manual-ocamlbuild: https://github.com/gasche/manual-ocamlbuild
+* realworldocaml-examples: https://github.com/realworldocaml/examples
+
