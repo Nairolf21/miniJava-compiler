@@ -18,4 +18,4 @@ declaration:
 
 ident_or_const:
     id=IDENT { "ident("^id^")" }
-    | n=NUMBER { "number("^(string_of_int n)^")" }
+    | n=NUMBER { "number("^(string_of_float n)^")" }

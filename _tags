@@ -1,3 +1,4 @@
+true: use_ocamlfind
 <Utils> or <Parsing> or <Typing> or <Compiling> or <Evaluator> or <Main>: include
 true: use_ocamlfind
 true: use_menhir

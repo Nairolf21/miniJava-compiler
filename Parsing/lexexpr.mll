@@ -16,5 +16,5 @@ rule nexttoken = parse
     | eof { EOF }
     | semicolon { SEMICOLON }
     | typeExpr as t { TYPE t }
-    | number as n { NUMBER (float_of_string n) }
+    | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
