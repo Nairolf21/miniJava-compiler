@@ -3,9 +3,14 @@
 open Lexing
 
 type error = 
-    LexingError
+    | LexingError
+    | ParsingError
 
 exception Error of error * position * position * lexbuf
+
+let print_error_name = function
+    | LexingError -> print_string "LexingError"
+    | ParsingError -> print_string "ParsingError"
 
 let raise_error err lexbuf =
     raise(Error(err, lexeme_start_p lexbuf, lexeme_end_p lexbuf, lexbuf))
@@ -33,8 +38,8 @@ let print_position start_p end_p =
         end
 
 let report_error = function
-    | Error(LexingError, start_p, end_p, lexbuf) ->
-            print_string "LexingError";
+    | Error(err, start_p, end_p, lexbuf) ->
+            print_error_name err;
             print_position start_p end_p;
             print_string " (";
             print_string (lexeme lexbuf);
