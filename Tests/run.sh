@@ -4,10 +4,7 @@ echo "run args: $@"
 testsDir=$(pwd)
 rootDir=$testsDir"/.."
 
-target=$1
-targetDir=$testsDir"/"$target
-
-function testTarget() {
+function testTargetDir() {
     if [ ! -d "$1" ]
     then 
         echo "test target $1 does not exist"
@@ -15,34 +12,57 @@ function testTarget() {
     fi
 }
 
+function runTestCase() {
+    testCase="$1"
+    reportFile="$2"
 
-testTarget $targetDir
 
-successDir=$targetDir"/success"
+}
 
-originalDir=$(pwd)
-cd $rootDir
-reportFile='reportFile'
-rm -f $reportFile
-find $successDir -name "*.java" | while read filename
-do
-    result=$(ocamlbuild Main.byte -- $filename)
-    isSuccess=$(echo "$result" | grep "SUCCESS")
-    if [ "$isSuccess" == "" ]
-    then
-        echo $filename" FAILED" >> $reportFile
-    else
-        echo $filename" OK" >> $reportFile
-    fi
+function runTargetTests() {
+    
+    target=$1
+    targetDir=$testsDir"/"$target
 
-done
+    testTargetDir $targetDir
+    successDir=$targetDir"/success"
 
-#Print report
-echo "$target results:"
-column -t $reportFile
+    #Changing to project root directory to be able to use ocamlbuild
+    originalDir=$(pwd)
+    cd $rootDir
 
-cd $originalDir
+    reportFile="$targetDir""/reportFile"
+    rm -f $reportFile
 
+    echo "SUCCESS" >> $reportFile
+    find $successDir -name "*.java" | while read filename
+    do
+        result=$(ocamlbuild Main.byte -- $filename)
+        isSuccess=$(echo "$result" | grep -i "success")
+        if [ "$isSuccess" == "" ]
+        then
+            echo $filename" FAILED" >> $reportFile
+        else
+            echo $filename" OK" >> $reportFile
+        fi
+
+    done
+
+    #Print report
+    echo "Target '$target' test results:"
+    column -t $reportFile
+
+    cd $originalDir
+}
+
+
+if [ "$1" == "all" ]
+then
+    #run tests on all targets
+    echo "run all targets"
+else
+    runTargetTests $1
+fi
 
 
 
