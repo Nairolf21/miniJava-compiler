@@ -10,7 +10,7 @@ let execute lexbuf verbose =
         let result = Parser.compilationUnit Lexer.readtoken lexbuf in
         print_string "\n --- Result --- \n";
         print_string result;
-        print_string "\n";
+        print_string "\nSUCCESS\n";
     with
         | Error(err, _, _, _) as e -> report_error e
         | Parser.Error -> 
