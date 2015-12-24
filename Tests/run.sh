@@ -8,7 +8,6 @@ target=$1
 targetDir=$testsDir"/"$target
 
 function testTarget() {
-    #echo "targetDir to test: $1"
     if [ ! -d "$1" ]
     then 
         echo "test target $1 does not exist"
@@ -21,29 +20,28 @@ testTarget $targetDir
 
 successDir=$targetDir"/success"
 
+originalDir=$(pwd)
 cd $rootDir
-
+reportFile='reportFile'
+rm -f $reportFile
 find $successDir -name "*.java" | while read filename
 do
-    echo ""
-    echo "Testing file $filename"
     result=$(ocamlbuild Main.byte -- $filename)
     isSuccess=$(echo "$result" | grep "SUCCESS")
-    echo "$isSuccess"
     if [ "$isSuccess" == "" ]
     then
-        echo $filename" FAILED"
+        echo $filename" FAILED" >> $reportFile
     else
-        echo $filename" OK"
+        echo $filename" OK" >> $reportFile
     fi
 
 done
 
-exit
-ls $successDir | egrep "*.java" | while read line
-do
-    ocamlbuild Main.byte -- "$line"
-done
+#Print report
+echo "$target results:"
+column -t $reportFile
+
+cd $originalDir
 
 
 
