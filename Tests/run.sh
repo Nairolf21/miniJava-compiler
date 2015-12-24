@@ -12,6 +12,20 @@ function testTargetDir() {
     fi
 }
 
+function listTestCases() {
+    targetDir=$1
+
+    find $targetDir -maxdepth 1 -mindepth 1 -type d | while read line
+    do 
+        count=$(find $line -name "*.java" | wc -l)
+        if [ $count -gt 0 ]
+        then
+            echo $line | rev | cut -d "/" -f 1 | rev
+        fi
+    done
+}
+
+
 function runTestCase() {
     targetDir="$1"
     testCase="$2"
@@ -50,13 +64,14 @@ function runTargetTests() {
 
 
     reportFile="$targetDir""/reportFile"
-    rm -f $reportFile
 
     echo "Target '$target' test results:" > $reportFile
 
-    runTestCase $targetDir "success" $reportFile
-    runTestCase $targetDir "LexingError" $reportFile
-    runTestCase $targetDir "ParsingError" $reportFile
+    echo "Listing test cases"
+    listTestCases $targetDir | while read tc
+    do
+        runTestCase $targetDir $tc $reportFile
+    done
 
     #Print report
     column -t -s "|" $reportFile
