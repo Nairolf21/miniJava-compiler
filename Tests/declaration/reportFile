@@ -1,0 +1,8 @@
+Target 'declaration' test results:
+success
+/home/yann/3A/f2b304/miniJava-compiler/Tests/declaration/success/Multiline.java|OK
+/home/yann/3A/f2b304/miniJava-compiler/Tests/declaration/success/Test.java|OK
+LexingError
+/home/yann/3A/f2b304/miniJava-compiler/Tests/declaration/LexingError/LexingError.java|OK
+ParsingError
+/home/yann/3A/f2b304/miniJava-compiler/Tests/declaration/ParsingError/ParsingError.java|OK
