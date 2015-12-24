@@ -13,10 +13,31 @@ function testTargetDir() {
 }
 
 function runTestCase() {
-    testCase="$1"
-    reportFile="$2"
+    targetDir="$1"
+    testCase="$2"
+    reportFile="$3"
 
+    testCaseDir="$targetDir""/$testCase"
 
+    #Changing to project root directory to be able to use ocamlbuild
+    originalDir=$(pwd)
+    cd $rootDir
+
+    echo "$testCase" >> $reportFile
+    find $testCaseDir -name "*.java" | while read filename
+    do
+        result=$(ocamlbuild Main.byte -- $filename)
+        isSuccess=$(echo "$result" | grep -i "$testCase")
+        if [ "$isSuccess" == "" ]
+        then
+            echo $filename"|FAILED" >> $reportFile
+        else
+            echo $filename"|OK" >> $reportFile
+        fi
+
+    done
+
+    cd $originalDir
 }
 
 function runTargetTests() {
@@ -27,32 +48,19 @@ function runTargetTests() {
     testTargetDir $targetDir
     successDir=$targetDir"/success"
 
-    #Changing to project root directory to be able to use ocamlbuild
-    originalDir=$(pwd)
-    cd $rootDir
 
     reportFile="$targetDir""/reportFile"
     rm -f $reportFile
 
-    echo "SUCCESS" >> $reportFile
-    find $successDir -name "*.java" | while read filename
-    do
-        result=$(ocamlbuild Main.byte -- $filename)
-        isSuccess=$(echo "$result" | grep -i "success")
-        if [ "$isSuccess" == "" ]
-        then
-            echo $filename" FAILED" >> $reportFile
-        else
-            echo $filename" OK" >> $reportFile
-        fi
+    echo "Target '$target' test results:" > $reportFile
 
-    done
+    runTestCase $targetDir "success" $reportFile
+    runTestCase $targetDir "LexingError" $reportFile
+    runTestCase $targetDir "ParsingError" $reportFile
 
     #Print report
-    echo "Target '$target' test results:"
-    column -t $reportFile
+    column -t -s "|" $reportFile
 
-    cd $originalDir
 }
 
 
