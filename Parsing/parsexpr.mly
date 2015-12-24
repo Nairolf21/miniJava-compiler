@@ -2,12 +2,16 @@
 %token <string> TYPE IDENT
 %token <float> NUMBER
 
-%start <string> expression
+%start <string> expressionList
 
 %%
 
+expressionList:
+    e=expression EOF { e }
+    |  e=expression el=expressionList EOF { e^"\n"^el }
+
 expression:
-    s=instruction SEMICOLON EOF { s }
+    | s=instruction SEMICOLON { s }
 
 instruction:
     dec=declaration { "declaration("^dec^")" }

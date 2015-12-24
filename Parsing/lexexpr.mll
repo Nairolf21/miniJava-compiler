@@ -1,5 +1,7 @@
 {
     open Parsexpr
+    open Lexing
+    open Error
 }
 
 let letter = ['a'-'z' 'A'-'Z']
@@ -19,6 +21,7 @@ rule nexttoken = parse
     | typeExpr as t { TYPE t }
     | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
+    | _ { raise_error LexingError lexbuf }
 
 {
 
