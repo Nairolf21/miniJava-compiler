@@ -2,7 +2,6 @@
     open Parsexpr
     open Lexing
     open Error
-
 }
 
 let letter = ['a'-'z' 'A'-'Z']
@@ -13,7 +12,6 @@ let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
 let semicolon = ';'
 let typeExpr = "int" | "float"
-let incorrect = [^' ' '\009']* blank
 
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
