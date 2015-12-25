@@ -16,10 +16,18 @@ let class_keyword = "class"
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
+    | eof { EOF } 
     | class_keyword { CLASS } 
-    | ident as i { IDENT i }
     | lbrace { LBRACE }
     | rbrace { RBRACE }
+    | "public" { PUBLIC }
+    | "protected" { PROTECTED } 
+    | "private" { PRIVATE }
+    | "abstract" { ABSTRACT }
+    | "static" { STATIC }
+    | "final" { FINAL }
+    | "strictfp" { STRICTFP } 
+    | ident as i { IDENT i }
 
 {
 
@@ -30,6 +38,13 @@ let printtoken = function
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | PUBLIC -> print_string "public"
+    | PROTECTED -> print_string "protected"
+    | PRIVATE -> print_string "private"
+    | ABSTRACT -> print_string "abstract"
+    | STATIC -> print_string "static"
+    | FINAL -> print_string "final"
+    | STRICTFP -> print_string "strictfp" 
 
 let rec readtoken buffer = 
     let res = nexttoken buffer in
