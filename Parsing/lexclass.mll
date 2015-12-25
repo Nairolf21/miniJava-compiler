@@ -8,18 +8,15 @@ let real = digit* ('.' digit*)?
 let ident = letter (letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
-let semicolon = ';'
-let lbrace = "{"
-let rbrace = "}"
-let class_keyword = "class"
 
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
     | eof { EOF } 
-    | class_keyword { CLASS } 
-    | lbrace { LBRACE }
-    | rbrace { RBRACE }
+    | ";" { SEMICOLON } 
+    | "{" { LBRACE }
+    | "}" { RBRACE }
+    | "class" { CLASS } 
     | "public" { PUBLIC }
     | "protected" { PROTECTED } 
     | "private" { PRIVATE }

@@ -1,23 +1,21 @@
-%token SEMICOLON EOF 
-%token CLASS
-%token PUBLIC PROTECTED PRIVATE ABSTRACT STATIC FINAL STRICTFP
-%token LBRACE RBRACE
+%token EOF 
+%token SEMICOLON LBRACE RBRACE
+%token CLASS PUBLIC PROTECTED PRIVATE ABSTRACT STATIC FINAL STRICTFP
 %token <string> TYPE IDENT
 %token <float> NUMBER
 
-%start <string> classdeclarationlist
+%start <string> classDeclarationList
 
 %%
 
-classdeclarationlist:
-      ncd=normalclassdeclaration EOF { ncd }
-    | ncd=normalclassdeclaration cdl=classdeclarationlist EOF { ncd^"\n"^cdl }  
+classBody:
+    LBRACE RBRACE { " { ... }" }
 
-normalclassdeclaration:
-      CLASS id=identifier cb=classbody { "class "^id^cb } 
-    | cm=classmodifier CLASS id=identifier cb=classbody { cm^" class "^id^cb}
+classDeclarationList:
+      ncd=normalClassDeclaration EOF { ncd }
+    | ncd=normalClassDeclaration cdl=classDeclarationList EOF { ncd^"\n"^cdl }  
 
-classmodifier:
+classModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -26,10 +24,11 @@ classmodifier:
     | FINAL { "final" }
     | STRICTFP { "strictfp" }
 
-classbody:
-    LBRACE RBRACE { " { ... }" }
-
 identifier:
     id=IDENT { id }
+
+normalClassDeclaration:
+      CLASS id=identifier cb=classBody { "class "^id^cb } 
+    | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
 
 %%
