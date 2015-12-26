@@ -1,5 +1,7 @@
 {
-    open Parseclass
+    open Parser
+    open Lexing
+    open Error
 }
 
 let letter = ['a'-'z' 'A'-'Z']
@@ -8,11 +10,13 @@ let real = digit* ('.' digit*)?
 let ident = letter (letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
+let typeExpr = "int" | "float"
 
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
-    | eof { EOF } 
+    | eof { EOF }
+    | "," { COMMA }
     | ";" { SEMICOLON } 
     | "{" { LBRACE }
     | "}" { RBRACE }
@@ -24,15 +28,21 @@ rule nexttoken = parse
     | "static" { STATIC }
     | "final" { FINAL }
     | "strictfp" { STRICTFP } 
+    | typeExpr as t { TYPE t }
+    | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
+    | _ { raise_error LexingError lexbuf }
 
 {
 
 let printtoken = function
     | EOF -> print_string "EOF"
+    | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
-    | CLASS -> print_string "class" 
+    | TYPE t -> print_string "TYPE("; print_string t; print_string ")"
+    | NUMBER n -> print_string "NUMBER("; print_float n; print_string ")" 
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
+    | CLASS -> print_string "class" 
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
     | PUBLIC -> print_string "public"
@@ -42,6 +52,7 @@ let printtoken = function
     | STATIC -> print_string "static"
     | FINAL -> print_string "final"
     | STRICTFP -> print_string "strictfp" 
+
 
 let rec readtoken buffer = 
     let res = nexttoken buffer in
