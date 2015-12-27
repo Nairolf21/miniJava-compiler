@@ -16,19 +16,23 @@ rule nexttoken = parse
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
     | eof { EOF }
     | "," { COMMA }
-    | ";" { SEMICOLON } 
+    | ";" { SEMICOLON }
+    | "(" { LPAREN }
+    | ")" { RPAREN }
     | "{" { LBRACE }
     | "}" { RBRACE }
-    | "class" { CLASS } 
-    | "public" { PUBLIC }
-    | "protected" { PROTECTED } 
-    | "private" { PRIVATE }
     | "abstract" { ABSTRACT }
-    | "static" { STATIC }
-    | "final" { FINAL }
-    | "strictfp" { STRICTFP }
+    | "class" { CLASS }
     | "int" { INT }
+    | "final" { FINAL }
     | "float" { FLOAT }
+    | "native" { NATIVE } 
+    | "private" { PRIVATE } 
+    | "protected" { PROTECTED } 
+    | "public" { PUBLIC } 
+    | "static" { STATIC } 
+    | "strictfp" { STRICTFP } 
+    | "synchronized" { SYNCHRONIZED }
     | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
     | _ { raise_error LexingError lexbuf }
@@ -41,19 +45,22 @@ let printtoken = function
     | SEMICOLON -> print_string ";"
     | NUMBER n -> print_string "NUMBER("; print_float n; print_string ")" 
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
-    | CLASS -> print_string "class" 
+    | LPAREN -> print_string "("
+    | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
-    | PUBLIC -> print_string "public"
-    | PROTECTED -> print_string "protected"
-    | PRIVATE -> print_string "private"
     | ABSTRACT -> print_string "abstract"
-    | STATIC -> print_string "static"
-    | FINAL -> print_string "final"
-    | STRICTFP -> print_string "strictfp" 
+    | CLASS -> print_string "class" 
     | INT -> print_string "int"
+    | FINAL -> print_string "final"
     | FLOAT -> print_string "float"
-
+    | NATIVE -> print_string "native"
+    | PRIVATE -> print_string "private"
+    | PROTECTED -> print_string "protected"
+    | PUBLIC -> print_string "public"
+    | STATIC -> print_string "static"
+    | STRICTFP -> print_string "strictfp" 
+    | SYNCHRONIZED -> print_string "synchronized"
 
 let rec readtoken buffer = 
     let res = nexttoken buffer in
