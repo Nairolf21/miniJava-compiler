@@ -1,7 +1,8 @@
 %token EOF 
 %token COMMA SEMICOLON LBRACE RBRACE
 %token CLASS PUBLIC PROTECTED PRIVATE ABSTRACT STATIC FINAL STRICTFP
-%token <string> TYPE IDENT
+%token INT FLOAT
+%token <string> IDENT
 %token <float> NUMBER
 
 %start <string> compilationUnitList
@@ -39,33 +40,34 @@ compilationUnitList:
       tp=typeDeclaration EOF { tp } 
     | tp=typeDeclaration cul=compilationUnitList EOF { tp^"\n"^cul }  
 
-declaration:
-    t=TYPE id=IDENT { t^" "^id }
-
-expression:
-    | s=instruction SEMICOLON { s }
-
 fieldDeclaration:
-     t=TYPE vdl=variableDeclaratorList SEMICOLON { t^" "^vdl^";"}
-    (* {fieldModifier} unnanType variableDeclaratorList ; *) 
+    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
+
+floatingPointType:
+    FLOAT { "float" } 
 
 identifier:
     id=IDENT { id }
 
-ident_or_const:
-      id=IDENT { id }
-    | n=NUMBER { n }
-
-instruction:
-      dec=declaration { dec }
-    | id=ident_or_const { id }
+integralType:
+    INT { "int" } 
 
 normalClassDeclaration:
       CLASS id=identifier cb=classBody { "class "^id^cb } 
     | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
 
+numericType:
+      it=integralType { it } 
+    | fpt=floatingPointType { fpt } 
+
 typeDeclaration:
     cd=classDeclaration { cd } 
+
+unannPrimitiveType:
+    nt=numericType { nt } 
+
+unannType:
+    upt=unannPrimitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
