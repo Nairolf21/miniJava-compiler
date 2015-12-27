@@ -1,42 +1,111 @@
+(* operators *)
+
+(* delimitors *)
+%token COMMA SEMICOLON LPAREN RPAREN LBRACE RBRACE
+
+(* keyword *)
+%token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+SYNCHRONIZED
+
+(* special *)
 %token EOF 
-%token COMMA SEMICOLON LBRACE RBRACE
-%token CLASS STATIC 
-%token INT FLOAT
-%token <string> UIDENT LIDENT
+%token <string> IDENT
 %token <float> NUMBER
 
-%start <string> start
+%start <string> compilationUnitList
 
 %%
 
-start:
-      EOF { "eof" }
-    | joel=jclass_or_expr_list EOF { joel }
+classBody:
+    LBRACE cbd=classBodyDeclaration RBRACE { " {"^cbd^" }" }
 
-jclass_or_expr_list:
-      joe=jclass_or_expr { joe }
-    | joe=jclass_or_expr joel=jclass_or_expr_list { joe^"\n"^joel }
+classBodyDeclaration:
+    cmd=classMemberDeclaration { cmd }
 
-jclass_or_expr:
-      jc=jclass { jc }
+classDeclaration:
+    ncd=normalClassDeclaration { ncd }
 
-jclass:
-    CLASS ui=UIDENT LBRACE ajl=attribute_or_jmethod_list RBRACE 
-        { "class "^ui^" { "^ajl^" } " }
-        
-attribute_or_jmethod_list:
-      aoj=attribute_or_jmethod { aoj } 
-    | aoj=attribute_or_jmethod ajl=attribute_or_jmethod_list { aoj^"\n"^ajl } 
+classMemberDeclaration:
+      (*fd=fieldDeclaration { fd } *)
+    | md=methodDeclaration { md }
+    | SEMICOLON { ";" } 
+    
+classModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | STRICTFP { "strictfp" }
 
-attribute_or_jmethod:
-    a=attribute { a } 
-   
-attribute:
-    jt=jtype li=LIDENT SEMICOLON { jt^" "^li^";" } 
+compilationUnitList: 
+      tp=typeDeclaration EOF { tp } 
+    | tp=typeDeclaration cul=compilationUnitList EOF { tp^"\n"^cul }
 
-jtype:
-      INT { "int" }
-    | FLOAT { "float" }
-    | ui=UIDENT { ui } 
+fieldDeclaration:
+    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
 
+floatingPointType:
+    FLOAT { "float" } 
+
+identifier:
+    id=IDENT { id }
+
+integralType:
+    INT { "int" } 
+    
+methodBody:
+    SEMICOLON { ";" }
+
+methodDeclaration:
+      mh=methodHeader mb=methodBody { mh^" "^mb }
+    | mm=methodModifier mh=methodHeader mb=methodBody { mm^" "^mh^" "^mb }
+
+methodDeclarator:
+    id=identifier LPAREN RPAREN { id^" ( )" } 
+
+methodHeader:
+    r=result md=methodDeclarator { r^" "^md } 
+
+methodModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | SYNCHRONIZED { "synchronized" } 
+    | NATIVE { "native" } 
+    | STRICTFP { "strictfp" }
+
+normalClassDeclaration:
+      CLASS id=identifier cb=classBody { "class "^id^cb } 
+    | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
+
+numericType:
+      it=integralType { it } 
+    | fpt=floatingPointType { fpt } 
+
+result:
+    ut=unannType { ut }
+
+typeDeclaration:
+    cd=classDeclaration { cd }
+
+unannPrimitiveType:
+    nt=numericType { nt }
+
+unannType:
+    upt=unannPrimitiveType { upt }
+
+variableDeclarator:
+    vdi=variableDeclaratorId { vdi }
+
+variableDeclaratorId:
+    id=identifier { id }
+
+variableDeclaratorList:
+    vd=variableDeclarator { vd }
+    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
 %%
