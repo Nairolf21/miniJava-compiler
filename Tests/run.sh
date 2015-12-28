@@ -22,6 +22,7 @@ function testTargetDir() {
     fi
 }
 
+
 function listTestCases() {
     targetDir=$1
 
@@ -35,6 +36,17 @@ function listTestCases() {
     done
 }
 
+function listTargets() {
+    find $testsDir -maxdepth 1 -mindepth 1 -type d | while read line
+    do
+        testcasecount=$(listTestCases "$line" | wc -l)
+        #echo "dir $line"": $testcasecount test cases"
+        if [ $testcasecount -gt 0 ]
+        then
+            echo $line | rev | cut -d "/" -f 1 | rev
+        fi
+    done
+}
 
 function runTestCase() {
     targetDir="$1"
@@ -47,16 +59,17 @@ function runTestCase() {
     originalDir=$(pwd)
     cd $rootDir
 
-    echo "$testCase" >> $reportFile
+    echo "Test case: $testCase" >> $reportFile
     find $testCaseDir -name "*.java" | while read filename
     do
         result=$(./Main.native $filename)
         isSuccess=$(echo "$result" | grep -i "$testCase")
+        printfilename=$filename
         if [ "$isSuccess" == "" ]
         then
-            echo $filename"|FAILED" >> $reportFile
+            echo $printfilename"|FAILED" >> $reportFile
         else
-            echo $filename"|OK" >> $reportFile
+            echo $printfilename"|OK" >> $reportFile
         fi
 
     done
@@ -77,15 +90,16 @@ function runTargetTests() {
 
     echo "Target '$target' test results:" > $reportFile
 
-    echo "Listing test cases"
     listTestCases $targetDir | while read tc
     do
         runTestCase $targetDir $tc $reportFile
     done
 
     #Print report
+    echo ""
+    echo " ------ "
+    echo ""
     column -t -s "|" $reportFile
-
 }
 
 
@@ -93,6 +107,10 @@ if [ "$1" == "all" ]
 then
     #run tests on all targets
     echo "run all targets"
+    listTargets | while read target
+    do
+    runTargetTests $target
+    done
 else
     runTargetTests $1
 fi
