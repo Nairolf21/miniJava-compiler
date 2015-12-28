@@ -8,18 +8,23 @@ let real = digit* ('.' digit*)?
 let ident = letter (letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
-let semicolon = ';'
-let lbrace = "{"
-let rbrace = "}"
-let class_keyword = "class"
 
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
-    | class_keyword { CLASS } 
+    | eof { EOF } 
+    | ";" { SEMICOLON } 
+    | "{" { LBRACE }
+    | "}" { RBRACE }
+    | "class" { CLASS } 
+    | "public" { PUBLIC }
+    | "protected" { PROTECTED } 
+    | "private" { PRIVATE }
+    | "abstract" { ABSTRACT }
+    | "static" { STATIC }
+    | "final" { FINAL }
+    | "strictfp" { STRICTFP } 
     | ident as i { IDENT i }
-    | lbrace { LBRACE }
-    | rbrace { RBRACE }
 
 {
 
@@ -30,6 +35,13 @@ let printtoken = function
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | PUBLIC -> print_string "public"
+    | PROTECTED -> print_string "protected"
+    | PRIVATE -> print_string "private"
+    | ABSTRACT -> print_string "abstract"
+    | STATIC -> print_string "static"
+    | FINAL -> print_string "final"
+    | STRICTFP -> print_string "strictfp" 
 
 let rec readtoken buffer = 
     let res = nexttoken buffer in

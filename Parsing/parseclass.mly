@@ -1,23 +1,40 @@
-%token SEMICOLON EOF 
-%token CLASS
-%token LBRACE RBRACE
+%token EOF 
+%token SEMICOLON LBRACE RBRACE
+%token CLASS PUBLIC PROTECTED PRIVATE ABSTRACT STATIC FINAL STRICTFP
 %token <string> TYPE IDENT
 %token <float> NUMBER
 
-%start <string> classdeclaration
+%start <string> compilationUnitList
 
 %%
 
-classdeclaration:
-    ncd=normalclassdeclaration { ncd }
+classBody:
+    LBRACE RBRACE { " { ... }" }
 
-normalclassdeclaration:
-    CLASS id=identifier classbody { "class("^id^")" } 
+classDeclaration:
+    ncd=normalClassDeclaration { ncd }
 
-classbody:
-    LBRACE RBRACE { "{ classbody }" }
+classModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | STRICTFP { "strictfp" }
+
+compilationUnitList: 
+      tp=typeDeclaration EOF { tp } 
+    | tp=typeDeclaration cul=compilationUnitList EOF { tp^"\n"^cul }  
 
 identifier:
-    id=IDENT { "ident("^id^")" }
+    id=IDENT { id }
+
+normalClassDeclaration:
+      CLASS id=identifier cb=classBody { "class "^id^cb } 
+    | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
+
+typeDeclaration:
+    cd=classDeclaration { cd } 
 
 %%
