@@ -4,6 +4,16 @@ echo "run args: $@"
 testsDir=$(pwd)
 rootDir=$testsDir"/.."
 
+function compileCompiler() {
+
+    originalDir=$(pwd)
+    cd $rootDir
+
+    ocamlbuild Main.native
+
+    cd $originalDir
+}
+
 function testTargetDir() {
     if [ ! -d "$1" ]
     then 
@@ -40,7 +50,7 @@ function runTestCase() {
     echo "$testCase" >> $reportFile
     find $testCaseDir -name "*.java" | while read filename
     do
-        result=$(ocamlbuild Main.byte -- $filename)
+        result=$(./Main.native $filename)
         isSuccess=$(echo "$result" | grep -i "$testCase")
         if [ "$isSuccess" == "" ]
         then
