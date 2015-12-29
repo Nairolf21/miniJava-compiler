@@ -205,6 +205,7 @@ like that :
 ## Useful reads
 
 * OCaml in the real World: https://realworldocaml.org/v1/en/html/index.html
+* A tidy, linear Git history: http://www.bitsnbites.eu/?p=221
 
 ## Useful repositories
 
