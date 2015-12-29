@@ -75,10 +75,10 @@ branch to integrate your work.
 	You're allowed to repeat this step many times. It's better to use several single 
 	commits than a unique big commit. A commit should represent your steps.  
 
-    `git commit --amend` enables you to modify your last commit. Usually used to correct a typo
-    in the commit message. This command will open a text editor (usually Vim, but it depends on
-    your git config): the first line is the commit message. Edit it, and save the file: your commit
-    will be modified.
+    `git commit --amend` enables you to modify your last commit. Usually used to correct 
+	a typo in the commit message. This command will open a text editor (usually Vim, but 
+	it depends on your git config): the first line is the commit message. Edit it, and 
+	save the file: your commit will be modified.
 
 3. Push your branch into the remote repository :
 
