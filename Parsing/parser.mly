@@ -1,6 +1,6 @@
 %token EOF 
 %token COMMA SEMICOLON LBRACE RBRACE
-%token CLASS PUBLIC PROTECTED PRIVATE ABSTRACT STATIC FINAL STRICTFP
+%token CLASS STATIC 
 %token INT FLOAT
 %token <string> IDENT
 %token <float> NUMBER
@@ -72,12 +72,6 @@ floatingPointType:
     FLOAT { "float" } 
 
 classModifier:
-      PUBLIC { "public" }
-    | PROTECTED { "protected" }
-    | PRIVATE { "private" }
-    | ABSTRACT { "abstract" }
-    | STATIC { "static" }
-    | FINAL { "final" }
-    | STRICTFP { "strictfp" }
+    STATIC { "static" }
 
 %%
