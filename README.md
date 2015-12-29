@@ -41,10 +41,12 @@ branch to integrate your work.
 
 0. Before you start to work, update your local repertory :
 
+	`git fetch origin` - To download updated status of the project and its branches.
+	
 	`git checkout develop` - To be sure to be in develop branch.
 
-	`git pull` - Incorporates changes from develop branch of the remote repository 
-	into the current branch. Now, your develop branch is up to date. 
+	`git pull origin develop` - Incorporates changes from develop branch of the 
+	remote repository into the current branch. Now, your develop branch is up to date. 
 
 1. Create your own branch
 
@@ -98,9 +100,11 @@ need to fix your code.
 
 1. Update your parent branch :
 
+	`git fetch origin` - To download updated status of the project and its branches.
+
 	`git checkout develop` - To be sure to be in develop branch.
 
-	`git pull` - Your local branch is updated
+	`git pull origin develop` - Your local branch is updated
 
 2. Integrate these changes into your own branch : 
 
