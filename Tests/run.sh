@@ -4,7 +4,7 @@ echo "run args: $@"
 testsDir=$(pwd)
 rootDir=$testsDir"/.."
 
-testResultFile=$testsDir"/testResult"
+testResultFile=$testsDir"/testResult.ign"
 rm -f $testResultFile
 
 function compileProject() {
@@ -108,7 +108,7 @@ function runTargetTests() {
     successDir=$targetDir"/success"
 
 
-    reportFile="$targetDir""/reportFile"
+    reportFile="$targetDir""/reportFile.ign"
 
     echo "Target '$target' test results:" > $reportFile
 
