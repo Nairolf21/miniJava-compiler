@@ -5,73 +5,38 @@
 %token <string> UIDENT LIDENT
 %token <float> NUMBER
 
-%start <string> compilationUnitList
+%start <string> start
 
 %%
 
-(* expressionList:
-    e=expression EOF { e }
-    |  e=expression el=expressionList EOF { e^"\n"^el } 
-*)
+start:
+      EOF { "eof" }
+    | joel=jclass_or_expr_list EOF { joel }
 
+jclass_or_expr_list:
+      joe=jclass_or_expr { joe }
+    | joe=jclass_or_expr joel=jclass_or_expr_list { joe^"\n"^joel }
+
+jclass_or_expr:
+      jc=jclass { jc }
+
+jclass:
+    CLASS ui=UIDENT LBRACE ajl=attribute_or_jmethod_list RBRACE 
+        { "class "^ui^" { "^ajl^" } " }
+        
+attribute_or_jmethod_list:
+      aoj=attribute_or_jmethod { aoj } 
+    | aoj=attribute_or_jmethod ajl=attribute_or_jmethod_list { aoj^"\n"^ajl } 
+
+attribute_or_jmethod:
+    a=attribute { a } 
    
-compilationUnitList: 
-      tp=typeDeclaration EOF { tp } 
-    | tp=typeDeclaration cul=compilationUnitList EOF { tp^"\n"^cul }  
+attribute:
+    jt=jtype li=LIDENT SEMICOLON { jt^" "^li^";" } 
 
-typeDeclaration:
-    cd=classDeclaration { cd } 
-
-classDeclaration:
-    ncd=normalClassDeclaration { ncd }
-
-normalClassDeclaration:
-      CLASS id=identifier cb=classBody { "class "^id^cb } 
-    | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
-
-classBody:
-    LBRACE cbd=classBodyDeclaration RBRACE { " {"^cbd^" }" }
-
-classBodyDeclaration:
-    cmd=classMemberDeclaration { cmd }
-
-classMemberDeclaration:
-      fd=fieldDeclaration { fd } 
-    | SEMICOLON { ";" } 
- 
-fieldDeclaration:
-    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
-
-variableDeclaratorList:
-    vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
-
-variableDeclarator:
-    vdi=variableDeclaratorId { vdi }
-
-variableDeclaratorId:
-    id=identifier { id } 
-
-identifier:
-    id=UIDENT { id }
-
-unannType:
-    upt=unannPrimitiveType { upt }
-
-unannPrimitiveType:
-    nt=numericType { nt } 
-
-numericType:
-      it=integralType { it } 
-    | fpt=floatingPointType { fpt } 
-
-integralType:
-    INT { "int" } 
-
-floatingPointType:
-    FLOAT { "float" } 
-
-classModifier:
-    STATIC { "static" }
+jtype:
+      INT { "int" }
+    | FLOAT { "float" }
+    | ui=UIDENT { ui } 
 
 %%
