@@ -7,11 +7,30 @@ rootDir=$testsDir"/.."
 testResultFile=$testsDir"/testResult"
 
 function compileProject() {
+    echo "Compiling project..."
+    echo ""
 
     originalDir=$(pwd)
     cd $rootDir
+    rm -f Main.native
 
-    ocamlbuild Main.native
+    compilationResult=$(ocamlbuild Main.native)
+    
+    if [ -f Main.native ]
+    then
+        echo "Project compilation succesful"
+    else
+        echo "Compilation failed with the following message:"
+        echo ""
+        echo "--------"
+        echo "$compilationResult"
+        echo "--------"
+        echo ""
+        echo "Fix the project before testing. Exiting Test script"
+        exit
+    fi
+
+    echo ""
 
     cd $originalDir
 }
