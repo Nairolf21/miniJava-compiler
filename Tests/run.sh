@@ -5,6 +5,7 @@ testsDir=$(pwd)
 rootDir=$testsDir"/.."
 
 testResultFile=$testsDir"/testResult"
+rm -f $testResultFile
 
 function compileProject() {
     echo "Compiling project..."
@@ -146,7 +147,7 @@ function printResult() {
     then
         echo "The test run FAILED"
     else
-        echo "The test run SUCCEEDED"
+        echo "The test run SUCCESS"
     fi
 
     echo ""

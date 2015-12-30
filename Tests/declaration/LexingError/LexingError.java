@@ -1,1 +1,4 @@
-int sdfdf#fsdqsd = 2;
+class LexingError {
+    int sdfdf#fsdqsd = 2;
+}
+
