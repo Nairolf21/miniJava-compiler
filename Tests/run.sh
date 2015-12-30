@@ -4,6 +4,8 @@ echo "run args: $@"
 testsDir=$(pwd)
 rootDir=$testsDir"/.."
 
+testResultFile=$testsDir"/testResult"
+
 function compileCompiler() {
 
     originalDir=$(pwd)
@@ -95,18 +97,45 @@ function runTargetTests() {
         runTestCase $targetDir $tc $reportFile
     done
 
+    #count failed occurences
+    failedCount=$(grep -c -i "failed" $reportFile)
+    if [ $failedCount -gt 0 ]
+    then
+        testResult="Target test '$target' FAILED"
+    else
+        testResult="Target test '$target' OK"
+    fi
+
+    echo $testResult >> $reportFile
+    echo $testResult >> $testResultFile
+
     #Print report
     echo ""
     echo " ------ "
     echo ""
     column -t -s "|" $reportFile
+
 }
 
+function printResult() {
+    echo ""
+    echo "===== "
+
+    failedCount=$(grep -i -c "FAILED" $testResultFile)
+
+    if [ $failedCount -gt 0 ]
+    then
+        echo "The test run FAILED"
+    else
+        echo "The test run SUCCEEDED"
+    fi
+
+    echo ""
+}
 
 if [ "$1" == "all" ]
 then
     #run tests on all targets
-    echo "run all targets"
     listTargets | while read target
     do
     runTargetTests $target
@@ -115,5 +144,5 @@ else
     runTargetTests $1
 fi
 
-
+printResult
 
