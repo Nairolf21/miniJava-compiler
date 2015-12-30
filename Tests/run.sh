@@ -6,7 +6,7 @@ rootDir=$testsDir"/.."
 
 testResultFile=$testsDir"/testResult"
 
-function compileCompiler() {
+function compileProject() {
 
     originalDir=$(pwd)
     cd $rootDir
@@ -132,6 +132,8 @@ function printResult() {
 
     echo ""
 }
+
+compileProject
 
 if [ "$1" == "all" ]
 then
