@@ -2,7 +2,7 @@
 %token COMMA SEMICOLON LBRACE RBRACE
 %token CLASS STATIC 
 %token INT FLOAT
-%token <string> IDENT
+%token <string> UIDENT LIDENT
 %token <float> NUMBER
 
 %start <string> compilationUnitList
@@ -53,7 +53,7 @@ variableDeclaratorId:
     id=identifier { id } 
 
 identifier:
-    id=IDENT { id }
+    id=UIDENT { id }
 
 unannType:
     upt=unannPrimitiveType { upt }

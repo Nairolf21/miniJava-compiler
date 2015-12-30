@@ -5,9 +5,12 @@
 }
 
 let letter = ['a'-'z' 'A'-'Z']
+let capital = ['A'-'Z']
+let lowercase = ['a'-'z']
 let digit = ['0'-'9']
 let real = digit* ('.' digit*)?
-let ident = letter (letter | digit | '_')*
+let uident = capital ( letter | digit | '_')*
+let lident = lowercase ( letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
 
@@ -24,7 +27,8 @@ rule nexttoken = parse
     | "int" { INT }
     | "float" { FLOAT }
     | real as n { NUMBER (float_of_string n) }
-    | ident as i { IDENT i }
+    | uident as u { UIDENT u }
+    | lident as l { LIDENT l }
     | _ { raise_error LexingError lexbuf }
 
 {
@@ -34,7 +38,8 @@ let printtoken = function
     | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
     | NUMBER n -> print_string "NUMBER("; print_float n; print_string ")" 
-    | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
+    | UIDENT u -> print_string "UIDENT("; print_string u; print_string ")"
+    | LIDENT l -> print_string "LIDENT("; print_string l; print_string ")"
     | CLASS -> print_string "class" 
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
