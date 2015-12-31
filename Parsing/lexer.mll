@@ -20,13 +20,7 @@ rule nexttoken = parse
     | "{" { LBRACE }
     | "}" { RBRACE }
     | "class" { CLASS } 
-    | "public" { PUBLIC }
-    | "protected" { PROTECTED } 
-    | "private" { PRIVATE }
-    | "abstract" { ABSTRACT }
     | "static" { STATIC }
-    | "final" { FINAL }
-    | "strictfp" { STRICTFP }
     | "int" { INT }
     | "float" { FLOAT }
     | real as n { NUMBER (float_of_string n) }
@@ -44,13 +38,7 @@ let printtoken = function
     | CLASS -> print_string "class" 
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
-    | PUBLIC -> print_string "public"
-    | PROTECTED -> print_string "protected"
-    | PRIVATE -> print_string "private"
-    | ABSTRACT -> print_string "abstract"
     | STATIC -> print_string "static"
-    | FINAL -> print_string "final"
-    | STRICTFP -> print_string "strictfp" 
     | INT -> print_string "int"
     | FLOAT -> print_string "float"
 
