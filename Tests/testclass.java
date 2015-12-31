@@ -1,1 +1,1 @@
-public class classA { int a; } 
+class ClassA { int a; } 
