@@ -308,16 +308,21 @@ enhancedForStatement:
 	  FOR LPAREN ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^ut^" "^id^" : "^e^")\n"^s }
 	| FOR LPAREN vm=variableModifiers ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^ut^" "^id^" : "^e^")\n"^s }
 
-(* The break Statement *)
+(* 14.15 The break Statement *)
 breakStatement:
 	  BREAK SEMICOLON { "break ;" }
 	| BREAK id=identifier SEMICOLON { "break "^id^" ;" }
 	
+(* 14.16 The continue Statement *)
+continueStatement:
+	CONTINUE SEMICOLON { "continue ;" }
+	| CONTINUE id=identifier SEMICOLON { "continue "^id^" ;" }
+
+
 
 
 (*
 // TODO
-continueStatement
 returnStatement
 synchronizedStatement
 throwStatement
