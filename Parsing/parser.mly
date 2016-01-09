@@ -171,7 +171,7 @@ statementWithoutTrailingSubstatement:
 	  b=bloc { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
-	| as=assertStatement { as }
+	| ass=assertStatement { ass }
 	| ss=switchStatement { ss }
 	| ds=doStatement { ds }
 	| bs=breakStatement { bs }
