@@ -29,6 +29,7 @@ rule nexttoken = parse
     | "long" { LONG }
     | "float" { FLOAT }
     | "double" { DOUBLE }
+    | "boolean" { BOOLEAN }
     | "class" { CLASS }
     | "abstract" { ABSTRACT }
     | "final" { FINAL }
@@ -58,6 +59,7 @@ let printtoken = function
     | LONG -> print_string "long"
     | FLOAT -> print_string "float"
     | DOUBLE -> print_string "double"
+    | BOOLEAN -> print_string "boolean"
     | CLASS -> print_string "class" 
     | ABSTRACT -> print_string "abstract"
     | FINAL -> print_string "final"
