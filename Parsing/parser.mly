@@ -100,15 +100,11 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 (* To sort *)
-floatingPointType:
-    FLOAT { "float" } 
 
 identifier:
     id=IDENT { id }
 
-integralType:
-    INT { "int" } 
-    
+(* TODO: add possibility for method content *)    
 methodBody:
     SEMICOLON { ";" }
 
@@ -116,6 +112,15 @@ numericType:
       it=integralType { it } 
     | fpt=floatingPointType { fpt } 
 
+integralType:
+    | BYTE { "byte" } 
+    | SHORT { "short" } 
+    | INT { "int" } 
+    | LONG { "long" } 
+
+floatingPointType:
+    FLOAT { "float" } 
+    | DOUBLE { "double" }
 result:
     ut=unannType { ut }
 
