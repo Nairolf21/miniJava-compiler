@@ -250,7 +250,13 @@ switchLabels:
 	| sls=switchLabels sl=switchLabel { sls^"\n"^sl }
 
 switchLabel:
-	  CASE ce=constantExpression COLON
+	  CASE ce=constantExpression COLON { "case "^ce^" :" }
+	| CASE ecn=enumConstantName COLON { "case "^ecn^" :" }
+	| DEFAULT COLON { "default :" }
+	
+enumConstantName:
+	id=Identifier { id }
+	
 
 (*
 // TODO
