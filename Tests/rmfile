@@ -1,0 +1,3 @@
+#!/bin/bash
+
+rm -rf $1 && git rm -rf $1
