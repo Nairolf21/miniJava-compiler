@@ -4,7 +4,7 @@
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 
 (* keyword *)
-%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
 SYNCHRONIZED NEW
 
 (* statements *)
@@ -79,7 +79,7 @@ methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
 methodHeader:
-    r=result md=methodDeclarator { r^" "^md } 
+    r=resultType md=methodDeclarator { r^" "^md } 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
@@ -121,8 +121,9 @@ integralType:
 floatingPointType:
     FLOAT { "float" } 
     | DOUBLE { "double" }
-result:
+resultType:
     ut=unannType { ut }
+    | VOID { "void" }
 
 unannPrimitiveType:
     nt=numericType { nt }
