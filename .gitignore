@@ -18,3 +18,14 @@ _build/
 # oasis generated files
 setup.data
 setup.log
+
+#test script generated files
+*.ign
+
+notes
+
+jls3.pdf
+testMac.sh
+.~lock*
+taches.xlsx
+*.out
