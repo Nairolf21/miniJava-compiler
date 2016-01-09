@@ -1,11 +1,15 @@
 (* operators *)
 
 (* delimitors *)
-%token COMMA SEMICOLON LPAREN RPAREN LBRACE RBRACE
+%token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE
 
 (* keyword *)
 %token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
 SYNCHRONIZED
+
+(* statements *)
+%token IF THEN ELSE ASSERT SWITCH  CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
+TRY CATCH FINALLY
 
 (* special *)
 %token EOF 
@@ -130,4 +134,158 @@ variableDeclaratorId:
 variableDeclaratorList:
     vd=variableDeclarator { vd }
     | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
+
+
+(* 14.2 Blocks *)    
+block:
+	  LBRACE bss=blockStatements RBRACE { " {\n"^bss^"\n}" }
+	| LBRACE RBRACE { " {} "}
+
+blockStatements:
+	  bs=blockStatement { bs }
+	| bss=blockStatements bs=blockStatement { bss^"\n"^bs }
+
+blockStatement:
+	  lvds=localVariableDeclarationStatement { lvds }
+	| cd=classDeclaration { cd }
+	| s=statement { s }
+
+(* 14.4 Local Variable Declaration Statements *)
+localVariableDeclarationStatement:
+	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
+
+localVariableDeclaration:
+	(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
+	vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+
+(* 14.5 Statements *)
+statement:
+	  swts=statementWithoutTrailingSubstatement { swts }
+	| ls=labeledStatement { ls }
+	| its=ifThenStatement { its }
+	| ites=ifThenElseStatement { ites }
+	| ws=whileStatement { ws }
+	| fs=forStatement { fs }
+	
+statementWithoutTrailingSubstatement:
+	  b=bloc { b }
+	| es=emptyStatement { es }
+	| es=expressionStatement { es }
+	| as=assertStatement { as }
+	| ss=switchStatement { ss }
+	| ds=doStatement { ds }
+	| bs=breakStatement { bs }
+	| cs=continueStatement { cs }
+	| rs=returnStatement { rs }
+	| ss=synchronizedStatement { ss }
+	| ts=throwStatement { ts }
+	| ts=tryStatement { ts }
+	
+statementNoShortIf:
+	  swts=StatementWithoutTrailingSubstatement { swts }
+	| lsnsi=labeledStatementNoShortIf { lsnsi }
+	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
+	| wsnsi=WhileStatementNoShortIf { wsnsi }
+	| fsnsi=ForStatementNoShortIf { fsnsi }
+
+(* 14.6 Empty Statement *)
+emptyStatement:
+	(* ?? *)
+	SEMICOLON { ";" }
+
+(* 14.7 Labeled Statement *)
+labeledStatement:
+	i=identifier COLON s=statement { i^" : "^s }
+
+labeledStatementNoShortIf:
+	i=identifier COLON snsi=statementNoShortIf { i^" : "^snsi }
+	
+(* 14.8 Expression Statement *)
+expressionStatement:
+	se=statementExpression SEMICOLON { se^" ;" }
+	
+statementExpression:
+	  a=assignment { a }
+	| pie=preIncrementExpression { pie }
+	| pde=preDecrementExpression { pde }
+	| pie=postIncrementExpression { pie }
+	| pde=postDecrementExpression { pde }
+	| mi=methodInvocation { mi }
+	| cce=classInstanceCreationExpression { cce }
+
+(* 14.9 The if Statement *)
+ifThenStatement:
+	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
+
+ifThenElseStatement:
+	IF LPAREN e=expression RPAREN snsi=statementNoShortIf ELSE s=statement { "if ("^e^")\n"^snsi^"\nelse\n"^s }
+
+ifThenElseStatementNoShortIf:
+	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
+
+(* 14.10 The assert Statement *)
+assertStatement:
+	  ASSERT e=expression SEMICOLON { "assert "^e^" ;" }
+	| ASSERT e1=expression COLON e2=expression SEMICOLON { "assert "^e1^" : "^e2^" ;" }
+	
+(* 14.11 The switch Statement *)
+switchStatement:
+	SWITCH LPAREN e=expression RPAREN sb=switchBlock { "switch ("^e^") "^sb }
+	
+switchBlock:
+	  LBRACE RBRACE { "{}" }
+	| LBRACE sbsgs=switchBlockStatementGroups RBRACE { "{ "^sbsgs^"}" }
+	| LBRACE sls=switchLabels RBRACE { "{"^sls^"}" }
+	| LBRACE sbsg=switchBlockStatementGroups sls=switchLabels RBRACE { "{"^sbsg^" "^sls^"}" }
+	
+switchBlockStatementGroups:
+	  sbsg=switchBlockStatementGroup { sbsg }
+	| sbsgs=switchBlockStatementGroups sbsg=switchBlockStatementGroup { sbsgs^"\n"^sbsg }
+	
+switchBlockStatementGroup:
+	sls=switchLabels bss=blockStatements { sls^"\n"^bss }
+
+switchLabels:
+	  sl=switchLabel { sl }
+	| sls=switchLabels sl=switchLabel { sls^"\n"^sl }
+
+switchLabel:
+	  CASE ce=constantExpression COLON
+
+// TODO
+whileStatement
+forStatement
+
+// TODO
+doStatement
+breakStatement
+continueStatement
+returnStatement
+synchronizedStatement
+throwStatement
+tryStatement
+
+// TODO
+whileStatementNoShortIf
+forStatementNoShortIf
+
+// TODO
+assignment
+preIncrementExpression
+preDecrementExpression
+postIncrementExpression
+postDecrementExpression
+methodInvocation
+classInstanceCreationExpression
+
+// TODO
+expression
+constantExpression
+
+
+
+
+
+
+
 %%
