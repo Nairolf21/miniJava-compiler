@@ -1,42 +1,133 @@
+(* operators *)
+
+(* delimitors *)
+%token COMMA SEMICOLON LPAREN RPAREN LBRACE RBRACE
+
+(* keyword *)
+%token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+SYNCHRONIZED
+
+(* special *)
 %token EOF 
-%token COMMA SEMICOLON LBRACE RBRACE
-%token CLASS STATIC 
-%token INT FLOAT
-%token <string> UIDENT LIDENT
+%token <string> IDENT
 %token <float> NUMBER
 
-%start <string> start
+%start <string> compilationUnit
 
 %%
 
-start:
-      EOF { "eof" }
-    | joel=jclass_or_expr_list EOF { joel }
+(* 7.3 Compilation Units *)
+compilationUnit: 
+      tps=typeDeclarations EOF { tps } 
 
-jclass_or_expr_list:
-      joe=jclass_or_expr { joe }
-    | joe=jclass_or_expr joel=jclass_or_expr_list { joe^"\n"^joel }
+typeDeclarations:
+      tp=typeDeclaration { tp }
+    | tps=typeDeclarations tp=typeDeclaration { tps^"\n"^tp }
 
-jclass_or_expr:
-      jc=jclass { jc }
+(* 7.6 Top Level Type Declarations *)
+typeDeclaration:
+      cd=classDeclaration { cd }
+    | SEMICOLON { ";" } 
 
-jclass:
-    CLASS ui=UIDENT LBRACE ajl=attribute_or_jmethod_list RBRACE 
-        { "class "^ui^" { "^ajl^" } " }
-        
-attribute_or_jmethod_list:
-      aoj=attribute_or_jmethod { aoj } 
-    | aoj=attribute_or_jmethod ajl=attribute_or_jmethod_list { aoj^"\n"^ajl } 
+(* 8.1 Class Declaration *)
+classDeclaration:
+    ncd=normalClassDeclaration { ncd }
 
-attribute_or_jmethod:
-    a=attribute { a } 
-   
-attribute:
-    jt=jtype li=LIDENT SEMICOLON { jt^" "^li^";" } 
+normalClassDeclaration:
+      CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
+    | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
 
-jtype:
-      INT { "int" }
-    | FLOAT { "float" }
-    | ui=UIDENT { ui } 
+classModifiers:
+      cm=classModifier { cm }
+    | cms=classModifiers cm=classModifier { cms^" "^cm }
 
+classModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | STRICTFP { "strictfp" }
+
+classBody:
+      LBRACE cbds=classBodyDeclarations RBRACE { " {"^cbds^" }" }
+    | LBRACE RBRACE { " {} "}
+
+classBodyDeclarations:
+      cbd=classBodyDeclaration { cbd }
+    | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
+
+classBodyDeclaration:
+      cmd=classMemberDeclaration { cmd }
+
+classMemberDeclaration:
+      (*fd=fieldDeclaration { fd } *)
+    | md=methodDeclaration { md }
+    | SEMICOLON { ";" } 
+    
+(* 8.3 Field Declarations *)
+fieldDeclaration:
+    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
+
+(* 8.4 Method Declarations *)
+methodDeclaration:
+      mh=methodHeader mb=methodBody { mh^" "^mb }
+
+methodHeader:
+    r=result md=methodDeclarator { r^" "^md } 
+
+methodDeclarator:
+    id=identifier LPAREN RPAREN { id^" ( )" } 
+
+methodModifiers:
+      mm=methodModifier { mm }
+    | mms=methodModifiers mm=methodModifier { mms^" "^mm }
+
+methodModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | SYNCHRONIZED { "synchronized" } 
+    | NATIVE { "native" } 
+    | STRICTFP { "strictfp" }
+
+(* To sort *)
+floatingPointType:
+    FLOAT { "float" } 
+
+identifier:
+    id=IDENT { id }
+
+integralType:
+    INT { "int" } 
+    
+methodBody:
+    SEMICOLON { ";" }
+
+numericType:
+      it=integralType { it } 
+    | fpt=floatingPointType { fpt } 
+
+result:
+    ut=unannType { ut }
+
+unannPrimitiveType:
+    nt=numericType { nt }
+
+unannType:
+    upt=unannPrimitiveType { upt }
+
+variableDeclarator:
+    vdi=variableDeclaratorId { vdi }
+
+variableDeclaratorId:
+    id=identifier { id }
+
+variableDeclaratorList:
+    vd=variableDeclarator { vd }
+    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
 %%
