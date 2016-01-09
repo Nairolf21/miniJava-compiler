@@ -12,24 +12,35 @@ SYNCHRONIZED
 %token <string> IDENT
 %token <float> NUMBER
 
-%start <string> compilationUnitList
+%start <string> compilationUnit
 
 %%
 
-classBody:
-    LBRACE cbd=classBodyDeclaration RBRACE { " {"^cbd^" }" }
+(* 7.3 Compilation Units *)
+compilationUnit: 
+      tps=typeDeclarations EOF { tps } 
 
-classBodyDeclaration:
-    cmd=classMemberDeclaration { cmd }
+typeDeclarations:
+      tp=typeDeclaration { tp }
+    | tps=typeDeclarations tp=typeDeclaration { tps^"\n"^tp }
 
+(* 7.6 Top Level Type Declarations *)
+typeDeclaration:
+      cd=classDeclaration { cd }
+    | SEMICOLON { ";" } 
+
+(* 8.1 Class Declaration *)
 classDeclaration:
     ncd=normalClassDeclaration { ncd }
 
-classMemberDeclaration:
-      (*fd=fieldDeclaration { fd } *)
-    | md=methodDeclaration { md }
-    | SEMICOLON { ";" } 
-    
+normalClassDeclaration:
+      CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
+    | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
+
+classModifiers:
+      cm=classModifier { cm }
+    | cms=classModifiers cm=classModifier { cms^" "^cm }
+
 classModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
@@ -39,34 +50,39 @@ classModifier:
     | FINAL { "final" }
     | STRICTFP { "strictfp" }
 
-compilationUnitList: 
-      tp=typeDeclaration EOF { tp } 
-    | tp=typeDeclaration cul=compilationUnitList EOF { tp^"\n"^cul }
+classBody:
+      LBRACE cbds=classBodyDeclarations RBRACE { " {"^cbds^" }" }
+    | LBRACE RBRACE { " {} "}
 
+classBodyDeclarations:
+      cbd=classBodyDeclaration { cbd }
+    | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
+
+classBodyDeclaration:
+      cmd=classMemberDeclaration { cmd }
+
+classMemberDeclaration:
+      (*fd=fieldDeclaration { fd } *)
+    | md=methodDeclaration { md }
+    | SEMICOLON { ";" } 
+    
+(* 8.3 Field Declarations *)
 fieldDeclaration:
     ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
 
-floatingPointType:
-    FLOAT { "float" } 
-
-identifier:
-    id=IDENT { id }
-
-integralType:
-    INT { "int" } 
-    
-methodBody:
-    SEMICOLON { ";" }
-
+(* 8.4 Method Declarations *)
 methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
-    | mm=methodModifier mh=methodHeader mb=methodBody { mm^" "^mh^" "^mb }
+
+methodHeader:
+    r=result md=methodDeclarator { r^" "^md } 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
 
-methodHeader:
-    r=result md=methodDeclarator { r^" "^md } 
+methodModifiers:
+      mm=methodModifier { mm }
+    | mms=methodModifiers mm=methodModifier { mms^" "^mm }
 
 methodModifier:
       PUBLIC { "public" }
@@ -79,9 +95,18 @@ methodModifier:
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
 
-normalClassDeclaration:
-      CLASS id=identifier cb=classBody { "class "^id^cb } 
-    | cm=classModifier CLASS id=identifier cb=classBody { cm^" class "^id^cb}
+(* To sort *)
+floatingPointType:
+    FLOAT { "float" } 
+
+identifier:
+    id=IDENT { id }
+
+integralType:
+    INT { "int" } 
+    
+methodBody:
+    SEMICOLON { ";" }
 
 numericType:
       it=integralType { it } 
@@ -89,9 +114,6 @@ numericType:
 
 result:
     ut=unannType { ut }
-
-typeDeclaration:
-    cd=classDeclaration { cd }
 
 unannPrimitiveType:
     nt=numericType { nt }

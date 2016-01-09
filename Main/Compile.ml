@@ -7,7 +7,7 @@ open Lexing
 (* verbose is a boolean that you can use to switch to a verbose output (for example, to dump all the ast) *)
 let execute lexbuf verbose = 
     try
-        let result = Parser.compilationUnitList Lexer.readtoken lexbuf in
+        let result = Parser.compilationUnit Lexer.readtoken lexbuf in
         print_string "\n --- Result --- \n";
         print_string result;
         print_string "\n";
