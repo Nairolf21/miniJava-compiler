@@ -331,16 +331,26 @@ throwStatement:
 synchronizedStatement:
 	SYNCHRONIZED LPAREN e=expression RPAREN b=block { "synchronized ("^e^")\n"^b }
 
+(* 14.20 The try Statement *)
+tryStatement:
+	  TRY b=block c=catches { "try \n"^b^"\n"^c }
+	| TRY b=block f=finally { "try \n"^b^"\n"^f }
+	| TRY b=block c=catches f=finally { "try \n"^b^"\n"^c^"\n"^f }
 
+catches:
+	  cc=catchClause { cc }
+	| c=catches cc=catchClause { c^"\n"^cc }
+
+catchClause:
+	CATCH LPAREN fp=formalParameter RPAREN b=block { "catch ("^fp^")\n"^b }
+
+finally:
+	FINALLY b=block { "finally\n"^b }
 
 
 
 
 (*
-// TODO
-synchronizedStatement
-tryStatement
-
 // TODO
 assignment
 preIncrementExpression
