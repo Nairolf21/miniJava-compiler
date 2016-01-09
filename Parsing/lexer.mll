@@ -12,6 +12,7 @@ let ident = letter ( letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
 
+
 rule nexttoken = parse 
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
@@ -22,8 +23,12 @@ rule nexttoken = parse
     | ")" { RPAREN }
     | "{" { LBRACE }
     | "}" { RBRACE }
+    | "byte" { BYTE }
+    | "short" { SHORT }
     | "int" { INT }
+    | "long" { LONG }
     | "float" { FLOAT }
+    | "double" { DOUBLE }
     | "class" { CLASS }
     | "abstract" { ABSTRACT }
     | "final" { FINAL }
@@ -47,8 +52,12 @@ let printtoken = function
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | BYTE -> print_string "byte"
+    | SHORT -> print_string "short"
     | INT -> print_string "int"
+    | LONG -> print_string "long"
     | FLOAT -> print_string "float"
+    | DOUBLE -> print_string "double"
     | CLASS -> print_string "class" 
     | ABSTRACT -> print_string "abstract"
     | FINAL -> print_string "final"
