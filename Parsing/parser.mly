@@ -257,10 +257,17 @@ switchLabel:
 enumConstantName:
 	id=Identifier { id }
 	
+(* 14.12 The while Statement *)
+whileStatement:
+	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
+	
+whileStatementNoShortIf:
+	WHILE LPAREN e=expression RPAREN snsi=statementNoShortIf { "while ("^e^")\n"^snsi }
+	
+
 
 (*
 // TODO
-whileStatement
 forStatement
 
 // TODO
@@ -273,7 +280,6 @@ throwStatement
 tryStatement
 
 // TODO
-whileStatementNoShortIf
 forStatementNoShortIf
 
 // TODO
