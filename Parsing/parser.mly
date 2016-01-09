@@ -322,7 +322,10 @@ continueStatement:
 returnStatement:
 	RETURN SEMICOLON { "return ;" }
 	| RETURN e=expression SEMICOLON { "return "^e^" ;" }
-
+	
+(* The throw Statement *)
+throwStatement:
+	THROW e=expression SEMICOLON { "throw "^e^" ;" }
 
 
 
@@ -330,7 +333,6 @@ returnStatement:
 (*
 // TODO
 synchronizedStatement
-throwStatement
 tryStatement
 
 // TODO
