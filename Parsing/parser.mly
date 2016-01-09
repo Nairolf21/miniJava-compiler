@@ -182,7 +182,7 @@ statementWithoutTrailingSubstatement:
 	| ts=tryStatement { ts }
 	
 statementNoShortIf:
-	  swts=StatementWithoutTrailingSubstatement { swts }
+	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
 	| wsnsi=WhileStatementNoShortIf { wsnsi }
