@@ -317,13 +317,18 @@ breakStatement:
 continueStatement:
 	CONTINUE SEMICOLON { "continue ;" }
 	| CONTINUE id=identifier SEMICOLON { "continue "^id^" ;" }
+	
+(* 14.17 The return statement *)
+returnStatement:
+	RETURN SEMICOLON { "return ;" }
+	| RETURN e=expression SEMICOLON { "return "^e^" ;" }
+
 
 
 
 
 (*
 // TODO
-returnStatement
 synchronizedStatement
 throwStatement
 tryStatement
