@@ -16,6 +16,7 @@ In all names, please don't use spaces.
 
 *test target* and *test cases* are represented by directories, orginized in the following manner:
 
+```
 Tests
     | *<test_target1>*
         | *<test_case1>*
@@ -28,7 +29,16 @@ Tests
             | ...
     | *<test_target2>*
         | ...
+```
 
+To add a test target, a test case or a test file, do it "by hand"
+
+To delete them, use the following command:
+
+`./rmfile <directory or file>`
+
+DO NOT delete by hand. If you do, make sure the files are effectively deleted from the worktree (with unix `rm`) AND git index (with `git rm`)
+In doubt, use the rmfile command.
 
 ## Run tests
 
@@ -52,3 +62,5 @@ the parser behaves as the test case commands it (either a succesful run, or an e
 in the normal development mode, and try to run the test again.
 
 If all the targets are OK, it will print "SUCCESS" at the end of the message.
+
+
