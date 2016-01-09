@@ -23,6 +23,8 @@ rule nexttoken = parse
     | ")" { RPAREN }
     | "{" { LBRACE }
     | "}" { RBRACE }
+    | "[" { LBRACK }
+    | "]" { RBRACK }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }

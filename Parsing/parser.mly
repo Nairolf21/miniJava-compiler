@@ -72,7 +72,7 @@ classMemberDeclaration:
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
-    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
+    ut=unannType vdl=variableDeclarators SEMICOLON { ut^" "^vdl^";"}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -106,8 +106,37 @@ identifier:
 
 (* TODO: add possibility for method content *)    
 methodBody:
-    SEMICOLON { ";" }
+    b=block { b }
+    | SEMICOLON { ";" }
 
+
+block:
+    LBRACE RBRACE { "{ }" }
+    | LBRACE bss=blockStatements RBRACE { "{ "^bss^" }" }
+
+blockStatements:
+    bs=blockStatement { bs }
+    | bss=blockStatements bs=blockStatement { bss^" "^bs }
+
+blockStatement:
+    lvds=localVariableDeclarationStatement { lvds }
+    (*| cd=classDeclaration { cd }*)
+    (*| s=statement { s }*)
+
+localVariableDeclarationStatement:
+    lvd=localVariableDeclaration SEMICOLON { lvd^";" }
+
+localVariableDeclaration:
+    vm=variableModifiers t=unannType vds=variableDeclarators { vm^" "^t^" "^vds }
+
+variableModifiers:
+    vm=variableModifier { vm }
+    | vms=variableModifiers vm=variableModifier { vms^" "^vm }
+
+variableModifier:
+    FINAL { "final" }
+
+(* 4.2 Primitive Types *)
 numericType:
       it=integralType { it } 
     | fpt=floatingPointType { fpt } 
@@ -136,9 +165,11 @@ variableDeclarator:
 
 variableDeclaratorId:
     id=identifier { id }
+    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
-variableDeclaratorList:
+variableDeclarators:
     vd=variableDeclarator { vd }
+<<<<<<< HEAD
     | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
 
 
@@ -414,4 +445,7 @@ constantExpression
 
 
 
+=======
+    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
+>>>>>>> began to implement method blocks
 %%
