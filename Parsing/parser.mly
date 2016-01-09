@@ -323,9 +323,15 @@ returnStatement:
 	RETURN SEMICOLON { "return ;" }
 	| RETURN e=expression SEMICOLON { "return "^e^" ;" }
 	
-(* The throw Statement *)
+(* 14.18 The throw Statement *)
 throwStatement:
 	THROW e=expression SEMICOLON { "throw "^e^" ;" }
+	
+(* 14.19 The synchronized Statement *)
+synchronizedStatement:
+	SYNCHRONIZED LPAREN e=expression RPAREN b=block { "synchronized ("^e^")\n"^b }
+
+
 
 
 
