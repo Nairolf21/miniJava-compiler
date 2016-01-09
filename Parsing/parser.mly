@@ -264,6 +264,11 @@ whileStatement:
 whileStatementNoShortIf:
 	WHILE LPAREN e=expression RPAREN snsi=statementNoShortIf { "while ("^e^")\n"^snsi }
 	
+(* 14.13 The do Statement *)
+doStatement:
+	DO s=statement WHILE LPAREN e=expression RPAREN { "do\n"^s^"\nwhile ("^e^")" }
+	
+
 
 
 (*
@@ -271,7 +276,6 @@ whileStatementNoShortIf:
 forStatement
 
 // TODO
-doStatement
 breakStatement
 continueStatement
 returnStatement
