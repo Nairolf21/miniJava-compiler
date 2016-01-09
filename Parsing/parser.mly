@@ -303,6 +303,10 @@ forUpdate:
 statementExpressionList:
 	  se=statementExpression { se }
 	| sel=statementExpressionList COMMA se=statementExpression { sel^" , "^se }
+	
+enhancedForStatement:
+	  FOR LPAREN ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^ut^" "^id^" : "^e^")\n"^s }
+	| FOR LPAREN vm=variableModifiers ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^ut^" "^id^" : "^e^")\n"^s }
 
 
 (*
@@ -313,9 +317,6 @@ returnStatement
 synchronizedStatement
 throwStatement
 tryStatement
-
-// TODO
-forStatementNoShortIf
 
 // TODO
 assignment
