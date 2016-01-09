@@ -21,3 +21,10 @@ setup.log
 
 #test script generated files
 *.ign
+
+notes
+
+jls3.pdf
+testMac.sh
+.~lock*
+taches.xlsx
