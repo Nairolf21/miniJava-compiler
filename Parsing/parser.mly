@@ -155,7 +155,7 @@ classBodyDeclaration:
       cmd=classMemberDeclaration { cmd }
 
 classMemberDeclaration:
-      (*fd=fieldDeclaration { fd } *)
+      fd=fieldDeclaration { fd }
     | md=methodDeclaration { md }
     | SEMICOLON { ";" } 
     
@@ -164,15 +164,20 @@ fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
 
 variableDeclarators:
-    vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
+      vd=variableDeclarator { vd }
+    | vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
+    | vdi=variableDeclaratorID EQUAL vi=variableInitializer { vdi^" = "^vi }
 
 variableDeclaratorId:
-    id=identifier { id }
+      id=identifier { id }
     | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
+
+variableInitializer:
+      e=expression { e } 
+    | ai=arrayInitializer { ai } 
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
