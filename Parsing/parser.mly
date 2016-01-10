@@ -331,8 +331,27 @@ conditionalExpression:
 arrayAccess:
     TODO { "" }
 
-expressionName:
+(* 6.5 Meaning of a name *)
+packageName:
     TODO { "" }
+
+typeName:
+    TODO { "" }
+
+methodName:
+    TODO { "" }
+
+packageOrTypeName:
+    TODO { "" }
+
+expressionName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+
+ambiguousName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+    
 
 (* 14.10 The assert Statement *)
 assertStatement:
