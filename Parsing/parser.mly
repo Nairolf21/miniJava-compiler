@@ -104,37 +104,11 @@ methodModifier:
 identifier:
     id=IDENT { id }
 
-(* TODO: add possibility for method content *)    
-methodBody:
-    b=block { b }
-    | SEMICOLON { ";" }
 
-
-block:
-    LBRACE RBRACE { "{ }" }
-    | LBRACE bss=blockStatements RBRACE { "{ "^bss^" }" }
-
-blockStatements:
-    bs=blockStatement { bs }
-    | bss=blockStatements bs=blockStatement { bss^" "^bs }
-
-blockStatement:
-    lvds=localVariableDeclarationStatement { lvds }
-    | cd=classDeclaration { cd }
-    | s=statement { s }
-
-localVariableDeclarationStatement:
-    lvd=localVariableDeclaration SEMICOLON { lvd^";" }
-
-localVariableDeclaration:
-    vm=variableModifiers t=unannType vds=variableDeclarators { vm^" "^t^" "^vds }
-
-variableModifiers:
-    vm=variableModifier { vm }
-    | vms=variableModifiers vm=variableModifier { vms^" "^vm }
 
 variableModifier:
     FINAL { "final" }
+    | a=annotation { a }
 
 (* 4.2 Primitive Types *)
 numericType:
