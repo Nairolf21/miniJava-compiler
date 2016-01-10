@@ -7,6 +7,6 @@ public class ExpressionStatements {
 		--i;
 		i--;
 		i = foo1(i);
-		Toto t = new Toto(i);
+		Cla t = new Cla(i);
 	}
 }
