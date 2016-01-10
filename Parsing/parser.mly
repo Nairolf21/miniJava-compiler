@@ -104,24 +104,6 @@ methodModifier:
 identifier:
     id=IDENT { id }
 
-(* TODO: add possibility for method content *)    
-methodBody:
-    b=block { b }
-    | SEMICOLON { ";" }
-
-
-block:
-    LBRACE RBRACE { "{ }" }
-    | LBRACE bss=blockStatements RBRACE { "{ "^bss^" }" }
-
-blockStatements:
-    bs=blockStatement { bs }
-    | bss=blockStatements bs=blockStatement { bss^" "^bs }
-
-blockStatement:
-    lvds=localVariableDeclarationStatement { lvds }
-    | cd=classDeclaration { cd }
-    | s=statement { s }
 
 localVariableDeclarationStatement:
     lvd=localVariableDeclaration SEMICOLON { lvd^";" }
