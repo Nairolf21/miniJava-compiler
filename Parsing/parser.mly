@@ -17,6 +17,8 @@
 %token TODO
 
 (* operators *)
+%token PLUS MINUS INCR DECR
+
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
 
@@ -540,7 +542,15 @@ nonWildTypeArguments:
 	  en=expressionName LBRACK e=expression RBRACK { en^" ["^e^"]" }
 	| pnna=primaryNoNewArray LBRACK e=expression RBRACK { pnna^" ["^e^"]" }
 	
-
+(* 15.14 Postfix Expressions *)
+postfixExpression:
+	  p=primary { p }
+	| en=expressionName { en }
+	| pie=postIncrementExpression { pie }
+	| pde=postDecrementExpression { pde }
+	
+PostIncrementExpression:
+	pfe=postfixExpression ++
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
