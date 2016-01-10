@@ -286,8 +286,6 @@ postIncrementExpression:
 classInstanceCreationExpression:
     TODO { "" }
 
-methodInvocation:
-    TODO { "" }
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -297,6 +295,21 @@ ifThenElseStatement:
 
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
+
+
+(* 15.12 Method invocation *)
+methodInvocation:
+    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
+   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
+
+argumentList:
+   TODO { "" }
+
+nonWildTypeArguments:
+   TODO { "" }
 
 (*15.27 Expression*)
 expression:
