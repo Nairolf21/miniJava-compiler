@@ -31,8 +31,6 @@ rule nexttoken = parse
     | "--" { DECR }
     | "~" { TILDE }
     | "!" { EXCL }
-    | "+" { PLUS }
-    | "-" { MINUS }
     | "=" { EQUAL }
     | "*=" { MULTEQUAL }
     | "/=" { DIVEQUAL }
@@ -45,6 +43,11 @@ rule nexttoken = parse
     | "&=" { BITANDEQUAL }
     | "^=" { BITXOREQUAL }
     | "|=" { BITOREQUAL }
+    | "+" { PLUS }
+    | "-" { MINUS }
+    | "*" { MULT }
+    | "/" { DIV }
+    | "%" { MOD }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }
@@ -106,6 +109,9 @@ let printtoken = function
     | EQUAL -> print_string "="
     | EXCL -> print_string "!"
     | TILDE -> print_string "~"
+    | MULT -> print_string "*"
+    | DIV -> print_string "/"
+    | MOD -> print_string "%"
     | MULTEQUAL -> print_string "*="
     | DIVEQUAL -> print_string "/="
     | MODEQUAL -> print_string "%="
