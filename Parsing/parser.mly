@@ -102,8 +102,10 @@ methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
     | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
 
+
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
+    | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
 
 methodModifiers:
@@ -120,6 +122,7 @@ methodModifier:
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
+    | an=annotation {an}
 
 methodBody:
 	SEMICOLON { ";" }
@@ -127,10 +130,11 @@ methodBody:
 
 formalParameterList:
 	lfp = lastFormalParameter {lfp}
-(*	| fp=formalParameters lfp = lastFormalParameter {fp^" "^lfp} *)
+	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
 
 formalParameters:
 	fp=formalParameter {fp}
+	|fps=formalParameters COMMA fp=formalParameter {fps^" , "^fps}
 
 formalParameter:
 	vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
@@ -144,7 +148,8 @@ variableModifier:
 	| a=annotation { a }
 
 lastFormalParameter:
-	fp = formalParameter {fp}
+	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
+	|fp = formalParameter {fp}
 
 (* To sort *)
 
