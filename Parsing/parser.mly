@@ -208,8 +208,7 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-    TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-    | vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
+	vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
 
 (* 14.5 Statements *)
 statement:
