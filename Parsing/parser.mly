@@ -313,11 +313,14 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
+<<<<<<< HEAD
 preIncrementExpression:
     TODO { "" }
 
 preDecrementExpression:
     TODO { "" }
+=======
+>>>>>>> Parser: implemented 15.15 productions
 
 
 classInstanceCreationExpression:
@@ -569,17 +572,28 @@ postIncrementExpression:
 	pfe=postfixExpression INCR { pfe^" ++" }
 	
 postDecrementExpression:
-	fpe=postfixExpression DECR { pfe^" --" }
+	pfe=postfixExpression DECR { pfe^" --" }
 
 (* 15.15 Unary operators *)
 
 unaryExpression:
     pie=preIncrementExpression { pie }
-    pde=preDecrementExpression { pde }
-    PLUS ue=unaryExpression { "+"^ue }
-    MINUS ue=unaryExpression { "-"^ue }
-    uenpm=unaryExpressionNotPlusMinus { uenpm }
+    | pde=preDecrementExpression { pde }
+    | PLUS ue=unaryExpression { "+"^ue }
+    | MINUS ue=unaryExpression { "-"^ue }
+    | uenpm=unaryExpressionNotPlusMinus { uenpm }
 
+preIncrementExpression:
+    INCR ue=unaryExpression { "++"^ue }
+
+preDecrementExpression:
+    DECR ue=unaryExpression { "--"^ue }
+
+unaryExpressionNotPlusMinus:
+    pe=postfixExpression { pe }
+    | TILDE ue=unaryExpression { "~"^ue }
+    | EXCL ue=unaryExpression { "!"^ue }
+    | ce=castExpression { ce }
 
 (* 15.16 Cast Expressions *)
 castExpression:
