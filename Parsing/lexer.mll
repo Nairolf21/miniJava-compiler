@@ -19,6 +19,8 @@ rule nexttoken = parse
     | eof { EOF }
     | "," { COMMA }
     | ";" { SEMICOLON }
+    | ":" { COLON }
+    | "." { DOT }
     | "(" { LPAREN }
     | ")" { RPAREN }
     | "{" { LBRACE }
@@ -41,7 +43,26 @@ rule nexttoken = parse
     | "protected" { PROTECTED } 
     | "public" { PUBLIC } 
     | "static" { STATIC } 
-    | "strictfp" { STRICTFP } 
+    | "strictfp" { STRICTFP }
+    | "synchronized" { SYNCHRONIZED }
+    | "new" { NEW }
+	| "if" { IF }
+	| "then" { THEN }
+	| "else" { ELSE }
+	| "assert" { ASSERT }
+	| "switch" { SWITCH }
+	| "case" { CASE }
+	| "default" { DEFAULT }
+	| "while" { WHILE }
+	| "do" { DO }
+	| "for" { FOR }
+	| "break" { BREAK }
+	| "continue" { CONTINUE }
+	| "return" { RETURN }
+	| "throw" { THROW  }
+	| "try" { TRY }
+	| "catch" { CATCH }
+	| "finally" { FINALLY }
     | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
     | _ { raise_error LexingError lexbuf }
