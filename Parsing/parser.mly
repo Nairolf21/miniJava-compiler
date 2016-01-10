@@ -131,6 +131,7 @@ classBodyDeclarations:
       cbd=classBodyDeclaration { cbd }
     | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
     | ii=instanceInitializer {ii}
+    | si=staticInitializer {si}
 
 classBodyDeclaration:
       cmd=classMemberDeclaration { cmd }
@@ -213,6 +214,10 @@ lastFormalParameter:
 (* 8.6 Instance Initializers *)
 instanceInitializer:
 	b=block {b}
+
+(* 8.7 Static Initializers *)
+staticInitializer:
+	STATIC b=block {"static "^b}
 	
 (* 14.2 Blocks *)    
 block:
