@@ -161,7 +161,7 @@ primitiveType:
     nt=numericType { nt }
 
 jType:
-    upt=unannPrimitiveType { upt }
+    upt= primitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
