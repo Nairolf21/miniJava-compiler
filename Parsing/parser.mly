@@ -32,7 +32,7 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS INCR DECR
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -313,12 +313,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-preIncrementExpression:
-    TODO { "" }
-
-preDecrementExpression:
-    TODO { "" }
-
 classInstanceCreationExpression:
     TODO { "" }
 
@@ -568,9 +562,31 @@ postIncrementExpression:
 	pfe=postfixExpression INCR { pfe^" ++" }
 	
 postDecrementExpression:
-	fpe=postfixExpression DECR { pfe^" --" }
-	
-(* 15.16 Cast Expressions *)
+	pfe=postfixExpression DECR { pfe^" --" }
+
+(* 15.15 Unary operators *)
+
+unaryExpression:
+    pie=preIncrementExpression { pie }
+    | pde=preDecrementExpression { pde }
+    | PLUS ue=unaryExpression { "+"^ue }
+    | MINUS ue=unaryExpression { "-"^ue }
+    | uenpm=unaryExpressionNotPlusMinus { uenpm }
+
+preIncrementExpression:
+    INCR ue=unaryExpression { "++"^ue }
+
+preDecrementExpression:
+    DECR ue=unaryExpression { "--"^ue }
+
+unaryExpressionNotPlusMinus:
+    pe=postfixExpression { pe }
+    | TILDE ue=unaryExpression { "~"^ue }
+    | EXCL ue=unaryExpression { "!"^ue }
+    | ce=castExpression { ce }
+    | error { print_error "error: unaryExpressionNotPlusMinus" }
+
+(* 15.16 Cast expression *)
 castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
