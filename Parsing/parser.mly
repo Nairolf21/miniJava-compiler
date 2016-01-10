@@ -4,7 +4,7 @@
  *          add the missing symbol with the token TODO as only production rule
  *              ex. 
  *                  formalParameter:
-     *                  TODO {}
+     *                  TODO { "" }
      *
  *      * You only want to partially implement production rules for a symbol: add a production rule
  *          only containing TODO, so we now it's not finished yet
@@ -119,8 +119,11 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 
+methodBody:
+    TODO { "" }
+
 formalParameter:
-    TODO {}
+    TODO { "" }
 
 
 (* To sort *)
@@ -135,7 +138,7 @@ variableModifier:
     | a=annotation { a }
 
 annotation:
-    TODO {}
+    TODO { "" }
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -155,11 +158,11 @@ resultType:
     ut=unannType { ut }
     | VOID { "void" }
 
-unannPrimitiveType:
+primitiveType:
     nt=numericType { nt }
 
 unannType:
-    upt=unannPrimitiveType { upt }
+    upt=primitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
@@ -192,11 +195,11 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-    TODO {}(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
+    TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
     | vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
 
 variableModifiers:
-    TODO {}
+    TODO { "" }
 
 (* 14.5 Statements *)
 statement:
@@ -225,13 +228,13 @@ statementNoShortIf:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
-	| wsnsi=WhileStatementNoShortIf { wsnsi }
-	| fsnsi=ForStatementNoShortIf { fsnsi }
+	| wsnsi=whileStatementNoShortIf { wsnsi }
+	| fsnsi=forStatementNoShortIf { fsnsi }
 
 (* 14.6 Empty Statement *)
 emptyStatement:
-	(* ?? *)
 	SEMICOLON { ";" }
+    | TODO { "" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
@@ -254,22 +257,25 @@ statementExpression:
 	| cce=classInstanceCreationExpression { cce }
 
 assignment:
-    TODO {}
+    TODO { "" }
 
 preIncrementExpression:
-    TODO {}
+    TODO { "" }
 
 preDecrementExpression:
-    TODO {}
+    TODO { "" }
 
 postDecrementExpression:
-    TODO {}
+    TODO { "" }
 
 postIncrementExpression:
-    TODO {}
+    TODO { "" }
 
 classInstanceCreationExpression:
-    TODO {}
+    TODO { "" }
+
+methodInvocation:
+    TODO { "" }
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -279,6 +285,9 @@ ifThenElseStatement:
 
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
+
+expression:
+    TODO { "" }
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -314,6 +323,8 @@ switchLabel:
 enumConstantName:
 	id=identifier { id }
 	
+constantExpression:
+    TODO { "" }
 (* 14.12 The while Statement *)
 whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
@@ -411,7 +422,7 @@ primary:
 
 primaryNoNewArray:
     l=literal { l }
-    | TODO {}
+    | TODO { "" }
 	
 literal:
 	  il=integerLiteral { il }
@@ -424,22 +435,22 @@ literal:
 
 
 integerLiteral:
-    TODO {}
+    TODO { "" }
 
 floatingPointLiteral:
-    TODO {}
+    TODO { "" }
 
 booleanLiteral:
-    TODO {}
+    TODO { "" }
 
 stringLiteral:
-    TODO {}
+    TODO { "" }
 
 characterLiteral:
-    TODO {}
+    TODO { "" }
 
 nullLiteral:
-    TODO {}
+    TODO { "" }
 
 (* 15.9 TODO *)
 
@@ -464,7 +475,10 @@ dims:
 	| d=dims LBRACK RBRACK { d^"[]" }
 
 classOrInterfaceType:
-    TODO {}
+    TODO { "" }
+
+arrayInitializer:
+    TODO { "" }
 (*
 // TODO
 assignment
