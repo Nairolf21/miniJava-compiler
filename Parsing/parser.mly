@@ -549,8 +549,8 @@ postfixExpression:
 	| pie=postIncrementExpression { pie }
 	| pde=postDecrementExpression { pde }
 	
-PostIncrementExpression:
-	pfe=postfixExpression ++
+postIncrementExpression:
+	pfe=postfixExpression INCR { pfe^" ++" }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
