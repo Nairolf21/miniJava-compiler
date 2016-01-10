@@ -48,6 +48,9 @@ rule nexttoken = parse
     | "*" { MULT }
     | "/" { DIV }
     | "%" { MOD }
+    | ">>>" { USHIFT }
+    | ">>" { RSHIFT }
+    | "<<" { LSHIFT }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }
@@ -112,6 +115,9 @@ let printtoken = function
     | MULT -> print_string "*"
     | DIV -> print_string "/"
     | MOD -> print_string "%"
+    | LSHIFT -> print_string "<<"
+    | RSHIFT -> print_string ">>"
+    | USHIFT -> print_string ">>>"
     | MULTEQUAL -> print_string "*="
     | DIVEQUAL -> print_string "/="
     | MODEQUAL -> print_string "%="

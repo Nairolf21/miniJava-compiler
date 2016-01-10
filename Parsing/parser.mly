@@ -32,7 +32,7 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -595,7 +595,7 @@ castExpression:
 (* 15.17 Multiplicative Operators *)
 multiplicativeExpression:
 	  ue=unaryExpression { ue }
-	| me=multiplicativeExpression TIME ue=unaryExpression { me^" * "^ue }
+	| me=multiplicativeExpression MULT ue=unaryExpression { me^" * "^ue }
 	| me=multiplicativeExpression DIV ue=unaryExpression { me^" / "^ue }
 	| me=multiplicativeExpression MOD ue=unaryExpression { me^" % "^ue }
 	
