@@ -1,10 +1,29 @@
+(*This token is a placeholder to unimplemented symbol rules or unfinished production rules
+ *  Use them as followed
+ *      * You implemented a set of rules for a chapter, but need other rules not yet implemented.
+ *          add the missing symbol with the token TODO as only production rule
+ *              ex. 
+ *                  formalParameter:
+     *                  TODO { "" }
+     *
+ *      * You only want to partially implement production rules for a symbol: add a production rule
+ *          only containing TODO, so we now it's not finished yet
+ *                  formalParameters:
+     *                  fp=formalParameter { fp }
+     *                  | TODO
+ *
+ *
+ * *)
+%token TODO
+
 (* operators *)
+
 
 (* delimitors *)
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 
 (* keyword *)
-%token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
 SYNCHRONIZED NEW
 
 (* statements *)
@@ -72,17 +91,19 @@ classMemberDeclaration:
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
-    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
+    ut=unannType vdl=variableDeclarators SEMICOLON { ut^" "^vdl^";"}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
 methodHeader:
-    r=result md=methodDeclarator { r^" "^md } 
+    r=resultType md=methodDeclarator { r^" "^md } 
+    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
+    
 
 methodModifiers:
       mm=methodModifier { mm }
@@ -99,41 +120,62 @@ methodModifier:
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
 
+
+methodBody:
+    TODO { "" }
+
+formalParameter:
+    TODO { "" }
+
+
 (* To sort *)
-floatingPointType:
-    FLOAT { "float" } 
 
 identifier:
     id=IDENT { id }
 
-integralType:
-    INT { "int" } 
-    
-methodBody:
-    SEMICOLON { ";" }
 
+
+variableModifier:
+    FINAL { "final" }
+    | a=annotation { a }
+
+annotation:
+    TODO { "" }
+
+(* 4.2 Primitive Types *)
 numericType:
       it=integralType { it } 
     | fpt=floatingPointType { fpt } 
 
-result:
-    ut=unannType { ut }
+integralType:
+    | BYTE { "byte" } 
+    | SHORT { "short" } 
+    | INT { "int" } 
+    | LONG { "long" } 
 
-unannPrimitiveType:
+floatingPointType:
+    FLOAT { "float" } 
+    | DOUBLE { "double" }
+resultType:
+    ut=unannType { ut }
+    | VOID { "void" }
+
+primitiveType:
     nt=numericType { nt }
 
 unannType:
-    upt=unannPrimitiveType { upt }
+    upt=primitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
 
 variableDeclaratorId:
     id=identifier { id }
+    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
-variableDeclaratorList:
+variableDeclarators:
     vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
+    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
 
 
 (* 14.2 Blocks *)    
@@ -155,8 +197,11 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-	(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-	vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+    TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
+    | vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+
+variableModifiers:
+    TODO { "" }
 
 (* 14.5 Statements *)
 statement:
@@ -168,7 +213,7 @@ statement:
 	| fs=forStatement { fs }
 	
 statementWithoutTrailingSubstatement:
-	  b=bloc { b }
+	  b=block { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
 	| ass=assertStatement { ass }
@@ -185,13 +230,13 @@ statementNoShortIf:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
-	| wsnsi=WhileStatementNoShortIf { wsnsi }
-	| fsnsi=ForStatementNoShortIf { fsnsi }
+	| wsnsi=whileStatementNoShortIf { wsnsi }
+	| fsnsi=forStatementNoShortIf { fsnsi }
 
 (* 14.6 Empty Statement *)
 emptyStatement:
-	(* ?? *)
 	SEMICOLON { ";" }
+    | TODO { "" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
@@ -213,6 +258,26 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
+assignment:
+    TODO { "" }
+
+preIncrementExpression:
+    TODO { "" }
+
+preDecrementExpression:
+    TODO { "" }
+
+postDecrementExpression:
+    TODO { "" }
+
+postIncrementExpression:
+    TODO { "" }
+
+classInstanceCreationExpression:
+    TODO { "" }
+
+methodInvocation:
+    TODO { "" }
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -222,6 +287,9 @@ ifThenElseStatement:
 
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
+
+expression:
+    TODO { "" }
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -255,8 +323,10 @@ switchLabel:
 	| DEFAULT COLON { "default :" }
 	
 enumConstantName:
-	id=Identifier { id }
+	id=identifier { id }
 	
+constantExpression:
+    TODO { "" }
 (* 14.12 The while Statement *)
 whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
@@ -270,8 +340,8 @@ doStatement:
 	
 (* 14.14 The for Statement *)
 forStatement:
-	  bfs=BasicForStatement { bfs }
-	| efs=EnhancedForStatement { efs }
+	  bfs=basicForStatement { bfs }
+	| efs=enhancedForStatement { efs }
 	
 basicForStatement:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN s=statement { "for (;;)\n"^s }
@@ -353,16 +423,36 @@ primary:
 	| ace=arrayCreationExpression { ace }
 
 primaryNoNewArray:
-	  l=literal { l }
-	(* TODO ! *)
+    l=literal { l }
+    | TODO { "" }
 	
 literal:
 	  il=integerLiteral { il }
+
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
 	| cl=characterLiteral { cl }
 	| sl=stringLiteral { sl }
 	| nl=nullLiteral { nl }
+
+
+integerLiteral:
+    TODO { "" }
+
+floatingPointLiteral:
+    TODO { "" }
+
+booleanLiteral:
+    TODO { "" }
+
+stringLiteral:
+    TODO { "" }
+
+characterLiteral:
+    TODO { "" }
+
+nullLiteral:
+    TODO { "" }
 
 (* 15.9 TODO *)
 
@@ -386,7 +476,11 @@ dims:
 	  LBRACK RBRACK { "[]" }
 	| d=dims LBRACK RBRACK { d^"[]" }
 
+classOrInterfaceType:
+    TODO { "" }
 
+arrayInitializer:
+    TODO { "" }
 (*
 // TODO
 assignment
@@ -409,3 +503,4 @@ constantExpression
 
 
 %%
+
