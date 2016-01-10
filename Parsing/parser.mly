@@ -1,3 +1,18 @@
+%{
+
+let string_of_option o =
+    match o with
+    | None -> ""
+    | Some(o) -> o
+
+let print_error str =
+    print_string str;
+    str
+
+
+%}
+
+
 (*This token is a placeholder to unimplemented symbol rules or unfinished production rules
  *  Use them as followed
  *      * You implemented a set of rules for a chapter, but need other rules not yet implemented.
@@ -76,7 +91,8 @@ typeName:
     TODO { "" }
 
 methodName:
-    TODO { "" }
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
 
 packageOrTypeName:
     TODO { "" }
@@ -523,14 +539,19 @@ arrayInitializer:
 
 (* 15.12 Method invocation *)
 methodInvocation:
-    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
-   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
+    mn=methodName LPAREN al=argumentList? RPAREN { mn^"("^(string_of_option al)^")"  }
+   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { p^"."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { "super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? RPAREN { cn^".super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LPAREN al=argumentList? RPAREN { tn^"."^nwta^" "^id^"("^(string_of_option al)^")" }
+   (*| error { print_error "error in methodInvocation production" } *)
+
+
 
 argumentList:
-   TODO { "" }
+    e=expression { e }
+    | al=argumentList COMMA e=expression { al^", "^e }
+
 
 nonWildTypeArguments:
    TODO { "" }
