@@ -86,6 +86,8 @@ rule nexttoken = parse
     | "static" { STATIC } 
     | "strictfp" { STRICTFP }
     | "synchronized" { SYNCHRONIZED }
+    | "transient" { TRANSIENT }
+    | "volatile" { VOLATILE }
     | "new" { NEW }
     | "this" { THIS }
 	| "if" { IF }
@@ -182,6 +184,8 @@ let printtoken = function
     | STATIC -> print_string "static"
     | STRICTFP -> print_string "strictfp" 
     | SYNCHRONIZED -> print_string "synchronized"
+    | TRANSIENT -> print_string "transient"
+    | VOLATILE -> print_string "volatile"
     | NEW -> print_string "new"
     | THIS -> print_string "this"
 	| IF -> print_string "if"
