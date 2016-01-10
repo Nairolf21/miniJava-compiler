@@ -48,9 +48,9 @@ rule nexttoken = parse
     | "*" { MULT }
     | "/" { DIV }
     | "%" { MOD }
-    | "<<" { LSHIFT }
-    | ">>" { RSHIT }
     | ">>>" { USHIFT }
+    | ">>" { RSHIFT }
+    | "<<" { LSHIFT }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }

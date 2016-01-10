@@ -318,7 +318,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-
 classInstanceCreationExpression:
     TODO { "" }
 
@@ -597,6 +596,26 @@ castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
+	
+(* 15.17 Multiplicative Operators *)
+multiplicativeExpression:
+	  ue=unaryExpression { ue }
+	| me=multiplicativeExpression MULT ue=unaryExpression { me^" * "^ue }
+	| me=multiplicativeExpression DIV ue=unaryExpression { me^" / "^ue }
+	| me=multiplicativeExpression MOD ue=unaryExpression { me^" % "^ue }
+	
+(* 15.18 Additive Operators *)
+additiveExpression:
+	  me=multiplicativeExpression { me }
+	| ae=additiveExpression PLUS me=multiplicativeExpression { ae^" + "^me }
+	| ae=additiveExpression MINUS me=multiplicativeExpression { ae^" - "^me }
+	
+(* 15.19 Shift Operators *)
+shiftExpression:
+	  ae=additiveExpression { ae }
+	| es=shiftExpression LSHIFT ae=additiveExpression { es^" << "^ae }
+	| es=shiftExpression RSHIFT ae=additiveExpression { es^" >> "^ae }
+	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
