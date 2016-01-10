@@ -17,14 +17,15 @@
 %token TODO
 
 (* operators *)
-
+(* assignment operators *)
+%token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
 
 (* delimitors *)
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PERIOD
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW
+SYNCHRONIZED NEW SUPER
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -265,8 +266,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-assignment:
-    TODO { "" }
 
 preIncrementExpression:
     TODO { "" }
@@ -295,8 +294,64 @@ ifThenElseStatement:
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
 
+(*15.27 Expression*)
 expression:
+    ae=assignmentExpression { ae }
+
+(*15.26 Assignment Operators *)
+assignmentExpression:
+    ce=conditionalExpression { ce } 
+    | a=assignment { a }
+
+assignment:
+    lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
+
+leftHandSide:
+    en=expressionName { en }
+    | fa=fieldAccess { fa }
+    | aa=arrayAccess { aa }
+
+assignmentOperator:
+    EQUAL { "=" }
+    | MULTEQUAL { "*=" }
+    | DIVEQUAL { "/=" }
+    | MODEQUAL { "%=" }
+    | PLUSEQUAL { "+=" }
+    | MINUSEQUAL { "-=" }
+    | LSHIFTEQUAL { "<<=" }
+    | RSHIFTEQUAL { ">>=" }
+    | USHIFTEQUAL { ">>>=" }
+    | BITANDEQUAL { "&=" }
+    | BITXOREQUAL { "^=" }
+    | BITOREQUAL { "|=" }
+
+conditionalExpression:
     TODO { "" }
+
+arrayAccess:
+    TODO { "" }
+
+(* 6.5 Meaning of a name *)
+packageName:
+    TODO { "" }
+
+typeName:
+    TODO { "" }
+
+methodName:
+    TODO { "" }
+
+packageOrTypeName:
+    TODO { "" }
+
+expressionName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+
+ambiguousName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+    
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -466,7 +521,7 @@ nullLiteral:
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
 	  NEW pt=primitiveType des=dimExprs { pt^des }
-	| NEW pt=primitiveType des=dimExprs ds=dims { pt^de^ds }
+	| NEW pt=primitiveType des=dimExprs ds=dims { pt^des^ds }
 	| NEW coit=classOrInterfaceType des=dimExprs { coit^des }
 	| NEW coit=classOrInterfaceType des=dimExprs ds=dims { coit^des^ds }
 	| NEW pt=primitiveType ds=dims ai=arrayInitializer { pt^ds^" "^ai }
@@ -484,6 +539,14 @@ dims:
 	| d=dims LBRACK RBRACK { d^"[]" }
 
 classOrInterfaceType:
+    TODO { "" }
+(* 15.11 Field Access Expressions *)
+fieldAccess:
+    p=primary PERIOD id=identifier { p^"."^id }
+    | SUPER PERIOD id=identifier { "super."^id }
+    | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
+
+className:
     TODO { "" }
 
 arrayInitializer:
