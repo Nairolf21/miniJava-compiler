@@ -20,7 +20,6 @@ rule nexttoken = parse
     | "," { COMMA }
     | ";" { SEMICOLON }
     | ":" { COLON }
-    | "." { DOT }
     | "(" { LPAREN }
     | ")" { RPAREN }
     | "{" { LBRACE }
@@ -74,7 +73,6 @@ let printtoken = function
     | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
     | COLON -> print_string ":"
-    | DOT -> print_string "."
     | LPAREN -> print_string "("
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
