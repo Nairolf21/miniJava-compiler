@@ -588,6 +588,13 @@ additiveExpression:
 	  me=multiplicativeExpression { me }
 	| ae=additiveExpression PLUS me=multiplicativeExpression { ae^" + "^me }
 	| ae=additiveExpression MINUS me=multiplicativeExpression { ae^" - "^me }
+	
+(* 15.19 Shift Operators *)
+shiftExpression:
+	  ae=additiveExpression { ae }
+	| es=shiftExpression LSHIFT ae=additiveExpression { es^" << "^ae }
+	| es=shiftExpression RSHIFT ae=additiveExpression { es^" >> "^ae }
+	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
