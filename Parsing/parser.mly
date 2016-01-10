@@ -7,7 +7,7 @@
      *                  TODO { "" }
      *
  *      * You only want to partially implement production rules for a symbol: add a production rule
- *          only containing TODO, so we now it's not finished yet
+ *          only containing TODO, so we know it's not finished yet
  *                  formalParameters:
      *                  fp=formalParameter { fp }
      *                  | TODO
@@ -20,7 +20,11 @@
 
 
 (* delimitors *)
+<<<<<<< HEAD
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK DOT
+=======
+%token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PERIOD
+>>>>>>> develop
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
@@ -91,7 +95,7 @@ classMemberDeclaration:
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
-    ut=unannType vdl=variableDeclarators SEMICOLON { ut^" "^vdl^";"}
+    jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -120,20 +124,17 @@ methodModifier:
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
 
-
 methodBody:
-    TODO { "" }
+	SEMICOLON { ; }
+	| b=block { b }
 
 formalParameter:
     TODO { "" }
-
 
 (* To sort *)
 
 identifier:
     id=IDENT { id }
-
-
 
 variableModifier:
     FINAL { "final" }
@@ -157,14 +158,14 @@ floatingPointType:
     FLOAT { "float" } 
     | DOUBLE { "double" }
 resultType:
-    ut=unannType { ut }
+    jt=jType { jt }
     | VOID { "void" }
 
 primitiveType:
     nt=numericType { nt }
 
-unannType:
-    upt=primitiveType { upt }
+jType:
+    upt= primitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
@@ -198,7 +199,7 @@ localVariableDeclarationStatement:
 
 localVariableDeclaration:
     TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-    | vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+    | vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
 
 variableModifiers:
     TODO { "" }
@@ -375,8 +376,8 @@ statementExpressionList:
 	| sel=statementExpressionList COMMA se=statementExpression { sel^" , "^se }
 	
 enhancedForStatement:
-	  FOR LPAREN ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^ut^" "^id^" : "^e^")\n"^s }
-	| FOR LPAREN vm=variableModifiers ut=unannType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^ut^" "^id^" : "^e^")\n"^s }
+	  FOR LPAREN jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^jt^" "^id^" : "^e^")\n"^s }
+	| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }
 
 (* 14.15 The break Statement *)
 breakStatement:

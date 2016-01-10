@@ -26,6 +26,7 @@ rule nexttoken = parse
     | "}" { RBRACE }
     | "[" { LBRACK }
     | "]" { RBRACK }
+    | "." { PERIOD }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }
@@ -70,6 +71,7 @@ rule nexttoken = parse
 
 let printtoken = function
     | EOF -> print_string "EOF"
+    | PERIOD -> print_string "."
     | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
     | COLON -> print_string ":"
