@@ -17,7 +17,8 @@
 %token TODO
 
 (* operators *)
-
+(* assignment operators *)
+%token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
 
 (* delimitors *)
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PERIOD
@@ -311,7 +312,18 @@ leftHandSide:
     | aa=arrayAccess { aa }
 
 assignmentOperator:
-    TODO { "" }
+    EQUAL { "=" }
+    | MULTEQUAL { "*=" }
+    | DIVEQUAL { "/=" }
+    | MODEQUAL { "%=" }
+    | PLUSEQUAL { "+=" }
+    | MINUSEQUAL { "-=" }
+    | LSHIFTEQUAL { "<<=" }
+    | RSHIFTEQUAL { ">>=" }
+    | USHIFTEQUAL { ">>>=" }
+    | BITANDEQUAL { "&=" }
+    | BITXOREQUAL { "^=" }
+    | BITOREQUAL { "|=" }
 
 conditionalExpression:
     TODO { "" }
