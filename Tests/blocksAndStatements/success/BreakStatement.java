@@ -1,5 +1,7 @@
 public class BreakStatement {
-	int i;
-	break;
-	break i;
+	void foo() {
+		int i;
+		break;
+		break i;
+	}
 }
