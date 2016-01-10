@@ -1,11 +1,11 @@
 (* operators *)
 
 (* delimitors *)
-%token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE
+%token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 
 (* keyword *)
 %token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED
+SYNCHRONIZED NEW
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH  CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -364,6 +364,27 @@ literal:
 	| sl=stringLiteral { sl }
 	| nl=nullLiteral { nl }
 
+(* 15.9 TODO *)
+
+(* 15.10 Array Creation Expressions *)
+arrayCreationExpression:
+	  NEW pt=primitiveType des=dimExprs { pt^des }
+	| NEW pt=primitiveType des=dimExprs ds=dims { pt^de^ds }
+	| NEW coit=classOrInterfaceType des=dimExprs { coit^des }
+	| NEW coit=classOrInterfaceType des=dimExprs ds=dims { coit^des^ds }
+	| NEW pt=primitiveType ds=dims ai=arrayInitializer { pt^ds^" "^ai }
+	| NEW coit=classOrInterfaceType ds=dims ai=arrayInitializer { coit^ds^" "^ai }
+
+dimExprs:
+	  de=dimExpr { de }
+	| des=dimExprs de=dimExpr { des^de }
+
+dimExpr:
+	LBRACK e=expression RBRACK { "["^e^"]" }
+
+dims:
+	  LBRACK RBRACK { "[]" }
+	| d=dims LBRACK RBRACK { d^"[]" }
 
 
 (*
@@ -379,9 +400,6 @@ classInstanceCreationExpression
 // TODO
 expression
 constantExpression
-
-// TODO
-arrayCreationExpression
 *)
 
 
