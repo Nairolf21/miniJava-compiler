@@ -24,7 +24,7 @@
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW
+SYNCHRONIZED NEW SUPER
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -265,8 +265,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-assignment:
-    TODO { "" }
 
 preIncrementExpression:
     TODO { "" }
@@ -295,8 +293,28 @@ ifThenElseStatement:
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
 
+(*15.27 Expression*)
 expression:
-    TODO { "" }
+    ae=assignmentExpression { ae }
+
+(*15.26 Assignment Operators *)
+assignmentExpression:
+    ce=conditionnalExpression { ce } 
+    | a=assignment { a }
+
+assignment:
+    lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
+
+leftHandSide:
+    en=expressionName { en }
+    | fa=fieldAccess { fa }
+    | aa=arrayAccess { aa }
+
+arrayAccess:
+    TODO {}
+
+expressionName:
+    TODO {}
 
 (* 14.10 The assert Statement *)
 assertStatement:

@@ -42,6 +42,7 @@ rule nexttoken = parse
     | "private" { PRIVATE } 
     | "protected" { PROTECTED } 
     | "public" { PUBLIC } 
+    | "super" { SUPER }
     | "static" { STATIC } 
     | "strictfp" { STRICTFP }
     | "synchronized" { SYNCHRONIZED }
@@ -94,6 +95,7 @@ let printtoken = function
     | PRIVATE -> print_string "private"
     | PROTECTED -> print_string "protected"
     | PUBLIC -> print_string "public"
+    | SUPER -> print_string "super"
     | STATIC -> print_string "static"
     | STRICTFP -> print_string "strictfp" 
     | SYNCHRONIZED -> print_string "synchronized"
