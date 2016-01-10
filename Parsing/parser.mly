@@ -1,3 +1,16 @@
+%{
+
+let string_of_option o =
+    match o with
+    | None -> ""
+    | Some(o) -> o
+
+
+
+
+%}
+
+
 (*This token is a placeholder to unimplemented symbol rules or unfinished production rules
  *  Use them as followed
  *      * You implemented a set of rules for a chapter, but need other rules not yet implemented.
@@ -523,12 +536,13 @@ arrayInitializer:
 
 (* 15.12 Method invocation *)
 methodInvocation:
-    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
+    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^(string_of_option al)^")"  }
+    (*
    | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
    | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
    | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
    | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
-
+*)
 argumentList:
    TODO { "" }
 
