@@ -120,8 +120,8 @@ blockStatements:
 
 blockStatement:
     lvds=localVariableDeclarationStatement { lvds }
-    (*| cd=classDeclaration { cd }*)
-    (*| s=statement { s }*)
+    | cd=classDeclaration { cd }
+    | s=statement { s }
 
 localVariableDeclarationStatement:
     lvd=localVariableDeclaration SEMICOLON { lvd^";" }
@@ -169,8 +169,7 @@ variableDeclaratorId:
 
 variableDeclarators:
     vd=variableDeclarator { vd }
-<<<<<<< HEAD
-    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
+    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
 
 
 (* 14.2 Blocks *)    
@@ -395,6 +394,7 @@ primaryNoNewArray:
 	
 literal:
 	  il=integerLiteral { il }
+
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
 	| cl=characterLiteral { cl }
@@ -445,7 +445,5 @@ constantExpression
 
 
 
-=======
-    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
->>>>>>> began to implement method blocks
 %%
+
