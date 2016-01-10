@@ -588,6 +588,12 @@ multiplicativeExpression:
 	| me=multiplicativeExpression TIME ue=unaryExpression { me^" * "^ue }
 	| me=multiplicativeExpression DIV ue=unaryExpression { me^" / "^ue }
 	| me=multiplicativeExpression MOD ue=unaryExpression { me^" % "^ue }
+	
+(* 15.18 Additive Operators *)
+additiveExpression:
+	  me=multiplicativeExpression
+	| ae=additiveExpression PLUS me=multiplicativeExpression { ae^" + "^me }
+	| ae=additiveExpression MINUS me=multiplicativeExpression { ae^" - "^me }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
