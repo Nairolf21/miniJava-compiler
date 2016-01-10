@@ -1,0 +1,7 @@
+class FieldAccess {
+
+
+    void foo() {
+    
+    }
+}

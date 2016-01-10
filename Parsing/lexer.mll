@@ -27,6 +27,18 @@ rule nexttoken = parse
     | "[" { LBRACK }
     | "]" { RBRACK }
     | "." { PERIOD }
+    | "=" { EQUAL }
+    | "*=" { MULTEQUAL }
+    | "/=" { DIVEQUAL }
+    | "%=" { MODEQUAL }
+    | "+=" { PLUSEQUAL }
+    | "-=" { MINUSEQUAL }
+    | "<<=" { LSHIFTEQUAL }
+    | ">>=" { RSHIFTEQUAL }
+    | ">>>=" { USHIFTEQUAL }
+    | "&=" { BITANDEQUAL }
+    | "^=" { BITXOREQUAL }
+    | "|=" { BITOREQUAL }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }
@@ -42,6 +54,7 @@ rule nexttoken = parse
     | "private" { PRIVATE } 
     | "protected" { PROTECTED } 
     | "public" { PUBLIC } 
+    | "super" { SUPER }
     | "static" { STATIC } 
     | "strictfp" { STRICTFP }
     | "synchronized" { SYNCHRONIZED }
@@ -69,6 +82,7 @@ rule nexttoken = parse
 
 {
 
+
 let printtoken = function
     | EOF -> print_string "EOF"
     | PERIOD -> print_string "."
@@ -79,6 +93,18 @@ let printtoken = function
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | EQUAL -> print_string "="
+    | MULTEQUAL -> print_string "*="
+    | DIVEQUAL -> print_string "/="
+    | MODEQUAL -> print_string "%="
+    | PLUSEQUAL -> print_string "+="
+    | MINUSEQUAL -> print_string "-="
+    | LSHIFTEQUAL -> print_string "<<="
+    | RSHIFTEQUAL -> print_string ">>="
+    | USHIFTEQUAL-> print_string ">>>="
+    | BITANDEQUAL -> print_string "&="
+    | BITXOREQUAL -> print_string "^="
+    | BITOREQUAL-> print_string "|="
     | BYTE -> print_string "byte"
     | SHORT -> print_string "short"
     | INT -> print_string "int"
@@ -94,6 +120,7 @@ let printtoken = function
     | PRIVATE -> print_string "private"
     | PROTECTED -> print_string "protected"
     | PUBLIC -> print_string "public"
+    | SUPER -> print_string "super"
     | STATIC -> print_string "static"
     | STRICTFP -> print_string "strictfp" 
     | SYNCHRONIZED -> print_string "synchronized"
