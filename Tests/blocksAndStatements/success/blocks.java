@@ -1,26 +1,22 @@
 public class Blocks {
-    // empty block
-    void foo1() {}
+    void emptyBlock() {}
     
-    // one block statement : block statement local variable
-    void foo2() {
-    	int i = 0;
+    void oneBlockStatementBlockStatementLocalVariable() {
+    	final int i;
     }
     
-    //one block statement : class declaration
-    void foo3() {
+    void oneBlockStatementClassDeclaration() {
     	class innerBlocks {}
 	}    
 
-    //one block statement : statement (statementWithoutTrailingSubstatement / empty block)
-    void foo4(){
+    void oneBlockStatementStatement(){
     	{}
     }
-    
-    //multiple statements
-    void foo5(){
-    	int i = 0;
+
+    void multipleStatements(){
+    	final int j;
     	class subBlocks {}
     	{}
     }
+    
 }
