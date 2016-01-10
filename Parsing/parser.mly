@@ -134,6 +134,9 @@ variableModifier:
     FINAL { "final" }
     | a=annotation { a }
 
+annotation:
+    TODO {}
+
 (* 4.2 Primitive Types *)
 numericType:
       it=integralType { it } 
@@ -205,7 +208,7 @@ statement:
 	| fs=forStatement { fs }
 	
 statementWithoutTrailingSubstatement:
-	  b=bloc { b }
+	  b=block { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
 	| ass=assertStatement { ass }
@@ -419,6 +422,22 @@ literal:
 	| sl=stringLiteral { sl }
 	| nl=nullLiteral { nl }
 
+
+integerLiteral:
+    TODO {}
+
+floatingPointLiteral:
+    TODO {}
+
+booleanLiteral:
+    TODO {}
+
+stringLiteral:
+    TODO {}
+
+characterLiteral:
+    TODO {}
+
 nullLiteral:
     TODO {}
 
@@ -444,7 +463,8 @@ dims:
 	  LBRACK RBRACK { "[]" }
 	| d=dims LBRACK RBRACK { d^"[]" }
 
-
+classOrInterfaceType:
+    TODO {}
 (*
 // TODO
 assignment
