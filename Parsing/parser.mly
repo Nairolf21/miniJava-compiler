@@ -124,8 +124,26 @@ methodBody:
 	SEMICOLON { ; }
 	| b=block { b }
 
+formalParameterList:
+	lfp = lastFormalParameter {lfp}
+(*	| fp=formalParameters lfp = lastFormalParameter {fp^" "^lfp} *)
+
+formalParameters:
+	fp=formalParameter {fp}
+
 formalParameter:
-    TODO { "" }
+	vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
+
+variableModifiers:
+	vm=variableModifier {vm}
+	| vms=variableModifiers vm=variableModifier {vms^" "^vm}
+
+variableModifier:
+	| FINAL { "final" }
+	| a=annotation {a}
+
+lastFormalParameter:
+	fp = formalParameter {fp}
 
 (* To sort *)
 
