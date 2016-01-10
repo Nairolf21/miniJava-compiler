@@ -102,6 +102,7 @@ methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
     | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
 
+
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
@@ -121,6 +122,7 @@ methodModifier:
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
+    | an=annotation {an}
 
 methodBody:
 	SEMICOLON { ";" }
