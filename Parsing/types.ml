@@ -1,11 +1,11 @@
 type classDeclaration = 
     | ClassDeclaration of classDeclaration
-    | EnumDeclaration of enumDeclaration
 
 type normalClassDeclaration = 
-    NormalClassDeclaration of ( classmodifiers * jclass * identifier * classbody )
+    NormalClassDeclaration of classModifiers * jclass * identifier * classbody
 
-type modifiers = 
+type classModifiers = 
+    | EMPTY
     | PUBLIC
     | PROTECTED
     | PRIVATE
@@ -18,7 +18,4 @@ type jclass = CLASS
 
 type identifier = IDENTIFIER of string
 
-(* 
- * type classBody = ... ???
- *
- * ) 
+type classbody = CLASSBODY of string

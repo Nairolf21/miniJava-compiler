@@ -1,3 +1,7 @@
+%{ 
+    open Types
+    %}
+
 (* operators *)
 
 (* delimitors *)
@@ -37,6 +41,9 @@ normalClassDeclaration:
       CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
     | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
 
+identifier:
+    id=IDENT { id }
+
 classModifiers:
       cm=classModifier { cm }
     | cms=classModifiers cm=classModifier { cms^" "^cm }
@@ -51,6 +58,10 @@ classModifier:
     | STRICTFP { "strictfp" }
 
 classBody:
+    | LBRACE RBRACE { CLASSBODY }
+
+(*
+ classBody:
       LBRACE cbds=classBodyDeclarations RBRACE { " {"^cbds^" }" }
     | LBRACE RBRACE { " {} "}
 
@@ -130,4 +141,5 @@ variableDeclaratorId:
 variableDeclaratorList:
     vd=variableDeclarator { vd }
     | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
+*)
 %%
