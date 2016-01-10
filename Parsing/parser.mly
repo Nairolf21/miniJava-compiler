@@ -212,6 +212,7 @@ methodBody:
 	SEMICOLON { ";" }
 	| b=block { b }
 
+(* 8.4.1 Formal Parameters *)
 formalParameterList:
 	lfp = lastFormalParameter {lfp}
 	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
@@ -241,7 +242,33 @@ instanceInitializer:
 (* 8.7 Static Initializers *)
 staticInitializer:
 	STATIC b=block {"static "^b}
-	
+
+(* 8.8 Constructor Declarations *)
+constructorDeclaration:
+	|cd=constructorDeclarator cb=constructorBody {cd^" "cb}
+	|cm=constructorModifiers cd=constructorDeclarator cb=constructorBody {cm^" "^cd^" "cb}
+
+constructorDeclarator:
+	|stn=simpleTypeName LPAREN RPAREN {stn^" ()"}
+	|stn=simpleTypeName LPAREN fpl=formalParameterList RPAREN {stn^" ("^fpl^")"}
+
+(* todo : simpleTypeName has to be the name of the class that contains the identifier *)
+simpleTypeName:
+	i=identifier {i}
+
+constructorBody:
+	LBRACE RBRACE { " {} "}
+	| LBRACE bs=blockStatements RBRACE { " {\n"^bs^"\n}" }
+
+constructorModifiers:
+	cm=constructorModifier {cm}
+	| cms=constructorModifiers cm=constructorModifier {cms^" "^cm}
+
+constructorModifier:
+	| PUBLIC {"public"}
+	| PROTECTED {"protected"}
+	| PRIVATE {"private"}
+
 (* 14.2 Blocks *)    
 block:
 	  LBRACE bss=blockStatements RBRACE { " {\n"^bss^"\n}" }
