@@ -27,7 +27,7 @@
 SYNCHRONIZED NEW
 
 (* statements *)
-%token IF THEN ELSE ASSERT SWITCH  CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
+%token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
 TRY CATCH FINALLY
 
 (* special *)
@@ -208,8 +208,7 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-    TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-    | vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
+	vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
 
 (* 14.5 Statements *)
 statement:

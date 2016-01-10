@@ -19,6 +19,7 @@ rule nexttoken = parse
     | eof { EOF }
     | "," { COMMA }
     | ";" { SEMICOLON }
+    | ":" { COLON }
     | "(" { LPAREN }
     | ")" { RPAREN }
     | "{" { LBRACE }
@@ -42,7 +43,26 @@ rule nexttoken = parse
     | "protected" { PROTECTED } 
     | "public" { PUBLIC } 
     | "static" { STATIC } 
-    | "strictfp" { STRICTFP } 
+    | "strictfp" { STRICTFP }
+    | "synchronized" { SYNCHRONIZED }
+    | "new" { NEW }
+	| "if" { IF }
+	| "then" { THEN }
+	| "else" { ELSE }
+	| "assert" { ASSERT }
+	| "switch" { SWITCH }
+	| "case" { CASE }
+	| "default" { DEFAULT }
+	| "while" { WHILE }
+	| "do" { DO }
+	| "for" { FOR }
+	| "break" { BREAK }
+	| "continue" { CONTINUE }
+	| "return" { RETURN }
+	| "throw" { THROW  }
+	| "try" { TRY }
+	| "catch" { CATCH }
+	| "finally" { FINALLY }
     | real as n { NUMBER (float_of_string n) }
     | ident as i { IDENT i }
     | _ { raise_error LexingError lexbuf }
@@ -54,6 +74,7 @@ let printtoken = function
     | PERIOD -> print_string "."
     | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
+    | COLON -> print_string ":"
     | LPAREN -> print_string "("
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
@@ -75,6 +96,25 @@ let printtoken = function
     | PUBLIC -> print_string "public"
     | STATIC -> print_string "static"
     | STRICTFP -> print_string "strictfp" 
+    | SYNCHRONIZED -> print_string "synchronized"
+    | NEW -> print_string "new"
+	| IF -> print_string "if"
+	| THEN -> print_string "then"
+	| ELSE -> print_string "else"
+	| ASSERT -> print_string "assert"
+	| SWITCH -> print_string "switch"
+	| CASE -> print_string "case"
+	| DEFAULT -> print_string "default"
+	| WHILE -> print_string "while"
+	| DO -> print_string "do"
+	| FOR -> print_string "for"
+	| BREAK -> print_string "break"
+	| CONTINUE -> print_string "continue"
+	| RETURN -> print_string "return"
+	| THROW -> print_string "throw" 
+	| TRY -> print_string "try"
+	| CATCH -> print_string "catch"
+	| FINALLY -> print_string "finally"
     | NUMBER n -> print_string "NUMBER("; print_float n; print_string ")" 
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
 
