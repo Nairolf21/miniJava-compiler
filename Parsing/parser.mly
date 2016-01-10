@@ -575,6 +575,12 @@ postIncrementExpression:
 	
 postDecrementExpression:
 	fpe=postfixExpression DECR { pfe^" --" }
+	
+(* 15.16 Cast Expressions *)
+castExpression:
+	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
+	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
+	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
