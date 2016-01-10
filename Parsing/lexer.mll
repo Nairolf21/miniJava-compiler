@@ -71,6 +71,7 @@ rule nexttoken = parse
     | "strictfp" { STRICTFP }
     | "synchronized" { SYNCHRONIZED }
     | "new" { NEW }
+    | "this" { THIS }
 	| "if" { IF }
 	| "then" { THEN }
 	| "else" { ELSE }
@@ -149,6 +150,7 @@ let printtoken = function
     | STRICTFP -> print_string "strictfp" 
     | SYNCHRONIZED -> print_string "synchronized"
     | NEW -> print_string "new"
+    | THIS -> print_string "this"
 	| IF -> print_string "if"
 	| THEN -> print_string "then"
 	| ELSE -> print_string "else"
