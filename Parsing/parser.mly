@@ -182,7 +182,6 @@ methodModifier:
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
-    | an=annotation {an}
 
 methodBody:
 	SEMICOLON { ";" }
@@ -205,7 +204,6 @@ variableModifiers:
 
 variableModifier:
 	| FINAL { "final" }
-	| a=annotation { a }
 
 lastFormalParameter:
 	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
@@ -563,11 +561,7 @@ arrayAccess:
 expression:
     ae=assignmentExpression { ae }
 
-(* To sort *)
-annotation:
-    TODO { "" }
 
- 
 (*
 // TODO
 assignment
