@@ -32,7 +32,7 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS INCR DECR
+%token PLUS MINUS INCR DECR TILDE EXCL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -570,6 +570,16 @@ postIncrementExpression:
 	
 postDecrementExpression:
 	fpe=postfixExpression DECR { pfe^" --" }
+
+(* 15.15 Unary operators *)
+
+unaryExpression:
+    pie=preIncrementExpression { pie }
+    pde=preDecrementExpression { pde }
+    PLUS ue=unaryExpression { "+"^ue }
+    MINUS ue=unaryExpression { "-"^ue }
+    uenpm=unaryExpressionNotPlusMinus { uenpm }
+
 
 (* 15.16 Cast Expressions *)
 castExpression:
