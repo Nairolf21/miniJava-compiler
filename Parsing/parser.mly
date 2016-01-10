@@ -4,7 +4,7 @@
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
 
 (* keyword *)
-%token ABSTRACT CLASS INT FINAL FLOAT NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
 SYNCHRONIZED NEW
 
 (* statements *)
@@ -72,14 +72,14 @@ classMemberDeclaration:
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
-    ut=unannType vdl=variableDeclaratorList SEMICOLON { ut^" "^vdl^";"}
+    ut=unannType vdl=variableDeclarators SEMICOLON { ut^" "^vdl^";"}
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
 methodHeader:
-    r=result md=methodDeclarator { r^" "^md } 
+    r=resultType md=methodDeclarator { r^" "^md } 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
@@ -100,24 +100,59 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 (* To sort *)
-floatingPointType:
-    FLOAT { "float" } 
 
 identifier:
     id=IDENT { id }
 
-integralType:
-    INT { "int" } 
-    
+(* TODO: add possibility for method content *)    
 methodBody:
-    SEMICOLON { ";" }
+    b=block { b }
+    | SEMICOLON { ";" }
 
+
+block:
+    LBRACE RBRACE { "{ }" }
+    | LBRACE bss=blockStatements RBRACE { "{ "^bss^" }" }
+
+blockStatements:
+    bs=blockStatement { bs }
+    | bss=blockStatements bs=blockStatement { bss^" "^bs }
+
+blockStatement:
+    lvds=localVariableDeclarationStatement { lvds }
+    | cd=classDeclaration { cd }
+    | s=statement { s }
+
+localVariableDeclarationStatement:
+    lvd=localVariableDeclaration SEMICOLON { lvd^";" }
+
+localVariableDeclaration:
+    vm=variableModifiers t=unannType vds=variableDeclarators { vm^" "^t^" "^vds }
+
+variableModifiers:
+    vm=variableModifier { vm }
+    | vms=variableModifiers vm=variableModifier { vms^" "^vm }
+
+variableModifier:
+    FINAL { "final" }
+
+(* 4.2 Primitive Types *)
 numericType:
       it=integralType { it } 
     | fpt=floatingPointType { fpt } 
 
-result:
+integralType:
+    | BYTE { "byte" } 
+    | SHORT { "short" } 
+    | INT { "int" } 
+    | LONG { "long" } 
+
+floatingPointType:
+    FLOAT { "float" } 
+    | DOUBLE { "double" }
+resultType:
     ut=unannType { ut }
+    | VOID { "void" }
 
 unannPrimitiveType:
     nt=numericType { nt }
@@ -130,10 +165,11 @@ variableDeclarator:
 
 variableDeclaratorId:
     id=identifier { id }
+    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
-variableDeclaratorList:
+variableDeclarators:
     vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclaratorList { vd^", "^vdl }
+    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
 
 
 (* 14.2 Blocks *)    
@@ -358,6 +394,7 @@ primaryNoNewArray:
 	
 literal:
 	  il=integerLiteral { il }
+
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
 	| cl=characterLiteral { cl }
@@ -409,3 +446,4 @@ constantExpression
 
 
 %%
+
