@@ -121,7 +121,7 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 methodBody:
-	SEMICOLON { ; }
+	SEMICOLON { ";" }
 	| b=block { b }
 
 formalParameterList:
@@ -140,7 +140,7 @@ variableModifiers:
 
 variableModifier:
 	| FINAL { "final" }
-	| a=annotation {a}
+	| a=annotation { a }
 
 lastFormalParameter:
 	fp = formalParameter {fp}
@@ -149,10 +149,6 @@ lastFormalParameter:
 
 identifier:
     id=IDENT { id }
-
-variableModifier:
-    FINAL { "final" }
-    | a=annotation { a }
 
 annotation:
     TODO { "" }
@@ -214,9 +210,6 @@ localVariableDeclarationStatement:
 localVariableDeclaration:
     TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
     | vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
-
-variableModifiers:
-    TODO { "" }
 
 (* 14.5 Statements *)
 statement:
