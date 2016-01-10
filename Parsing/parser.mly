@@ -534,6 +534,13 @@ argumentList:
 
 nonWildTypeArguments:
    TODO { "" }
+   
+(* 15.13 Array Access Expressions *)
+ arrayAccess:
+	  en=expressionName LBRACK e=expression RBRACK { en^" ["^e^"]" }
+	| pnna=primaryNoNewArray LBRACK e=expression RBRACK { pnna^" ["^e^"]" }
+	
+
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
