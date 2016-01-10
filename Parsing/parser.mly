@@ -319,12 +319,6 @@ preIncrementExpression:
 preDecrementExpression:
     TODO { "" }
 
-postDecrementExpression:
-    TODO { "" }
-
-postIncrementExpression:
-    TODO { "" }
-
 classInstanceCreationExpression:
     TODO { "" }
 
@@ -591,7 +585,7 @@ multiplicativeExpression:
 	
 (* 15.18 Additive Operators *)
 additiveExpression:
-	  me=multiplicativeExpression
+	  me=multiplicativeExpression { me }
 	| ae=additiveExpression PLUS me=multiplicativeExpression { ae^" + "^me }
 	| ae=additiveExpression MINUS me=multiplicativeExpression { ae^" - "^me }
 
@@ -623,9 +617,6 @@ assignmentOperator:
     | BITOREQUAL { "|=" }
 
 conditionalExpression:
-    TODO { "" }
-
-arrayAccess:
     TODO { "" }
 
 (*15.27 Expression*)
