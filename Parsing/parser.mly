@@ -119,6 +119,8 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 
+formalParameter:
+    TODO {}
 
 
 (* To sort *)
@@ -187,8 +189,11 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-	(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-	vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+    TODO {}(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
+    | vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+
+variableModifiers:
+    TODO {}
 
 (* 14.5 Statements *)
 statement:
@@ -245,6 +250,23 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
+assignment:
+    TODO {}
+
+preIncrementExpression:
+    TODO {}
+
+preDecrementExpression:
+    TODO {}
+
+postDecrementExpression:
+    TODO {}
+
+postIncrementExpression:
+    TODO {}
+
+classInstanceCreationExpression:
+    TODO {}
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -287,7 +309,7 @@ switchLabel:
 	| DEFAULT COLON { "default :" }
 	
 enumConstantName:
-	id=Identifier { id }
+	id=identifier { id }
 	
 (* 14.12 The while Statement *)
 whileStatement:
@@ -302,8 +324,8 @@ doStatement:
 	
 (* 14.14 The for Statement *)
 forStatement:
-	  bfs=BasicForStatement { bfs }
-	| efs=EnhancedForStatement { efs }
+	  bfs=basicForStatement { bfs }
+	| efs=enhancedForStatement { efs }
 	
 basicForStatement:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN s=statement { "for (;;)\n"^s }
@@ -385,8 +407,8 @@ primary:
 	| ace=arrayCreationExpression { ace }
 
 primaryNoNewArray:
-	  l=literal { l }
-	(* TODO ! *)
+    l=literal { l }
+    | TODO {}
 	
 literal:
 	  il=integerLiteral { il }
@@ -396,6 +418,9 @@ literal:
 	| cl=characterLiteral { cl }
 	| sl=stringLiteral { sl }
 	| nl=nullLiteral { nl }
+
+nullLiteral:
+    TODO {}
 
 (* 15.9 TODO *)
 
