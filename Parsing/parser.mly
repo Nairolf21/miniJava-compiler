@@ -485,6 +485,12 @@ dims:
 
 classOrInterfaceType:
     TODO { "" }
+(* 15.11 Field Access Expressions *)
+fieldAccess:
+    p=primary PERIOD id=identifier { p^"."^id }
+    | SUPER PERIOD id=identifier { "super."^id }
+    | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
+
 
 arrayInitializer:
     TODO { "" }
