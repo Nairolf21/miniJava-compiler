@@ -243,7 +243,6 @@ statementNoShortIf:
 (* 14.6 Empty Statement *)
 emptyStatement:
 	SEMICOLON { ";" }
-    | TODO { "" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
