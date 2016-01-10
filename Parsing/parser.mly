@@ -99,9 +99,11 @@ methodDeclaration:
 
 methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
+    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
+    
 
 methodModifiers:
       mm=methodModifier { mm }
