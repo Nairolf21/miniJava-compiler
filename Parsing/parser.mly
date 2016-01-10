@@ -4,7 +4,7 @@
  *          add the missing symbol with the token TODO as only production rule
  *              ex. 
  *                  formalParameter:
-     *                  TODO {}
+     *                  TODO { "" }
      *
  *      * You only want to partially implement production rules for a symbol: add a production rule
  *          only containing TODO, so we now it's not finished yet
@@ -121,6 +121,11 @@ methodModifier:
     | STRICTFP { "strictfp" }
 
 
+methodBody:
+    TODO { "" }
+
+formalParameter:
+    TODO { "" }
 
 
 (* To sort *)
@@ -133,6 +138,9 @@ identifier:
 variableModifier:
     FINAL { "final" }
     | a=annotation { a }
+
+annotation:
+    TODO { "" }
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -152,11 +160,11 @@ resultType:
     ut=unannType { ut }
     | VOID { "void" }
 
-unannPrimitiveType:
+primitiveType:
     nt=numericType { nt }
 
 unannType:
-    upt=unannPrimitiveType { upt }
+    upt=primitiveType { upt }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
@@ -189,8 +197,11 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-	(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
-	vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+    TODO { "" }(* variableModifiers & variableDeclarators in 8.3 & 8.4 *)
+    | vm=variableModifiers ut=unannType vds=variableDeclarators { vm^" "^ut^" "^vds }
+
+variableModifiers:
+    TODO { "" }
 
 (* 14.5 Statements *)
 statement:
@@ -202,7 +213,7 @@ statement:
 	| fs=forStatement { fs }
 	
 statementWithoutTrailingSubstatement:
-	  b=bloc { b }
+	  b=block { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
 	| ass=assertStatement { ass }
@@ -219,13 +230,13 @@ statementNoShortIf:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
-	| wsnsi=WhileStatementNoShortIf { wsnsi }
-	| fsnsi=ForStatementNoShortIf { fsnsi }
+	| wsnsi=whileStatementNoShortIf { wsnsi }
+	| fsnsi=forStatementNoShortIf { fsnsi }
 
 (* 14.6 Empty Statement *)
 emptyStatement:
-	(* ?? *)
 	SEMICOLON { ";" }
+    | TODO { "" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
@@ -247,6 +258,26 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
+assignment:
+    TODO { "" }
+
+preIncrementExpression:
+    TODO { "" }
+
+preDecrementExpression:
+    TODO { "" }
+
+postDecrementExpression:
+    TODO { "" }
+
+postIncrementExpression:
+    TODO { "" }
+
+classInstanceCreationExpression:
+    TODO { "" }
+
+methodInvocation:
+    TODO { "" }
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -256,6 +287,9 @@ ifThenElseStatement:
 
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
+
+expression:
+    TODO { "" }
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -289,8 +323,10 @@ switchLabel:
 	| DEFAULT COLON { "default :" }
 	
 enumConstantName:
-	id=Identifier { id }
+	id=identifier { id }
 	
+constantExpression:
+    TODO { "" }
 (* 14.12 The while Statement *)
 whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
@@ -304,8 +340,8 @@ doStatement:
 	
 (* 14.14 The for Statement *)
 forStatement:
-	  bfs=BasicForStatement { bfs }
-	| efs=EnhancedForStatement { efs }
+	  bfs=basicForStatement { bfs }
+	| efs=enhancedForStatement { efs }
 	
 basicForStatement:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN s=statement { "for (;;)\n"^s }
@@ -387,8 +423,8 @@ primary:
 	| ace=arrayCreationExpression { ace }
 
 primaryNoNewArray:
-	  l=literal { l }
-	(* TODO ! *)
+    l=literal { l }
+    | TODO { "" }
 	
 literal:
 	  il=integerLiteral { il }
@@ -398,6 +434,25 @@ literal:
 	| cl=characterLiteral { cl }
 	| sl=stringLiteral { sl }
 	| nl=nullLiteral { nl }
+
+
+integerLiteral:
+    TODO { "" }
+
+floatingPointLiteral:
+    TODO { "" }
+
+booleanLiteral:
+    TODO { "" }
+
+stringLiteral:
+    TODO { "" }
+
+characterLiteral:
+    TODO { "" }
+
+nullLiteral:
+    TODO { "" }
 
 (* 15.9 TODO *)
 
@@ -421,7 +476,11 @@ dims:
 	  LBRACK RBRACK { "[]" }
 	| d=dims LBRACK RBRACK { d^"[]" }
 
+classOrInterfaceType:
+    TODO { "" }
 
+arrayInitializer:
+    TODO { "" }
 (*
 // TODO
 assignment
