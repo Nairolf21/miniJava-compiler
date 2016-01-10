@@ -1,4 +1,23 @@
+(*This token is a placeholder to unimplemented symbol rules or unfinished production rules
+ *  Use them as followed
+ *      * You implemented a set of rules for a chapter, but need other rules not yet implemented.
+ *          add the missing symbol with the token TODO as only production rule
+ *              ex. 
+ *                  formalParameter:
+     *                  TODO {}
+     *
+ *      * You only want to partially implement production rules for a symbol: add a production rule
+ *          only containing TODO, so we now it's not finished yet
+ *                  formalParameters:
+     *                  fp=formalParameter { fp }
+     *                  | TODO
+ *
+ *
+ * *)
+%token TODO
+
 (* operators *)
+
 
 (* delimitors *)
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK
@@ -98,6 +117,9 @@ methodModifier:
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
+
+
+
 
 (* To sort *)
 
