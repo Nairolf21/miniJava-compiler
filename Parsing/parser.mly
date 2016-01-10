@@ -347,6 +347,22 @@ catchClause:
 finally:
 	FINALLY b=block { "finally\n"^b }
 
+(* 15.8 Primary Expressions *)
+primary:
+	  pnna=primaryNoNewArray { pnna }
+	| ace=arrayCreationExpression { ace }
+
+primaryNoNewArray:
+	  l=literal { l }
+	(* TODO ! *)
+	
+literal:
+	  il=integerLiteral { il }
+	| fpl=floatingPointLiteral { fpl }
+	| bl=booleanLiteral { bl }
+	| cl=characterLiteral { cl }
+	| sl=stringLiteral { sl }
+	| nl=nullLiteral { nl }
 
 
 
@@ -363,6 +379,9 @@ classInstanceCreationExpression
 // TODO
 expression
 constantExpression
+
+// TODO
+arrayCreationExpression
 *)
 
 
