@@ -40,6 +40,55 @@ TRY CATCH FINALLY
 
 %%
 
+(* 3.8 identifiers *)
+identifier:
+    id=IDENT { id }
+
+(* 4.2 Primitive Types *)
+numericType:
+      it=integralType { it } 
+    | fpt=floatingPointType { fpt } 
+
+integralType:
+    | BYTE { "byte" } 
+    | SHORT { "short" } 
+    | INT { "int" } 
+    | LONG { "long" } 
+
+floatingPointType:
+    FLOAT { "float" } 
+    | DOUBLE { "double" }
+resultType:
+    jt=jType { jt }
+    | VOID { "void" }
+
+primitiveType:
+    nt=numericType { nt }
+
+jType:
+    upt= primitiveType { upt }
+
+(* 6.5 Meaning of a name *)
+packageName:
+    TODO { "" }
+
+typeName:
+    TODO { "" }
+
+methodName:
+    TODO { "" }
+
+packageOrTypeName:
+    TODO { "" }
+
+expressionName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+
+ambiguousName:
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+ 
 (* 7.3 Compilation Units *)
 compilationUnit: 
       tps=typeDeclarations EOF { tps } 
@@ -93,6 +142,17 @@ classMemberDeclaration:
 (* 8.3 Field Declarations *)
 fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
+
+variableDeclarators:
+    vd=variableDeclarator { vd }
+    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
+
+variableDeclarator:
+    vdi=variableDeclaratorId { vdi }
+
+variableDeclaratorId:
+    id=identifier { id }
+    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -150,50 +210,6 @@ variableModifier:
 lastFormalParameter:
 	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
 	|fp = formalParameter {fp}
-
-(* To sort *)
-
-identifier:
-    id=IDENT { id }
-
-annotation:
-    TODO { "" }
-
-(* 4.2 Primitive Types *)
-numericType:
-      it=integralType { it } 
-    | fpt=floatingPointType { fpt } 
-
-integralType:
-    | BYTE { "byte" } 
-    | SHORT { "short" } 
-    | INT { "int" } 
-    | LONG { "long" } 
-
-floatingPointType:
-    FLOAT { "float" } 
-    | DOUBLE { "double" }
-resultType:
-    jt=jType { jt }
-    | VOID { "void" }
-
-primitiveType:
-    nt=numericType { nt }
-
-jType:
-    upt= primitiveType { upt }
-
-variableDeclarator:
-    vdi=variableDeclaratorId { vdi }
-
-variableDeclaratorId:
-    id=identifier { id }
-    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
-
-variableDeclarators:
-    vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
-
 
 (* 14.2 Blocks *)    
 block:
@@ -270,7 +286,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-
 preIncrementExpression:
     TODO { "" }
 
@@ -296,79 +311,6 @@ ifThenElseStatement:
 ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
 
-
-(* 15.12 Method invocation *)
-methodInvocation:
-    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
-   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
-
-argumentList:
-   TODO { "" }
-
-nonWildTypeArguments:
-   TODO { "" }
-
-(*15.27 Expression*)
-expression:
-    ae=assignmentExpression { ae }
-
-(*15.26 Assignment Operators *)
-assignmentExpression:
-    ce=conditionalExpression { ce } 
-    | a=assignment { a }
-
-assignment:
-    lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
-
-leftHandSide:
-    en=expressionName { en }
-    | fa=fieldAccess { fa }
-    | aa=arrayAccess { aa }
-
-assignmentOperator:
-    EQUAL { "=" }
-    | MULTEQUAL { "*=" }
-    | DIVEQUAL { "/=" }
-    | MODEQUAL { "%=" }
-    | PLUSEQUAL { "+=" }
-    | MINUSEQUAL { "-=" }
-    | LSHIFTEQUAL { "<<=" }
-    | RSHIFTEQUAL { ">>=" }
-    | USHIFTEQUAL { ">>>=" }
-    | BITANDEQUAL { "&=" }
-    | BITXOREQUAL { "^=" }
-    | BITOREQUAL { "|=" }
-
-conditionalExpression:
-    TODO { "" }
-
-arrayAccess:
-    TODO { "" }
-
-(* 6.5 Meaning of a name *)
-packageName:
-    TODO { "" }
-
-typeName:
-    TODO { "" }
-
-methodName:
-    TODO { "" }
-
-packageOrTypeName:
-    TODO { "" }
-
-expressionName:
-    id=identifier { id }
-    | an=ambiguousName PERIOD id=identifier { an^"."^id }
-
-ambiguousName:
-    id=identifier { id }
-    | an=ambiguousName PERIOD id=identifier { an^"."^id }
-    
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -406,6 +348,7 @@ enumConstantName:
 	
 constantExpression:
     TODO { "" }
+
 (* 14.12 The while Statement *)
 whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
@@ -568,6 +511,63 @@ className:
 
 arrayInitializer:
     TODO { "" }
+
+(* 15.12 Method invocation *)
+methodInvocation:
+    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
+   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
+   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
+
+argumentList:
+   TODO { "" }
+
+nonWildTypeArguments:
+   TODO { "" }
+
+(*15.26 Assignment Operators *)
+assignmentExpression:
+    ce=conditionalExpression { ce } 
+    | a=assignment { a }
+
+assignment:
+    lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
+
+leftHandSide:
+    en=expressionName { en }
+    | fa=fieldAccess { fa }
+    | aa=arrayAccess { aa }
+
+assignmentOperator:
+    EQUAL { "=" }
+    | MULTEQUAL { "*=" }
+    | DIVEQUAL { "/=" }
+    | MODEQUAL { "%=" }
+    | PLUSEQUAL { "+=" }
+    | MINUSEQUAL { "-=" }
+    | LSHIFTEQUAL { "<<=" }
+    | RSHIFTEQUAL { ">>=" }
+    | USHIFTEQUAL { ">>>=" }
+    | BITANDEQUAL { "&=" }
+    | BITXOREQUAL { "^=" }
+    | BITOREQUAL { "|=" }
+
+conditionalExpression:
+    TODO { "" }
+
+arrayAccess:
+    TODO { "" }
+
+(*15.27 Expression*)
+expression:
+    ae=assignmentExpression { ae }
+
+(* To sort *)
+annotation:
+    TODO { "" }
+
+ 
 (*
 // TODO
 assignment
@@ -582,12 +582,6 @@ classInstanceCreationExpression
 expression
 constantExpression
 *)
-
-
-
-
-
-
 
 %%
 
