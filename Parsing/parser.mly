@@ -105,18 +105,10 @@ identifier:
     id=IDENT { id }
 
 
-localVariableDeclarationStatement:
-    lvd=localVariableDeclaration SEMICOLON { lvd^";" }
-
-localVariableDeclaration:
-    vm=variableModifiers t=unannType vds=variableDeclarators { vm^" "^t^" "^vds }
-
-variableModifiers:
-    vm=variableModifier { vm }
-    | vms=variableModifiers vm=variableModifier { vms^" "^vm }
 
 variableModifier:
     FINAL { "final" }
+    | a=annotation { a }
 
 (* 4.2 Primitive Types *)
 numericType:
