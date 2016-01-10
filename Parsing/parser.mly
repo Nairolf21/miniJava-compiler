@@ -299,7 +299,7 @@ expression:
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
-    ce=conditionnalExpression { ce } 
+    ce=conditionalExpression { ce } 
     | a=assignment { a }
 
 assignment:
@@ -310,11 +310,17 @@ leftHandSide:
     | fa=fieldAccess { fa }
     | aa=arrayAccess { aa }
 
+assignmentOperator:
+    TODO { "" }
+
+conditionalExpression:
+    TODO { "" }
+
 arrayAccess:
-    TODO {}
+    TODO { "" }
 
 expressionName:
-    TODO {}
+    TODO { "" }
 
 (* 14.10 The assert Statement *)
 assertStatement:
@@ -484,7 +490,7 @@ nullLiteral:
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
 	  NEW pt=primitiveType des=dimExprs { pt^des }
-	| NEW pt=primitiveType des=dimExprs ds=dims { pt^de^ds }
+	| NEW pt=primitiveType des=dimExprs ds=dims { pt^des^ds }
 	| NEW coit=classOrInterfaceType des=dimExprs { coit^des }
 	| NEW coit=classOrInterfaceType des=dimExprs ds=dims { coit^des^ds }
 	| NEW pt=primitiveType ds=dims ai=arrayInitializer { pt^ds^" "^ai }
@@ -509,6 +515,8 @@ fieldAccess:
     | SUPER PERIOD id=identifier { "super."^id }
     | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
 
+className:
+    TODO { "" }
 
 arrayInitializer:
     TODO { "" }
