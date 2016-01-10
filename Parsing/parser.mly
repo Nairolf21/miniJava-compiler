@@ -581,6 +581,13 @@ castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
+	
+(* 15.17 Multiplicative Operators *)
+multiplicativeExpression:
+	  ue=unaryExpression { ue }
+	| me=multiplicativeExpression TIME ue=unaryExpression { me^" * "^ue }
+	| me=multiplicativeExpression DIV ue=unaryExpression { me^" / "^ue }
+	| me=multiplicativeExpression MOD ue=unaryExpression { me^" % "^ue }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
