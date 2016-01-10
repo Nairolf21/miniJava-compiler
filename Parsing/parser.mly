@@ -313,15 +313,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-<<<<<<< HEAD
-preIncrementExpression:
-    TODO { "" }
-
-preDecrementExpression:
-    TODO { "" }
-=======
->>>>>>> Parser: implemented 15.15 productions
-
 
 classInstanceCreationExpression:
     TODO { "" }
@@ -594,8 +585,9 @@ unaryExpressionNotPlusMinus:
     | TILDE ue=unaryExpression { "~"^ue }
     | EXCL ue=unaryExpression { "!"^ue }
     | ce=castExpression { ce }
+    | error { print_error "error: unaryExpressionNotPlusMinus" }
 
-(* 15.16 Cast Expressions *)
+(* 15.16 Cast expression *)
 castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }

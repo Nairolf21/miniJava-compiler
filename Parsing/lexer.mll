@@ -29,6 +29,8 @@ rule nexttoken = parse
     | "." { PERIOD }
     | "++" { INCR }
     | "--" { DECR }
+    | "~" { TILDE }
+    | "!" { EXCL }
     | "+" { PLUS }
     | "-" { MINUS }
     | "=" { EQUAL }
@@ -102,6 +104,8 @@ let printtoken = function
     | INCR -> print_string "++"
     | DECR -> print_string "--"
     | EQUAL -> print_string "="
+    | EXCL -> print_string "!"
+    | TILDE -> print_string "~"
     | MULTEQUAL -> print_string "*="
     | DIVEQUAL -> print_string "/="
     | MODEQUAL -> print_string "%="
