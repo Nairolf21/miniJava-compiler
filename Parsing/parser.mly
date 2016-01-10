@@ -32,6 +32,8 @@ let print_error str =
 %token TODO
 
 (* operators *)
+%token PLUS MINUS INCR DECR
+
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
 
@@ -555,6 +557,24 @@ argumentList:
 
 nonWildTypeArguments:
    TODO { "" }
+   
+(* 15.13 Array Access Expressions *)
+ arrayAccess:
+	  en=expressionName LBRACK e=expression RBRACK { en^" ["^e^"]" }
+	| pnna=primaryNoNewArray LBRACK e=expression RBRACK { pnna^" ["^e^"]" }
+	
+(* 15.14 Postfix Expressions *)
+postfixExpression:
+	  p=primary { p }
+	| en=expressionName { en }
+	| pie=postIncrementExpression { pie }
+	| pde=postDecrementExpression { pde }
+	
+postIncrementExpression:
+	pfe=postfixExpression INCR { pfe^" ++" }
+	
+postDecrementExpression:
+	fpe=postfixExpression DECR { pfe^" --" }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:

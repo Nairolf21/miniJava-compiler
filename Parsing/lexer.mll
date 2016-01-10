@@ -27,6 +27,10 @@ rule nexttoken = parse
     | "[" { LBRACK }
     | "]" { RBRACK }
     | "." { PERIOD }
+    | "++" { INCR }
+    | "--" { DECR }
+    | "+" { PLUS }
+    | "-" { MINUS }
     | "=" { EQUAL }
     | "*=" { MULTEQUAL }
     | "/=" { DIVEQUAL }
@@ -93,6 +97,10 @@ let printtoken = function
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | PLUS -> print_string "+"
+    | MINUS -> print_string "-"
+    | INCR -> print_string "++"
+    | DECR -> print_string "--"
     | EQUAL -> print_string "="
     | MULTEQUAL -> print_string "*="
     | DIVEQUAL -> print_string "/="
