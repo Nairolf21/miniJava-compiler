@@ -572,6 +572,9 @@ postfixExpression:
 	
 postIncrementExpression:
 	pfe=postfixExpression INCR { pfe^" ++" }
+	
+postDecrementExpression:
+	fpe=postfixExpression DECR { pfe^" --" }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
