@@ -42,7 +42,7 @@ let print_error str =
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW SUPER
+SYNCHRONIZED NEW SUPER THIS
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -169,7 +169,7 @@ variableDeclarators:
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
-    | vdi=variableDeclaratorID EQUAL vi=variableInitializer { vdi^" = "^vi }
+    | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
 
 variableDeclaratorId:
       id=identifier { id }
@@ -492,8 +492,16 @@ primary:
 	| ace=arrayCreationExpression { ace }
 
 primaryNoNewArray:
-    l=literal { l }
-    | TODO { "" }
+	  l=literal { l }
+	| jt=jType PERIOD CLASS { jt^".class" }
+	| VOID PERIOD CLASS { "void.class" }
+	| THIS { "this" }
+	| cn=className PERIOD THIS { cn^".this" }
+	| LPAREN e=expression RPAREN { "("^e^")" }
+	| cice=classInstanceCreationExpression { cice }
+	| fa=fieldAccess { fa }
+	| mi=methodInvocation { mi }
+	| aa=arrayAccess { aa }
 	
 literal:
 	  il=integerLiteral { il }
