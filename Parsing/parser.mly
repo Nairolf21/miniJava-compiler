@@ -81,6 +81,7 @@ classBody:
 classBodyDeclarations:
       cbd=classBodyDeclaration { cbd }
     | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
+    | ii=instanceInitializer {ii}
 
 classBodyDeclaration:
       cmd=classMemberDeclaration { cmd }
@@ -150,6 +151,11 @@ variableModifier:
 lastFormalParameter:
 	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
 	|fp = formalParameter {fp}
+
+(* 8.6 Instance Initializers *)
+instanceInitializer:
+	b=block {b}
+
 
 (* To sort *)
 
