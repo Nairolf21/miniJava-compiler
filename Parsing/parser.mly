@@ -230,6 +230,19 @@ classModifier:
     | FINAL { "final" }
     | STRICTFP { "strictfp" }
 
+modifiers:
+      m = modifier { m }
+    | ms=modifiers m=modifier { ms^" "^m }
+
+modifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | STRICTFP { "strictfp" }
+
 classBody:
       LBRACE cbds=classBodyDeclarations RBRACE { " {"^cbds^" }" }
     | LBRACE RBRACE { " {} "}
@@ -238,11 +251,25 @@ classBodyDeclarations:
       cbd=classBodyDeclaration { cbd }
     | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
 
-classBodyDeclaration:
+(* classBodyDeclaration:
 	cmd=classMemberDeclaration { cmd }
     | ii=instanceInitializer {ii}
     | si=staticInitializer {si}
-    | cd=constructorDeclaration { cd }
+    | cd=constructorDeclaration { cd } *)
+
+classBodyDeclaration:
+      ms=modifiers md=memberDecl { ms^" "^md }
+    | md=memberDecl { md }
+
+memberDecl:
+      mofd=methodOrFieldDecl { mofd }
+
+methodOrFieldDecl:
+    jt=jType id=identifier mofr=methodOrFieldRest { jt^" "^id^" "^mofr }
+
+methodOrFieldRest:
+      vdr=variableDeclarators { vdr }
+    | mdr=methodDeclaration { mdr }
 
 classMemberDeclaration:
       fd=fieldDeclaration { fd }
