@@ -269,13 +269,13 @@ methodOrFieldDecl:
     jt=jType id=identifier mofr=methodOrFieldRest { jt^" "^id^" "^mofr }
 
 methodOrFieldRest:
-      vdr=variableDeclarators { vdr }
-    | mdr=methodDeclaration { mdr }
+      fd=fieldDeclaration { fd^"field declaration" }
+    | mdr=methodDeclaration { mdr^"method declaration"}
 
-classMemberDeclaration:
+(*classMemberDeclaration:
       fd=fieldDeclaration { fd }
     | md=methodDeclaration { md }
-    | SEMICOLON { ";" } 
+    | SEMICOLON { ";" } *)
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
