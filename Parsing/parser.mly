@@ -129,9 +129,10 @@ integralType:
 floatingPointType:
     FLOAT { "float" } 
     | DOUBLE { "double" }
-resultType:
+    
+(* resultType:
     jt=jType { jt }
-    | VOID { "void" }
+    | VOID { "void" } *)
 
 primitiveType:
     nt=numericType { nt }
@@ -289,8 +290,10 @@ methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
 methodHeader:
-    r=resultType md=methodDeclarator { r^" "^md } 
-    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
+    jt=jType md=methodDeclarator { jt^" "^md } 
+    | mms=methodModifiers jt=jType md=methodDeclarator { mms^" "^jt^" "^md } 
+    | VOID md=methodDeclarator { "void "^md } 
+    | mms=methodModifiers VOID md=methodDeclarator { mms^" void "^md } 
 
 
 methodDeclarator:
