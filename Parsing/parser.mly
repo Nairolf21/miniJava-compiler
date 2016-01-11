@@ -52,7 +52,9 @@ TRY CATCH FINALLY
 (* special *)
 %token EOF 
 %token <string> IDENT
-%token <float> NUMBER
+%token <char> NOTZERO
+%token ZERO
+%token TRUE FALSE NULL
 
 %start <string> compilationUnit
 
@@ -61,6 +63,57 @@ TRY CATCH FINALLY
 (* 3.8 identifiers *)
 identifier:
     id=IDENT { id }
+    
+(* 3.10 Literals *)
+literal:
+	  il=integerLiteral { il }
+	| fpl=floatingPointLiteral { fpl }
+	| bl=booleanLiteral { bl }
+	| cl=characterLiteral { cl }
+	| sl=stringLiteral { sl }
+	| nl=nullLiteral { nl }
+
+(* A compléter ! *)
+integerLiteral:
+	dil=decimalIntegerLiteral { dil }
+
+decimalIntegerLiteral:
+	dn=decimalNumeral { dn }
+	
+decimalNumeral:
+	  ZERO { "0" }
+	| nz=NOTZERO { (String.make 1 nz) }
+	| nz=NOTZERO ds=digits  { (String.make 1 nz)^ds } 
+
+digits:
+	  d=digit { d }
+	| ds=digits d=digit { ds^d }
+
+digit:
+	  ZERO { "0" }
+	| nz=NOTZERO { (String.make 1 nz) }
+
+(* A compléter ! *)
+floatingPointLiteral:
+    dfpl=decimalFloatingPointLiteral { dfpl }
+
+decimalFloatingPointLiteral:
+	  ds=digits PERIOD { ds^"." }
+	| ds1=digits PERIOD ds2=digits { ds1^"."^ds2 }
+	| PERIOD ds=digits { "."^ds }
+
+booleanLiteral:
+      TRUE { "true" }
+    | FALSE { "false" }
+
+stringLiteral:
+    TODO { "" }
+
+characterLiteral:
+    TODO { "" }
+
+nullLiteral:
+    TODO { "" }
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -269,6 +322,17 @@ constructorModifier:
 	| PUBLIC {"public"}
 	| PROTECTED {"protected"}
 	| PRIVATE {"private"}
+	
+(* 10.6 Array Initializers *)
+arrayInitializer:
+	  LBRACE RBRACE { "{}" }
+	| LBRACE vis=variableInitializers  RBRACE { "{"^vis^"}" }
+	| LBRACE COMMA RBRACE { "{,}" }
+	| LBRACE vis=variableInitializers COMMA RBRACE { "{"^vis^",}" }
+
+variableInitializers:
+	  vi=variableInitializer { vi }
+	| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi }
 
 (* 14.2 Blocks *)    
 block:
@@ -500,33 +564,6 @@ primaryNoNewArray:
 	| fa=fieldAccess { fa }
 	| mi=methodInvocation { mi }
 	| aa=arrayAccess { aa }
-	
-literal:
-	  il=integerLiteral { il }
-	| fpl=floatingPointLiteral { fpl }
-	| bl=booleanLiteral { bl }
-	| cl=characterLiteral { cl }
-	| sl=stringLiteral { sl }
-	| nl=nullLiteral { nl }
-
-
-integerLiteral:
-    TODO { "" }
-
-floatingPointLiteral:
-    TODO { "" }
-
-booleanLiteral:
-    TODO { "" }
-
-stringLiteral:
-    TODO { "" }
-
-characterLiteral:
-    TODO { "" }
-
-nullLiteral:
-    TODO { "" }
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
@@ -592,9 +629,6 @@ fieldAccess:
 className:
     TODO { "" }
 
-arrayInitializer:
-    TODO { "" }
-
 (* 15.12 Method invocation *)
 methodInvocation:
     mn=methodName LPAREN al=argumentList? RPAREN { mn^"("^(string_of_option al)^")"  }
@@ -645,7 +679,7 @@ unaryExpressionNotPlusMinus:
     | TILDE ue=unaryExpression { "~"^ue }
     | EXCL ue=unaryExpression { "!"^ue }
     | ce=castExpression { ce }
-    | error { print_error "error: unaryExpressionNotPlusMinus" }
+    (*| error { print_error "error: unaryExpressionNotPlusMinus" }*)
 
 (* 15.16 Cast expression *)
 castExpression:

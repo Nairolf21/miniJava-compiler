@@ -4,10 +4,11 @@
     open Error
 }
 
+
 let letter = ['a'-'z' 'A'-'Z']
 let lowercase = ['a'-'z']
+let notzero = ['1'-'9']
 let digit = ['0'-'9']
-let real = digit* ('.' digit*)?
 let ident = letter ( letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
@@ -17,6 +18,9 @@ rule nexttoken = parse
     | blank+ { nexttoken lexbuf }
     | newline { Lexing.new_line lexbuf; nexttoken lexbuf }
     | eof { EOF }
+    | "true" { TRUE }
+    | "false" { FALSE }
+    | "null" { NULL }
     | "," { COMMA }
     | ";" { SEMICOLON }
     | ":" { COLON }
@@ -102,7 +106,8 @@ rule nexttoken = parse
 	| "try" { TRY }
 	| "catch" { CATCH }
 	| "finally" { FINALLY }
-    | real as n { NUMBER (float_of_string n) }
+    | notzero as nz { NOTZERO(nz) }
+    | "0" { ZERO }
     | ident as i { IDENT i }
     | _ { raise_error LexingError lexbuf }
 
@@ -111,6 +116,9 @@ rule nexttoken = parse
 
 let printtoken = function
     | EOF -> print_string "EOF"
+    | TRUE -> print_string "true"
+    | FALSE -> print_string "false"
+    | NULL -> print_string "null"
     | PERIOD -> print_string "."
     | COMMA -> print_string ","
     | SEMICOLON -> print_string ";"
@@ -119,6 +127,8 @@ let printtoken = function
     | RPAREN -> print_string ")"
     | LBRACE -> print_string "{"
     | RBRACE -> print_string "}"
+    | LBRACK -> print_string "["
+    | RBRACK -> print_string "]"
     | PLUS -> print_string "+"
     | MINUS -> print_string "-"
     | INCR -> print_string "++"
@@ -194,7 +204,8 @@ let printtoken = function
 	| TRY -> print_string "try"
 	| CATCH -> print_string "catch"
 	| FINALLY -> print_string "finally"
-    | NUMBER n -> print_string "NUMBER("; print_float n; print_string ")" 
+    | NOTZERO n -> print_string (String.make 1 n)
+    | ZERO -> print_string "0"
     | IDENT i -> print_string "IDENT("; print_string i; print_string ")"
 
 let rec readtoken buffer = 

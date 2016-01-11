@@ -4,7 +4,7 @@ public class LocalVariableDeclarationStatement {
     	int b,c;
     	int d[];
     	int e=3;
-    	int f[] = {1,2};
+    	int f[]={1,2};
     	int g, h[];
     	final int i;
     }
