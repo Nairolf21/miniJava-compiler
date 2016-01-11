@@ -29,3 +29,5 @@ testMac.sh
 .~lock*
 taches.xlsx
 *.out
+*kate-swp
+

@@ -74,7 +74,6 @@ rule nexttoken = parse
     | "long" { LONG }
     | "float" { FLOAT }
     | "double" { DOUBLE }
-    | "boolean" { BOOLEAN }
     | "void" { VOID }
     | "class" { CLASS }
     | "abstract" { ABSTRACT }
@@ -87,10 +86,11 @@ rule nexttoken = parse
     | "static" { STATIC } 
     | "strictfp" { STRICTFP }
     | "synchronized" { SYNCHRONIZED }
+    | "transient" { TRANSIENT }
+    | "volatile" { VOLATILE }
     | "new" { NEW }
     | "this" { THIS }
 	| "if" { IF }
-	| "then" { THEN }
 	| "else" { ELSE }
 	| "assert" { ASSERT }
 	| "switch" { SWITCH }
@@ -172,7 +172,6 @@ let printtoken = function
     | LONG -> print_string "long"
     | FLOAT -> print_string "float"
     | DOUBLE -> print_string "double"
-    | BOOLEAN -> print_string "boolean"
     | VOID -> print_string "void"
     | CLASS -> print_string "class" 
     | ABSTRACT -> print_string "abstract"
@@ -185,10 +184,11 @@ let printtoken = function
     | STATIC -> print_string "static"
     | STRICTFP -> print_string "strictfp" 
     | SYNCHRONIZED -> print_string "synchronized"
+    | TRANSIENT -> print_string "transient"
+    | VOLATILE -> print_string "volatile"
     | NEW -> print_string "new"
     | THIS -> print_string "this"
 	| IF -> print_string "if"
-	| THEN -> print_string "then"
 	| ELSE -> print_string "else"
 	| ASSERT -> print_string "assert"
 	| SWITCH -> print_string "switch"
