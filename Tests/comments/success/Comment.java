@@ -9,5 +9,9 @@ class Comment {
 
     //comment
 
+    //Comment with special characters . "'(-_)=&~#[|\^@
+    //Comment / with // slashes
+    //
 
+    void method3();
 }
