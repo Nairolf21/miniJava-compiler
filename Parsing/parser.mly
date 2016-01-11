@@ -355,6 +355,13 @@ constructorModifier:
 	| PROTECTED {"protected"}
 	| PRIVATE {"private"}
 	
+nonWildTypeArguments:
+    INF rtl=referenceTypeList SUP { "< "^rtl^" >" }
+
+referenceTypeList:
+    rt=referenceType { rt }
+    | rtl=referenceTypeList COMMA rt=referenceType { rtl^", "^rt }
+
 (* 10.6 Array Initializers *)
 arrayInitializer:
 	  LBRACE RBRACE { "{}" }
@@ -665,8 +672,6 @@ methodInvocation:
    | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LPAREN al=argumentList? RPAREN { tn^"."^nwta^" "^id^"("^(string_of_option al)^")" }
    (*| error { print_error "error in methodInvocation production" } *)
 
-nonWildTypeArguments:
-    INF rtl=referenceTypeList SUP { "< "^rtl^" >" }
    
 (* 15.13 Array Access Expressions *)
  arrayAccess:
