@@ -538,14 +538,27 @@ classInstanceCreationExpression:
 	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^tas^" "^coit^"("^al^")" }
 	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^tas^" "^coit^"() "^cb }
 	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }	
+	| p=primary PERIOD NEW id=identifier LPAREN RPAREN { p^". new "^id^" ()" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN { p^". new "^ta1^" "^id^" ()" }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^id^" "^ta2^" ()" }
+	| p=primary PERIOD NEW id=identifier LPAREN al=ArgumentList RPAREN { p^". new "^id^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier LPAREN RPAREN cb=classBody { p^". new "^id^" () "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ()" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=ArgumentList RPAREN { p^". new "^ta1^" "^id^" ("^al^")" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" () "^cb }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN { p^". new "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^id^" "^ta2^" () "^cb }
+	| p=primary PERIOD NEW id=identifier LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" () "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^id^" "^ta2^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" ("^al^") "^cb }
 	
-Primary. new TypeArgumentsopt Identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
-
-
-ArgumentList:
-Expression
-ArgumentList , Expression
+argumentList:
+	  e=expression { e }
+	| al=argumentList COMMA e=expression { al^" , "^e }
 
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
