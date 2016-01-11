@@ -89,7 +89,6 @@ rule nexttoken = parse
     | "new" { NEW }
     | "this" { THIS }
 	| "if" { IF }
-	| "then" { THEN }
 	| "else" { ELSE }
 	| "assert" { ASSERT }
 	| "switch" { SWITCH }
@@ -186,7 +185,6 @@ let printtoken = function
     | NEW -> print_string "new"
     | THIS -> print_string "this"
 	| IF -> print_string "if"
-	| THEN -> print_string "then"
 	| ELSE -> print_string "else"
 	| ASSERT -> print_string "assert"
 	| SWITCH -> print_string "switch"
