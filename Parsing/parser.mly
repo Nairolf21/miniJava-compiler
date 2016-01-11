@@ -345,9 +345,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-classInstanceCreationExpression:
-    TODO { "" }
-
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -542,23 +539,26 @@ classInstanceCreationExpression:
 	| p=primary PERIOD NEW id=identifier LPAREN RPAREN { p^". new "^id^" ()" }
 	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN { p^". new "^ta1^" "^id^" ()" }
 	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^id^" "^ta2^" ()" }
-	| p=primary PERIOD NEW id=identifier LPAREN al=ArgumentList RPAREN { p^". new "^id^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier LPAREN al=argumentList RPAREN { p^". new "^id^" ("^al^")" }
 	| p=primary PERIOD NEW id=identifier LPAREN RPAREN cb=classBody { p^". new "^id^" () "^cb }
 	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ()" }
-	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=ArgumentList RPAREN { p^". new "^ta1^" "^id^" ("^al^")" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=argumentList RPAREN { p^". new "^ta1^" "^id^" ("^al^")" }
 	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" () "^cb }
-	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN { p^". new "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN { p^". new "^id^" "^ta2^" ("^al^")" }
 	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^id^" "^ta2^" () "^cb }
-	| p=primary PERIOD NEW id=identifier LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^id^" ("^al^") "^cb }
-	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier LPAREN al=argumentList RPAREN cb=classBody { p^". new "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ("^al^")" }
 	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" () "^cb }
-	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" ("^al^") "^cb }
-	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^id^" "^ta2^" ("^al^") "^cb }
-	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=ArgumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=argumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^id^" "^ta2^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" ("^al^") "^cb }
 	
 argumentList:
 	  e=expression { e }
 	| al=argumentList COMMA e=expression { al^" , "^e }
+	
+typeArguments:
+	TODO { "" }
 
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
@@ -602,13 +602,6 @@ methodInvocation:
    | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? RPAREN { cn^".super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
    | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LPAREN al=argumentList? RPAREN { tn^"."^nwta^" "^id^"("^(string_of_option al)^")" }
    (*| error { print_error "error in methodInvocation production" } *)
-
-
-
-argumentList:
-    e=expression { e }
-    | al=argumentList COMMA e=expression { al^", "^e }
-
 
 nonWildTypeArguments:
    TODO { "" }
