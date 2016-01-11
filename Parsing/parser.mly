@@ -65,7 +65,7 @@ identifier:
     id=IDENT { id }
     
 (* 3.10 Literals *)
-literal:
+(*literal:
 	  il=integerLiteral { il }
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
@@ -113,7 +113,7 @@ characterLiteral:
     TODO { "" }
 
 nullLiteral:
-    NULL { "null" }
+    NULL { "null" }*)
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -141,7 +141,7 @@ jType:
     (*| rt=referenceType { rt }*)
 
 (* 4.3 Reference Types and Values *)
-referenceType:
+(*referenceType:
 	  coit=classOrInterfaceType { coit }
 	| tv=typeVariable { tv }
 	| at=arrayType { at }
@@ -194,7 +194,7 @@ expressionName:
 
 ambiguousName:
     id=identifier { id }
-    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }*)
  
 (* 7.3 Compilation Units *)
 compilationUnit: 
@@ -215,13 +215,27 @@ classDeclaration:
 
 normalClassDeclaration:
       CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
-    | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
+    | ms=modifiers CLASS id=identifier cb=classBody { ms^" class "^id^" "^cb }
+    (*| cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }*)
 
-classModifiers:
+(*classModifiers:
       cm=classModifier { cm }
     | cms=classModifiers cm=classModifier { cms^" "^cm }
 
 classModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | STRICTFP { "strictfp" }*)
+
+modifiers:
+      m = modifier { m }
+    | ms=modifiers m=modifier { ms^" "^m }
+
+modifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -238,21 +252,36 @@ classBodyDeclarations:
       cbd=classBodyDeclaration { cbd }
     | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
 
-classBodyDeclaration:
+(* classBodyDeclaration:
 	cmd=classMemberDeclaration { cmd }
     | ii=instanceInitializer {ii}
     | si=staticInitializer {si}
-    | cd=constructorDeclaration { cd }
+    | cd=constructorDeclaration { cd } *)
 
-classMemberDeclaration:
+classBodyDeclaration:
+      ms=modifiers md=memberDecl { ms^" "^md }
+    | md=memberDecl { md }
+
+memberDecl:
+      mofd=methodOrFieldDecl { mofd }
+
+methodOrFieldDecl:
+    jt=jType id=identifier mofr=methodOrFieldRest { jt^" "^id^" "^mofr }
+
+methodOrFieldRest:
+      fd=fieldDeclaration { fd^"field declaration" }
+    | mdr=methodDeclaration { mdr^"method declaration"}
+
+(*classMemberDeclaration:
       fd=fieldDeclaration { fd }
     | md=methodDeclaration { md }
-    | SEMICOLON { ";" } 
+    | SEMICOLON { ";" } *)
     
 (* 8.3 Field Declarations *)
 fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
-    | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
+    | ms=modifiers jt=jType vdl=variableDeclarators SEMICOLON { ms^" "^jt^" "^vdl^";" }
+    (*| fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }*)
 
 variableDeclarators:
       vd=variableDeclarator { vd }
@@ -260,18 +289,19 @@ variableDeclarators:
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
-    | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
+    (*| vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }*)
 
 variableDeclaratorId:
       id=identifier { id }
     | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
-variableInitializer:
+(*variableInitializer:
       e=expression { e } 
-    | ai=arrayInitializer { ai } 
+    | ai=arrayInitializer { ai } *)
 
-fieldModifiers:
+(*fieldModifiers:
      fm=fieldModifier { fm }
+   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
    | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
    
 fieldModifier:
@@ -282,7 +312,7 @@ fieldModifier:
     | STATIC { "static" }
     | FINAL { "final" }
     | TRANSIENT { "transient" }
-    | VOLATILE { "volatiLe" }
+    | VOLATILE { "volatiLe" }*)
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -290,15 +320,16 @@ methodDeclaration:
 
 methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
-    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
+    | ms=modifiers r=resultType md=methodDeclarator { ms^" "^r^" "^md } 
+    (*| mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } *)
 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
-    | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
+    (*| id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }*)
     
 
-methodModifiers:
+(*methodModifiers:
       mm=methodModifier { mm }
     | mms=methodModifiers mm=methodModifier { mms^" "^mm }
 
@@ -311,14 +342,14 @@ methodModifier:
     | FINAL { "final" }
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
-    | STRICTFP { "strictfp" }
+    | STRICTFP { "strictfp" }*)
 
 methodBody:
 	SEMICOLON { ";" }
-	| b=block { b }
+	(*| b=block { b }*)
 
 (* 8.4.1 Formal Parameters *)
-formalParameterList:
+(*formalParameterList:
 	lfp = lastFormalParameter {lfp}
 	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
 
@@ -328,17 +359,19 @@ formalParameters:
 
 formalParameter:
 	  jt=jType vdi=variableDeclaratorId {jt^" "^vdi}
-	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
+	| ms = modifiers jt=jType vdi=variableDeclaratorId {ms^" "^jt^" "^vdi}
+	(*| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}*)
 
-variableModifiers:
+(*variableModifiers:
 	vm=variableModifier {vm}
 	| vms=variableModifiers vm=variableModifier {vms^" "^vm}
 
 variableModifier:
-	| FINAL { "final" }
+	| FINAL { "final" }*)
 
 lastFormalParameter:
-	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
+	|ms=modifiers vdi=variableDeclaratorId {ms^" "^vdi}
+	(*|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}*)
 	|fp = formalParameter {fp}
 
 (* 8.6 Instance Initializers *)
@@ -412,7 +445,8 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-	  vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
+	  ms=modifiers jt=jType vds=variableDeclarators { ms^" "^jt^" "^vds }
+	  (*vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }*)
 	| jt=jType vds=variableDeclarators { jt^" "^vds }
 
 (* 14.5 Statements *)
@@ -563,7 +597,8 @@ statementExpressionList:
 	
 enhancedForStatement:
 	  FOR LPAREN jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^jt^" "^id^" : "^e^")\n"^s }
-	| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }
+	| FOR LPAREN ms=modifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^ms^" "^jt^" "^id^" : "^e^")\n"^s }
+	(*| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }*)
 
 (* 14.15 The break Statement *)
 breakStatement:
@@ -835,7 +870,7 @@ expression:
 
 (* 15.28 Constant Expression *)
 constantExpression:
-	e=expression { e }
+	e=expression { e }*)
 
 %%
 
