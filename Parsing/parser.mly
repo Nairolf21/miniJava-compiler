@@ -232,11 +232,12 @@ classBody:
 classBodyDeclarations:
       cbd=classBodyDeclaration { cbd }
     | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
-    | ii=instanceInitializer {ii}
-    | si=staticInitializer {si}
 
 classBodyDeclaration:
-      cmd=classMemberDeclaration { cmd }
+	cmd=classMemberDeclaration { cmd }
+    | ii=instanceInitializer {ii}
+    | si=staticInitializer {si}
+    | cd=constructorDeclaration { cd }
 
 classMemberDeclaration:
       fd=fieldDeclaration { fd }
@@ -330,11 +331,11 @@ staticInitializer:
 
 (* 8.8 Constructor Declarations *)
 constructorDeclaration:
-	|cd=constructorDeclarator cb=constructorBody {cd^" "cb}
-	|cm=constructorModifiers cd=constructorDeclarator cb=constructorBody {cm^" "^cd^" "cb}
+	|cd=constructorDeclarator cb=constructorBody {cd^" "^cb}
+	|cm=constructorModifiers cd=constructorDeclarator cb=constructorBody {cm^" "^cd^" "^cb}
 
 constructorDeclarator:
-	|stn=simpleTypeName LPAREN RPAREN {stn^" ()"}
+	|stn=simpleTypeName LPAREN RPAREN {stn^" ( )"}
 	|stn=simpleTypeName LPAREN fpl=formalParameterList RPAREN {stn^" ("^fpl^")"}
 
 (* todo : simpleTypeName has to be the name of the class that contains the identifier *)
