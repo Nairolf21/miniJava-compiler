@@ -676,13 +676,13 @@ shiftExpression:
 	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
 	
 (* 15.20 Relational Operators *)
-RelationalExpression:
-ShiftExpression
-RelationalExpression < ShiftExpression
-RelationalExpression > ShiftExpression
-RelationalExpression <= ShiftExpression
-RelationalExpression >= ShiftExpression
-RelationalExpression instanceof ReferenceType
+relationalExpression:
+	  ShiftExpression
+	| re=relationalExpression INF se=shiftExpression { 
+	| re=relationalExpression SUP se=shiftExpression
+	| re=relationalExpression INFEQUAL se=shiftExpression
+	| re=relationalExpression SUPEQUAL se=shiftExpression
+	| re=relationalExpression INSTANCEOF rt=referenceType
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
