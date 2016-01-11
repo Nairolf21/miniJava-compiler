@@ -32,7 +32,8 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL 
+TRUEEQUAL NOTEQUAL AND EXCLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR CONDITIONAL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -42,7 +43,7 @@ let print_error str =
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW SUPER THIS
+SYNCHRONIZED NEW SUPER THIS INSTANCEOF
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -51,7 +52,9 @@ TRY CATCH FINALLY
 (* special *)
 %token EOF 
 %token <string> IDENT
-%token <float> NUMBER
+%token <char> NOTZERO
+%token ZERO
+%token TRUE FALSE NULL
 
 %start <string> compilationUnit
 
@@ -60,6 +63,57 @@ TRY CATCH FINALLY
 (* 3.8 identifiers *)
 identifier:
     id=IDENT { id }
+    
+(* 3.10 Literals *)
+literal:
+	  il=integerLiteral { il }
+	| fpl=floatingPointLiteral { fpl }
+	| bl=booleanLiteral { bl }
+	| cl=characterLiteral { cl }
+	| sl=stringLiteral { sl }
+	| nl=nullLiteral { nl }
+
+(* A compléter ! *)
+integerLiteral:
+	dil=decimalIntegerLiteral { dil }
+
+decimalIntegerLiteral:
+	dn=decimalNumeral { dn }
+	
+decimalNumeral:
+	  ZERO { "0" }
+	| nz=NOTZERO { (String.make 1 nz) }
+	| nz=NOTZERO ds=digits  { (String.make 1 nz)^ds } 
+
+digits:
+	  d=digit { d }
+	| ds=digits d=digit { ds^d }
+
+digit:
+	  ZERO { "0" }
+	| nz=NOTZERO { (String.make 1 nz) }
+
+(* A compléter ! *)
+floatingPointLiteral:
+    dfpl=decimalFloatingPointLiteral { dfpl }
+
+decimalFloatingPointLiteral:
+	  ds=digits PERIOD { ds^"." }
+	| ds1=digits PERIOD ds2=digits { ds1^"."^ds2 }
+	| PERIOD ds=digits { "."^ds }
+
+booleanLiteral:
+      TRUE { "true" }
+    | FALSE { "false" }
+
+stringLiteral:
+    i=IDENT { i }
+
+characterLiteral:
+    TODO { "" }
+
+nullLiteral:
+    NULL { "null" }
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -83,13 +137,43 @@ primitiveType:
     nt=numericType { nt }
 
 jType:
-    upt= primitiveType { upt }
+      upt= primitiveType { upt }
+    (*| rt=referenceType { rt }*)
+
+(* 4.3 Reference Types and Values *)
+referenceType:
+	  coit=classOrInterfaceType { coit }
+	| tv=typeVariable { tv }
+	| at=arrayType { at }
+
+classOrInterfaceType:
+	  ct=classType { ct }
+	| it=interfaceType { it }
+
+classType:
+	  tds=typeDeclSpecifier { tds }
+	| tds=typeDeclSpecifier tas=typeArguments { tds^" "^tas }
+
+interfaceType:
+	  tds=typeDeclSpecifier { tds }
+	| tds=typeDeclSpecifier tas=typeArguments { tds^" "^tas }
+
+typeDeclSpecifier:
+	  tn=typeName { tn }
+	| coit=classOrInterfaceType PERIOD id=identifier { coit^"."^id }
+
+typeName:
+	  id=identifier { id }
+	| tn=typeName PERIOD id=identifier { tn^"."^id }
+
+typeVariable:
+	id=identifier { id }
+
+arrayType:
+	jt=jType LBRACK RBRACK { "["^jt^"]" }
 
 (* 6.5 Meaning of a name *)
 packageName:
-    TODO { "" }
-
-typeName:
     TODO { "" }
 
 methodName:
@@ -222,7 +306,8 @@ formalParameters:
 	|fps=formalParameters COMMA fp=formalParameter {fps^" , "^fps}
 
 formalParameter:
-	vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
+	  jt=jType vdi=variableDeclaratorId {jt^" "^vdi}
+	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
 
 variableModifiers:
 	vm=variableModifier {vm}
@@ -268,6 +353,17 @@ constructorModifier:
 	| PUBLIC {"public"}
 	| PROTECTED {"protected"}
 	| PRIVATE {"private"}
+	
+(* 10.6 Array Initializers *)
+arrayInitializer:
+	  LBRACE RBRACE { "{}" }
+	| LBRACE vis=variableInitializers  RBRACE { "{"^vis^"}" }
+	| LBRACE COMMA RBRACE { "{,}" }
+	| LBRACE vis=variableInitializers COMMA RBRACE { "{"^vis^",}" }
+
+variableInitializers:
+	  vi=variableInitializer { vi }
+	| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi }
 
 (* 14.2 Blocks *)    
 block:
@@ -345,9 +441,6 @@ statementExpression:
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
 
-classInstanceCreationExpression:
-    TODO { "" }
-
 (* 14.9 The if Statement *)
 ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
@@ -392,9 +485,6 @@ switchLabel:
 	
 enumConstantName:
 	id=identifier { id }
-	
-constantExpression:
-    TODO { "" }
 
 (* 14.12 The while Statement *)
 whileStatement:
@@ -502,36 +592,39 @@ primaryNoNewArray:
 	| fa=fieldAccess { fa }
 	| mi=methodInvocation { mi }
 	| aa=arrayAccess { aa }
+
+(* 15.9 Class Instance Creation Expressions *)
+classInstanceCreationExpression:
+	  NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN { "new "^tas^" "^coit^"()" }
+	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^coit^"("^al^")" }
+	| NEW coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^coit^"() "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^tas^" "^coit^"("^al^")" }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^tas^" "^coit^"() "^cb }
+	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }	
+	| p=primary PERIOD NEW id=identifier LPAREN RPAREN { p^". new "^id^" ()" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN { p^". new "^ta1^" "^id^" ()" }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^id^" "^ta2^" ()" }
+	| p=primary PERIOD NEW id=identifier LPAREN al=argumentList RPAREN { p^". new "^id^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier LPAREN RPAREN cb=classBody { p^". new "^id^" () "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ()" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=argumentList RPAREN { p^". new "^ta1^" "^id^" ("^al^")" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" () "^cb }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN { p^". new "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^id^" "^ta2^" () "^cb }
+	| p=primary PERIOD NEW id=identifier LPAREN al=argumentList RPAREN cb=classBody { p^". new "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN { p^". new "^ta1^" "^id^" "^ta2^" ("^al^")" }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" () "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier LPAREN al=argumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" ("^al^") "^cb }
+	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^id^" "^ta2^" ("^al^") "^cb }
+	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" ("^al^") "^cb }
 	
-literal:
-	  il=integerLiteral { il }
-
-	| fpl=floatingPointLiteral { fpl }
-	| bl=booleanLiteral { bl }
-	| cl=characterLiteral { cl }
-	| sl=stringLiteral { sl }
-	| nl=nullLiteral { nl }
-
-
-integerLiteral:
-    TODO { "" }
-
-floatingPointLiteral:
-    TODO { "" }
-
-booleanLiteral:
-    TODO { "" }
-
-stringLiteral:
-    TODO { "" }
-
-characterLiteral:
-    TODO { "" }
-
-nullLiteral:
-    TODO { "" }
-
-(* 15.9 TODO *)
+argumentList:
+	  e=expression { e }
+	| al=argumentList COMMA e=expression { al^" , "^e }
+	
+typeArguments:
+	TODO { "" }
 
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
@@ -553,8 +646,6 @@ dims:
 	  LBRACK RBRACK { "[]" }
 	| d=dims LBRACK RBRACK { d^"[]" }
 
-classOrInterfaceType:
-    TODO { "" }
 (* 15.11 Field Access Expressions *)
 fieldAccess:
     p=primary PERIOD id=identifier { p^"."^id }
@@ -562,9 +653,6 @@ fieldAccess:
     | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
 
 className:
-    TODO { "" }
-
-arrayInitializer:
     TODO { "" }
 
 (* 15.12 Method invocation *)
@@ -575,13 +663,6 @@ methodInvocation:
    | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? RPAREN { cn^".super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
    | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LPAREN al=argumentList? RPAREN { tn^"."^nwta^" "^id^"("^(string_of_option al)^")" }
    (*| error { print_error "error in methodInvocation production" } *)
-
-
-
-argumentList:
-    e=expression { e }
-    | al=argumentList COMMA e=expression { al^", "^e }
-
 
 nonWildTypeArguments:
    TODO { "" }
@@ -624,7 +705,7 @@ unaryExpressionNotPlusMinus:
     | TILDE ue=unaryExpression { "~"^ue }
     | EXCL ue=unaryExpression { "!"^ue }
     | ce=castExpression { ce }
-    | error { print_error "error: unaryExpressionNotPlusMinus" }
+    (*| error { print_error "error: unaryExpressionNotPlusMinus" }*)
 
 (* 15.16 Cast expression *)
 castExpression:
@@ -651,6 +732,49 @@ shiftExpression:
 	| es=shiftExpression LSHIFT ae=additiveExpression { es^" << "^ae }
 	| es=shiftExpression RSHIFT ae=additiveExpression { es^" >> "^ae }
 	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
+	
+(* 15.20 Relational Operators *)
+relationalExpression:
+	  se=shiftExpression { se }
+	| re=relationalExpression INF se=shiftExpression { re^" < "^se }
+	| re=relationalExpression SUP se=shiftExpression { re^" > "^se }
+	| re=relationalExpression INFEQUAL se=shiftExpression { re^" <= "^se }
+	| re=relationalExpression SUPEQUAL se=shiftExpression { re^" >= "^se }
+	| re=relationalExpression INSTANCEOF rt=referenceType { re^" instanceof "^rt }
+	
+(* 15.21 Equality Operators *)
+equalityExpression:
+	  re=relationalExpression { re }
+	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
+	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
+	
+(* 15.22 Bitwise and Logical Operators *)
+andExpression:
+	  ee=equalityExpression { ee }
+	| ae=andExpression AND ee=equalityExpression { ae^" & "^ee }
+
+exclusiveOrExpression:
+	  ae=andExpression { ae }
+	| eoe=exclusiveOrExpression EXCLUSIVEOR ae=andExpression { eoe^" ^ "^ae }
+
+inclusiveOrExpression:
+	  eoe=exclusiveOrExpression { eoe }
+	| ioe=inclusiveOrExpression INCLUSIVEOR eoe=exclusiveOrExpression { ioe^" | "^eoe }
+	
+(* 15.23 Conditional-And Operator && *)
+conditionalAndExpression:
+	  ioe=inclusiveOrExpression { ioe }
+	| cae=conditionalAndExpression CONDITIONALAND ioe=inclusiveOrExpression { cae^" && "^ioe }
+
+(* 15.24 Conditional-Or Operator || *)
+conditionalOrExpression:
+	  cae=conditionalAndExpression { cae }
+	| coe=conditionalOrExpression CONDITIONALOR cae=conditionalAndExpression { coe^" || "^cae }
+
+(* 15.25 Conditional Operator ? *)
+conditionalExpression:
+	  coe=conditionalOrExpression { coe }
+	| coe=conditionalOrExpression CONDITIONAL e=expression COLON ce=conditionalExpression { coe^" ? "^e^" : "^ce }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
@@ -679,28 +803,13 @@ assignmentOperator:
     | BITXOREQUAL { "^=" }
     | BITOREQUAL { "|=" }
 
-conditionalExpression:
-    TODO { "" }
-
 (*15.27 Expression*)
 expression:
     ae=assignmentExpression { ae }
 
-
-(*
-// TODO
-assignment
-preIncrementExpression
-preDecrementExpression
-postIncrementExpression
-postDecrementExpression
-methodInvocation
-classInstanceCreationExpression
-
-// TODO
-expression
-constantExpression
-*)
+(* 15.28 Constant Expression *)
+constantExpression:
+	e=expression { e }
 
 %%
 
