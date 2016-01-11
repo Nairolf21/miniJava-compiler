@@ -65,7 +65,7 @@ identifier:
     id=IDENT { id }
     
 (* 3.10 Literals *)
-literal:
+(*literal:
 	  il=integerLiteral { il }
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
@@ -113,7 +113,7 @@ characterLiteral:
     TODO { "" }
 
 nullLiteral:
-    NULL { "null" }
+    NULL { "null" }*)
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -141,7 +141,7 @@ jType:
     (*| rt=referenceType { rt }*)
 
 (* 4.3 Reference Types and Values *)
-referenceType:
+(*referenceType:
 	  coit=classOrInterfaceType { coit }
 	| tv=typeVariable { tv }
 	| at=arrayType { at }
@@ -194,7 +194,7 @@ expressionName:
 
 ambiguousName:
     id=identifier { id }
-    | an=ambiguousName PERIOD id=identifier { an^"."^id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }*)
  
 (* 7.3 Compilation Units *)
 compilationUnit: 
@@ -289,15 +289,15 @@ variableDeclarators:
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
-    | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
+    (*| vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }*)
 
 variableDeclaratorId:
       id=identifier { id }
     | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
 
-variableInitializer:
+(*variableInitializer:
       e=expression { e } 
-    | ai=arrayInitializer { ai } 
+    | ai=arrayInitializer { ai } *)
 
 (*fieldModifiers:
      fm=fieldModifier { fm }
@@ -326,7 +326,7 @@ methodHeader:
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
-    | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
+    (*| id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }*)
     
 
 (*methodModifiers:
@@ -346,10 +346,10 @@ methodModifier:
 
 methodBody:
 	SEMICOLON { ";" }
-	| b=block { b }
+	(*| b=block { b }*)
 
 (* 8.4.1 Formal Parameters *)
-formalParameterList:
+(*formalParameterList:
 	lfp = lastFormalParameter {lfp}
 	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
 
@@ -870,7 +870,7 @@ expression:
 
 (* 15.28 Constant Expression *)
 constantExpression:
-	e=expression { e }
+	e=expression { e }*)
 
 %%
 
