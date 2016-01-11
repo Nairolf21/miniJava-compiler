@@ -215,9 +215,10 @@ classDeclaration:
 
 normalClassDeclaration:
       CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
-    | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
+    | ms=modifiers CLASS id=identifier cb=classBody { ms^" class "^id^" "^cb }
+    (*| cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }*)
 
-classModifiers:
+(*classModifiers:
       cm=classModifier { cm }
     | cms=classModifiers cm=classModifier { cms^" "^cm }
 
@@ -228,7 +229,7 @@ classModifier:
     | ABSTRACT { "abstract" }
     | STATIC { "static" }
     | FINAL { "final" }
-    | STRICTFP { "strictfp" }
+    | STRICTFP { "strictfp" }*)
 
 modifiers:
       m = modifier { m }
@@ -279,7 +280,8 @@ classMemberDeclaration:
 (* 8.3 Field Declarations *)
 fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
-    | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
+    | ms=modifiers jt=jType vdl=variableDeclarators SEMICOLON { ms^" "^jt^" "^vdl^";" }
+    (*| fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }*)
 
 variableDeclarators:
       vd=variableDeclarator { vd }
@@ -297,8 +299,9 @@ variableInitializer:
       e=expression { e } 
     | ai=arrayInitializer { ai } 
 
-fieldModifiers:
+(*fieldModifiers:
      fm=fieldModifier { fm }
+   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
    | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
    
 fieldModifier:
@@ -309,7 +312,7 @@ fieldModifier:
     | STATIC { "static" }
     | FINAL { "final" }
     | TRANSIENT { "transient" }
-    | VOLATILE { "volatiLe" }
+    | VOLATILE { "volatiLe" }*)
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -317,7 +320,8 @@ methodDeclaration:
 
 methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
-    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
+    | ms=modifiers r=resultType md=methodDeclarator { ms^" "^r^" "^md } 
+    (*| mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } *)
 
 
 methodDeclarator:
@@ -325,7 +329,7 @@ methodDeclarator:
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
 
-methodModifiers:
+(*methodModifiers:
       mm=methodModifier { mm }
     | mms=methodModifiers mm=methodModifier { mms^" "^mm }
 
@@ -338,7 +342,7 @@ methodModifier:
     | FINAL { "final" }
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
-    | STRICTFP { "strictfp" }
+    | STRICTFP { "strictfp" }*)
 
 methodBody:
 	SEMICOLON { ";" }
@@ -355,17 +359,19 @@ formalParameters:
 
 formalParameter:
 	  jt=jType vdi=variableDeclaratorId {jt^" "^vdi}
-	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
+	| ms = modifiers jt=jType vdi=variableDeclaratorId {ms^" "^jt^" "^vdi}
+	(*| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}*)
 
-variableModifiers:
+(*variableModifiers:
 	vm=variableModifier {vm}
 	| vms=variableModifiers vm=variableModifier {vms^" "^vm}
 
 variableModifier:
-	| FINAL { "final" }
+	| FINAL { "final" }*)
 
 lastFormalParameter:
-	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
+	|ms=modifiers vdi=variableDeclaratorId {ms^" "^vdi}
+	(*|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}*)
 	|fp = formalParameter {fp}
 
 (* 8.6 Instance Initializers *)
@@ -439,7 +445,8 @@ localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
 localVariableDeclaration:
-	  vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
+	  ms=modifiers jt=jType vds=variableDeclarators { ms^" "^jt^" "^vds }
+	  (*vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }*)
 	| jt=jType vds=variableDeclarators { jt^" "^vds }
 
 (* 14.5 Statements *)
@@ -590,7 +597,8 @@ statementExpressionList:
 	
 enhancedForStatement:
 	  FOR LPAREN jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^jt^" "^id^" : "^e^")\n"^s }
-	| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }
+	| FOR LPAREN ms=modifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^ms^" "^jt^" "^id^" : "^e^")\n"^s }
+	(*| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }*)
 
 (* 14.15 The break Statement *)
 breakStatement:
