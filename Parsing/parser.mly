@@ -42,11 +42,11 @@ TRUEEQUAL NOTEQUAL AND EXCLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR COND
 %token COMMA SEMICOLON COLON LPAREN RPAREN LBRACE RBRACE LBRACK RBRACK PERIOD
 
 (* keyword *)
-%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW SUPER THIS INSTANCEOF
+%token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
+SYNCHRONIZED NEW SUPER THIS INSTANCEOF TRANSIENT VOLATILE
 
-(* statements *)
-%token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
+(* statemeknts *)
+%token IF ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
 TRY CATCH FINALLY
 
 (* special *)
@@ -173,15 +173,20 @@ arrayType:
 	jt=jType LBRACK RBRACK { "["^jt^"]" }
 
 (* 6.5 Meaning of a name *)
+
+(* Not called by other rules
 packageName:
     TODO { "" }
+*)
 
 methodName:
     id=identifier { id }
     | an=ambiguousName PERIOD id=identifier { an^"."^id }
 
-packageOrTypeName:
+(* Not called by other rules
+ * packageOrTypeName:
     TODO { "" }
+*)
 
 expressionName:
     id=identifier { id }
@@ -247,6 +252,7 @@ classMemberDeclaration:
 (* 8.3 Field Declarations *)
 fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
+    | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
 
 variableDeclarators:
       vd=variableDeclarator { vd }
@@ -263,6 +269,20 @@ variableDeclaratorId:
 variableInitializer:
       e=expression { e } 
     | ai=arrayInitializer { ai } 
+
+fieldModifiers:
+     fm=fieldModifier { fm }
+   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
+   
+fieldModifier:
+      PUBLIC { "public" }
+    | PROTECTED { "protected" }
+    | PRIVATE { "private" }
+    | ABSTRACT { "abstract" }
+    | STATIC { "static" }
+    | FINAL { "final" }
+    | TRANSIENT { "transient" }
+    | VOLATILE { "volatiLe" }
 
 (* 8.4 Method Declarations *)
 methodDeclaration:

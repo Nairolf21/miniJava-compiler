@@ -1,1 +1,0 @@
-class ClassA { int a; } 
