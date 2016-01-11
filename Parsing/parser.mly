@@ -666,7 +666,7 @@ methodInvocation:
    (*| error { print_error "error in methodInvocation production" } *)
 
 nonWildTypeArguments:
-   TODO { "" }
+    INF rtl=referenceTypeList SUP { "< "^rtl^" >" }
    
 (* 15.13 Array Access Expressions *)
  arrayAccess:
