@@ -687,9 +687,9 @@ relationalExpression:
 	
 (* 15.21 Equality Operators *)
 EqualityExpression:
-	  RelationalExpression
-	| ee=equalityExpression == re=relationalExpression
-	| ee=equalityExpression != re=relationalExpression
+	  re=relationalExpression { re }
+	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
+	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
