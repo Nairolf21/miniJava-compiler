@@ -505,7 +505,6 @@ primaryNoNewArray:
 	
 literal:
 	  il=integerLiteral { il }
-
 	| fpl=floatingPointLiteral { fpl }
 	| bl=booleanLiteral { bl }
 	| cl=characterLiteral { cl }
@@ -531,7 +530,22 @@ characterLiteral:
 nullLiteral:
     TODO { "" }
 
-(* 15.9 TODO *)
+(* 15.9 Class Instance Creation Expressions *)
+classInstanceCreationExpression:
+	  NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	
+Primary. new TypeArgumentsopt Identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
+
+
+ArgumentList:
+Expression
+ArgumentList , Expression
 
 (* 15.10 Array Creation Expressions *)
 arrayCreationExpression:
@@ -631,6 +645,9 @@ castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
+
+referenceType:
+    TODO { "" }
 	
 (* 15.17 Multiplicative Operators *)
 multiplicativeExpression:
