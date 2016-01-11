@@ -57,6 +57,9 @@ rule nexttoken = parse
     | ">=" { SUPEQUAL }
     | "<" { INF }
     | ">" { SUP }
+    | "&" { AND }
+    | "^" { EXCLUSIVEOR }
+    | "|" { INCLUSIVEOR }
     | "instanceof" { INSTANCEOF }
     | "byte" { BYTE }
     | "short" { SHORT }
@@ -143,6 +146,9 @@ let printtoken = function
     | SUPEQUAL -> print_string ">="
     | INF -> print_string "<"
     | SUP -> print_string ">"
+    | AND -> print_string "&"
+    | INCLUSIVEOR -> print_string "|"
+    | EXCLUSIVEOR -> print_string "^"
     | INSTANCEOF -> print_string "instanceof"
     | BYTE -> print_string "byte"
     | SHORT -> print_string "short"

@@ -33,7 +33,7 @@ let print_error str =
 
 (* operators *)
 %token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL 
-TRUEEQUAL NOTEQUAL
+TRUEEQUAL NOTEQUAL AND EXLUSIVEOR INCLUSIVEOR
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -690,6 +690,8 @@ EqualityExpression:
 	  re=relationalExpression { re }
 	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
 	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
+	
+
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
