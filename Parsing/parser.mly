@@ -252,7 +252,7 @@ classMemberDeclaration:
 (* 8.3 Field Declarations *)
 fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
-    | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";"
+    | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
 
 variableDeclarators:
       vd=variableDeclarator { vd }
@@ -282,7 +282,7 @@ fieldModifier:
     | STATIC { "static" }
     | FINAL { "final" }
     | TRANSIENT { "transient" }
-    | VOLATINE { "volatine" }
+    | VOLATILE { "volatiLe" }
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
