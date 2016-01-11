@@ -57,6 +57,9 @@ rule nexttoken = parse
     | ">=" { SUPEQUAL }
     | "<" { INF }
     | ">" { SUP }
+    | "&&" { CONDITIONALAND }
+    | "||" { CONDITIONALOR }
+    | "?" { CONDITIONAL }
     | "&" { AND }
     | "^" { EXCLUSIVEOR }
     | "|" { INCLUSIVEOR }
@@ -146,6 +149,9 @@ let printtoken = function
     | SUPEQUAL -> print_string ">="
     | INF -> print_string "<"
     | SUP -> print_string ">"
+    | CONDITIONALAND -> print_string "&&"
+    | CONDITIONALOR -> print_string "||"
+    | CONDITIONAL -> print_string "?"
     | AND -> print_string "&"
     | INCLUSIVEOR -> print_string "|"
     | EXCLUSIVEOR -> print_string "^"

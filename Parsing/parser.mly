@@ -33,7 +33,7 @@ let print_error str =
 
 (* operators *)
 %token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL 
-TRUEEQUAL NOTEQUAL AND EXLUSIVEOR INCLUSIVEOR
+TRUEEQUAL NOTEQUAL AND EXLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR CONDITIONAL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -703,6 +703,8 @@ exclusiveOrExpression:
 inclusiveOrExpression:
 	  eoe=exclusiveOrExpression { eoe }
 	| ioe=inclusiveOrExpression INCLUSIVEOR eoe=exclusiveOrExpression { ioe^" | "^eoe }
+	
+
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
