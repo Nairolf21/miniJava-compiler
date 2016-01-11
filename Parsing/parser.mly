@@ -32,7 +32,8 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL 
+TRUEEQUAL NOTEQUAL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -683,6 +684,12 @@ relationalExpression:
 	| re=relationalExpression INFEQUAL se=shiftExpression { re^" <= "^se }
 	| re=relationalExpression SUPEQUAL se=shiftExpression { re^" >= "^se }
 	| re=relationalExpression INSTANCEOF rt=referenceType { re^" instanceof "^rt }
+	
+(* 15.21 Equality Operators *)
+EqualityExpression:
+	  RelationalExpression
+	| ee=equalityExpression == re=relationalExpression
+	| ee=equalityExpression != re=relationalExpression
 
 (*15.26 Assignment Operators *)
 assignmentExpression:

@@ -30,7 +30,9 @@ rule nexttoken = parse
     | "++" { INCR }
     | "--" { DECR }
     | "~" { TILDE }
+    | "!=" { NOTEQUAL }
     | "!" { EXCL }
+    | "==" { TRUEEQUAL }
     | "=" { EQUAL }
     | "*=" { MULTEQUAL }
     | "/=" { DIVEQUAL }
@@ -124,6 +126,8 @@ let printtoken = function
     | LSHIFT -> print_string "<<"
     | RSHIFT -> print_string ">>"
     | USHIFT -> print_string ">>>"
+    | TRUEEQUAL -> print_string "=="
+    | NOTEQUAL -> print_string "!="
     | MULTEQUAL -> print_string "*="
     | DIVEQUAL -> print_string "/="
     | MODEQUAL -> print_string "%="
