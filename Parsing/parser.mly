@@ -32,7 +32,7 @@ let print_error str =
 %token TODO
 
 (* operators *)
-%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -42,7 +42,7 @@ let print_error str =
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE BOOLEAN VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW SUPER THIS
+SYNCHRONIZED NEW SUPER THIS INSTANCEOF
 
 (* statements *)
 %token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -674,6 +674,15 @@ shiftExpression:
 	| es=shiftExpression LSHIFT ae=additiveExpression { es^" << "^ae }
 	| es=shiftExpression RSHIFT ae=additiveExpression { es^" >> "^ae }
 	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
+	
+(* 15.20 Relational Operators *)
+RelationalExpression:
+ShiftExpression
+RelationalExpression < ShiftExpression
+RelationalExpression > ShiftExpression
+RelationalExpression <= ShiftExpression
+RelationalExpression >= ShiftExpression
+RelationalExpression instanceof ReferenceType
 
 (*15.26 Assignment Operators *)
 assignmentExpression:

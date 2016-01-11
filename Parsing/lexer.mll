@@ -51,6 +51,11 @@ rule nexttoken = parse
     | ">>>" { USHIFT }
     | ">>" { RSHIFT }
     | "<<" { LSHIFT }
+    | "<=" { INFEQUAL }
+    | ">=" { SUPEQUAL }
+    | "<" { INF }
+    | ">" { SUP }
+    | "instanceof" { INSTANCEOF }
     | "byte" { BYTE }
     | "short" { SHORT }
     | "int" { INT }
@@ -129,7 +134,12 @@ let printtoken = function
     | USHIFTEQUAL-> print_string ">>>="
     | BITANDEQUAL -> print_string "&="
     | BITXOREQUAL -> print_string "^="
-    | BITOREQUAL-> print_string "|="
+    | BITOREQUAL -> print_string "|="
+    | INFEQUAL -> print_string "<="
+    | SUPEQUAL -> print_string ">="
+    | INF -> print_string "<"
+    | SUP -> print_string ">"
+    | INSTANCEOF -> print_string "instanceof"
     | BYTE -> print_string "byte"
     | SHORT -> print_string "short"
     | INT -> print_string "int"
