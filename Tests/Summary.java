@@ -23,8 +23,7 @@ class Summary {
         a = b = 3;
         a = a ? b : c;
         a = b %= c;
-        
-        
+
         
         }
         
@@ -36,7 +35,7 @@ class Summary {
         
         void oneBlockStatementClassDeclaration() {
             class innerBlocks {}
-            }    
+        }    
 
         void oneBlockStatementStatement(){
             {}
