@@ -86,7 +86,6 @@ rule nexttoken = parse
 	| "continue" { CONTINUE }
 	| "return" { RETURN }
 	| "throw" { THROW  }
-    | "throws" {THROWS}
 	| "try" { TRY }
 	| "catch" { CATCH }
 	| "finally" { FINALLY }
@@ -166,7 +165,6 @@ let printtoken = function
 	| CONTINUE -> print_string "continue"
 	| RETURN -> print_string "return"
 	| THROW -> print_string "throw" 
-    | THROWS -> print_string "throws" 
 	| TRY -> print_string "try"
 	| CATCH -> print_string "catch"
 	| FINALLY -> print_string "finally"

@@ -1,3 +1,18 @@
+%{
+
+let string_of_option o =
+    match o with
+    | None -> ""
+    | Some(o) -> o
+
+let print_error str =
+    print_string str;
+    str
+
+
+%}
+
+
 (*This token is a placeholder to unimplemented symbol rules or unfinished production rules
  *  Use them as followed
  *      * You implemented a set of rules for a chapter, but need other rules not yet implemented.
@@ -17,6 +32,8 @@
 %token TODO
 
 (* operators *)
+%token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT
+
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
 
@@ -28,7 +45,7 @@
 SYNCHRONIZED NEW SUPER THIS
 
 (* statements *)
-%token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW THROWS
+%token IF THEN ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
 TRY CATCH FINALLY
 
 (* special *)
@@ -68,10 +85,6 @@ primitiveType:
 jType:
     upt= primitiveType { upt }
 
-(* 4.3 *)
-typeVariable:
-	i=identifier{i}
-
 (* 6.5 Meaning of a name *)
 packageName:
     TODO { "" }
@@ -80,7 +93,8 @@ typeName:
     TODO { "" }
 
 methodName:
-    TODO { "" }
+    id=identifier { id }
+    | an=ambiguousName PERIOD id=identifier { an^"."^id }
 
 packageOrTypeName:
     TODO { "" }
@@ -141,7 +155,7 @@ classBodyDeclaration:
       cmd=classMemberDeclaration { cmd }
 
 classMemberDeclaration:
-      (*fd=fieldDeclaration { fd } *)
+      fd=fieldDeclaration { fd }
     | md=methodDeclaration { md }
     | SEMICOLON { ";" } 
     
@@ -150,19 +164,20 @@ fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
 
 variableDeclarators:
-    vd=variableDeclarator { vd }
-    | vd=variableDeclarator COMMA vdl=variableDeclarators { vd^", "^vdl }
+      vd=variableDeclarator { vd }
+    | vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }
 
 variableDeclarator:
     vdi=variableDeclaratorId { vdi }
-<<<<<<< HEAD
     | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
-=======
->>>>>>> Add method Throws declaration
 
 variableDeclaratorId:
-    id=identifier { id }
+      id=identifier { id }
     | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
+
+variableInitializer:
+      e=expression { e } 
+    | ai=arrayInitializer { ai } 
 
 (* 8.4 Method Declarations *)
 methodDeclaration:
@@ -170,14 +185,14 @@ methodDeclaration:
 
 methodHeader:
     r=resultType md=methodDeclarator { r^" "^md } 
-    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md }
-    | mms=methodModifiers r=resultType md=methodDeclarator t=throws { mms^" "^r^" "^md^" "t}
+    | mms=methodModifiers r=resultType md=methodDeclarator { mms^" "^r^" "^md } 
 
 
 methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
+
 methodModifiers:
       mm=methodModifier { mm }
     | mms=methodModifiers mm=methodModifier { mms^" "^mm }
@@ -220,18 +235,6 @@ lastFormalParameter:
 	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
 	|fp = formalParameter {fp}
 
-(* 8.4.6 Method throws *)
-throws:
-	THROWS etl=exceptionTypeList {"throws "^etl}
-
-exceptionTypeList:
-	et=exceptionType {et}
-	|etl=exceptionTypeList COMMA et=exceptionType {etl^" , "et}
-
-exceptionType:
-	ct=classType {ct}
-	|tv=typeVariable {tv}
-
 (* 8.6 Instance Initializers *)
 instanceInitializer:
 	b=block {b}
@@ -249,6 +252,7 @@ constructorDeclarator:
 	|stn=simpleTypeName LPAREN RPAREN {stn^" ()"}
 	|stn=simpleTypeName LPAREN fpl=formalParameterList RPAREN {stn^" ("^fpl^")"}
 
+(* todo : simpleTypeName has to be the name of the class that contains the identifier *)
 simpleTypeName:
 	i=identifier {i}
 
@@ -340,18 +344,6 @@ statementExpression:
 	| pde=postDecrementExpression { pde }
 	| mi=methodInvocation { mi }
 	| cce=classInstanceCreationExpression { cce }
-
-preIncrementExpression:
-    TODO { "" }
-
-preDecrementExpression:
-    TODO { "" }
-
-postDecrementExpression:
-    TODO { "" }
-
-postIncrementExpression:
-    TODO { "" }
 
 classInstanceCreationExpression:
     TODO { "" }
@@ -563,10 +555,6 @@ dims:
 
 classOrInterfaceType:
     TODO { "" }
-
-classType:
-	TODO { "" }
-
 (* 15.11 Field Access Expressions *)
 fieldAccess:
     p=primary PERIOD id=identifier { p^"."^id }
@@ -581,14 +569,19 @@ arrayInitializer:
 
 (* 15.12 Method invocation *)
 methodInvocation:
-    mn=methodName LBRACE al=argumentList? RBRACE { mn^"("^Some(al)^")"  }
-   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { p^"."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { "super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? { cn^".super."^Some(nwta)^" "^id^"("^Some(al)^")" }
-   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LBRACE al=argumentList? { tn^"."^nwta^" "^id^"("^al^")" }
+    mn=methodName LPAREN al=argumentList? RPAREN { mn^"("^(string_of_option al)^")"  }
+   | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { p^"."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { "super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | cn=className PERIOD SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LBRACE al=argumentList? RPAREN { cn^".super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
+   | tn=typeName PERIOD nwta=nonWildTypeArguments id=identifier LPAREN al=argumentList? RPAREN { tn^"."^nwta^" "^id^"("^(string_of_option al)^")" }
+   (*| error { print_error "error in methodInvocation production" } *)
+
+
 
 argumentList:
-   TODO { "" }
+    e=expression { e }
+    | al=argumentList COMMA e=expression { al^", "^e }
+
 
 nonWildTypeArguments:
    TODO { "" }
@@ -687,9 +680,6 @@ assignmentOperator:
     | BITOREQUAL { "|=" }
 
 conditionalExpression:
-    TODO { "" }
-
-arrayAccess:
     TODO { "" }
 
 (*15.27 Expression*)
