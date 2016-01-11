@@ -1,6 +1,5 @@
 public class SynchronizedStatement {
 	void foo() {
-		synchronized (i)
-			;
+		synchronized (i) {}
 	}
 }

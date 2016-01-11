@@ -107,13 +107,13 @@ booleanLiteral:
     | FALSE { "false" }
 
 stringLiteral:
-    TODO { "" }
+    i=IDENT { i }
 
 characterLiteral:
     TODO { "" }
 
 nullLiteral:
-    TODO { "" }
+    NULL { "null" }
 
 (* 4.2 Primitive Types *)
 numericType:
@@ -137,13 +137,43 @@ primitiveType:
     nt=numericType { nt }
 
 jType:
-    upt= primitiveType { upt }
+      upt= primitiveType { upt }
+    (*| rt=referenceType { rt }*)
+
+(* 4.3 Reference Types and Values *)
+referenceType:
+	  coit=classOrInterfaceType { coit }
+	| tv=typeVariable { tv }
+	| at=arrayType { at }
+
+classOrInterfaceType:
+	  ct=classType { ct }
+	| it=interfaceType { it }
+
+classType:
+	  tds=typeDeclSpecifier { tds }
+	| tds=typeDeclSpecifier tas=typeArguments { tds^" "^tas }
+
+interfaceType:
+	  tds=typeDeclSpecifier { tds }
+	| tds=typeDeclSpecifier tas=typeArguments { tds^" "^tas }
+
+typeDeclSpecifier:
+	  tn=typeName { tn }
+	| coit=classOrInterfaceType PERIOD id=identifier { coit^"."^id }
+
+typeName:
+	  id=identifier { id }
+	| tn=typeName PERIOD id=identifier { tn^"."^id }
+
+typeVariable:
+	id=identifier { id }
+
+arrayType:
+	jt=jType LBRACK RBRACK { "["^jt^"]" }
 
 (* 6.5 Meaning of a name *)
 packageName:
-    TODO { "" }
-
-typeName:
     TODO { "" }
 
 methodName:
@@ -276,7 +306,8 @@ formalParameters:
 	|fps=formalParameters COMMA fp=formalParameter {fps^" , "^fps}
 
 formalParameter:
-	vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
+	  jt=jType vdi=variableDeclaratorId {jt^" "^vdi}
+	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
 
 variableModifiers:
 	vm=variableModifier {vm}
@@ -454,9 +485,6 @@ switchLabel:
 	
 enumConstantName:
 	id=identifier { id }
-	
-constantExpression:
-    TODO { "" }
 
 (* 14.12 The while Statement *)
 whileStatement:
@@ -618,8 +646,6 @@ dims:
 	  LBRACK RBRACK { "[]" }
 	| d=dims LBRACK RBRACK { d^"[]" }
 
-classOrInterfaceType:
-    TODO { "" }
 (* 15.11 Field Access Expressions *)
 fieldAccess:
     p=primary PERIOD id=identifier { p^"."^id }
@@ -686,9 +712,6 @@ castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
-
-referenceType:
-    TODO { "" }
 	
 (* 15.17 Multiplicative Operators *)
 multiplicativeExpression:
@@ -712,7 +735,7 @@ shiftExpression:
 	
 (* 15.20 Relational Operators *)
 relationalExpression:
-	  se=shiftExpression {se }
+	  se=shiftExpression { se }
 	| re=relationalExpression INF se=shiftExpression { re^" < "^se }
 	| re=relationalExpression SUP se=shiftExpression { re^" > "^se }
 	| re=relationalExpression INFEQUAL se=shiftExpression { re^" <= "^se }
@@ -783,6 +806,10 @@ assignmentOperator:
 (*15.27 Expression*)
 expression:
     ae=assignmentExpression { ae }
+
+(* 15.28 Constant Expression *)
+constantExpression:
+	e=expression { e }
 
 %%
 

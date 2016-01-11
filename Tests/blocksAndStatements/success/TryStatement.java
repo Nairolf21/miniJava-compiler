@@ -1,36 +1,22 @@
 public class TryStatement {
 	void foo() {
-		try
-			;
-		catch (Exc e)
-			;
+		try {}
+		catch (int i) {}
 			
-		try
-			;
-		catch (Excun e)
-			;
-		catch (Excdeux e)
-			;
+		try {}
+		catch (int i) {}
+		catch (float f) {}
 			
-		try
-			;
-		finally
-			;
+		try {}
+		finally {}
 			
-		try
-			;
-		catch (Exc e)
-			;
-		finally
-			;
+		try {}
+		catch (float f) {}
+		finally {}
 			
-		try
-			;
-		catch (Excun e)
-			;
-		catch (Excdeux e)
-			;
-		finally
-			;
+		try {}
+		catch (int i) {}
+		catch (float f) {}
+		finally {}
 	}
 }

@@ -1,6 +1,6 @@
 public class SwitchStatement {
 	void foo() {
-		switch (i) {}
+		switch (aa) {}
 		switch (i) {
 			case 1 :
 		}
