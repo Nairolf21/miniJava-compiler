@@ -532,12 +532,12 @@ nullLiteral:
 
 (* 15.9 Class Instance Creation Expressions *)
 classInstanceCreationExpression:
-	  NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
-	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
+	  NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN { "new "^tas^" "^coit^"()" }
+	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^coit^"("^al^")" }
+	| NEW coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^coit^"() "^cb }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^tas^" "^coit^"("^al^")" }
+	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^tas^" "^coit^"() "^cb }
+	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^coit^"("^al^") "^cb }
 	| NEW tas=typeArguments coit=classOrInterfaceType LPAREN al=argumentList RPAREN cb=classBody { "new "^tas^" "^coit^"("^al^") "^cb }
 	
 Primary. new TypeArgumentsopt Identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
