@@ -33,7 +33,7 @@ let print_error str =
 
 (* operators *)
 %token PLUS MINUS MULT DIV MOD INCR DECR TILDE EXCL LSHIFT RSHIFT USHIFT INF SUP INFEQUAL SUPEQUAL 
-TRUEEQUAL NOTEQUAL AND EXLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR CONDITIONAL
+TRUEEQUAL NOTEQUAL AND EXCLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR CONDITIONAL
 
 (* assignment operators *)
 %token EQUAL MULTEQUAL DIVEQUAL MODEQUAL PLUSEQUAL MINUSEQUAL LSHIFTEQUAL RSHIFTEQUAL USHIFTEQUAL BITANDEQUAL BITXOREQUAL BITOREQUAL
@@ -686,7 +686,7 @@ relationalExpression:
 	| re=relationalExpression INSTANCEOF rt=referenceType { re^" instanceof "^rt }
 	
 (* 15.21 Equality Operators *)
-EqualityExpression:
+equalityExpression:
 	  re=relationalExpression { re }
 	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
 	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
@@ -704,7 +704,20 @@ inclusiveOrExpression:
 	  eoe=exclusiveOrExpression { eoe }
 	| ioe=inclusiveOrExpression INCLUSIVEOR eoe=exclusiveOrExpression { ioe^" | "^eoe }
 	
+(* 15.23 Conditional-And Operator && *)
+conditionalAndExpression:
+	  ioe=inclusiveOrExpression { ioe }
+	| cae=conditionalAndExpression CONDITIONALAND ioe=inclusiveOrExpression { cae^" && "^ioe }
 
+(* 15.24 Conditional-Or Operator || *)
+conditionalOrExpression:
+	  cae=conditionalAndExpression { cae }
+	| coe=conditionalOrExpression CONDITIONALOR cae=conditionalAndExpression { coe^" || "^cae }
+
+(* 15.25 Conditional Operator ? *)
+conditionalExpression:
+	  coe=conditionalOrExpression { coe }
+	| coe=conditionalOrExpression CONDITIONAL e=expression COLON ce=conditionalExpression { coe^" ? "^e^" : "^ce }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
@@ -733,28 +746,9 @@ assignmentOperator:
     | BITXOREQUAL { "^=" }
     | BITOREQUAL { "|=" }
 
-conditionalExpression:
-    TODO { "" }
-
 (*15.27 Expression*)
 expression:
     ae=assignmentExpression { ae }
-
-
-(*
-// TODO
-assignment
-preIncrementExpression
-preDecrementExpression
-postIncrementExpression
-postDecrementExpression
-methodInvocation
-classInstanceCreationExpression
-
-// TODO
-expression
-constantExpression
-*)
 
 %%
 
