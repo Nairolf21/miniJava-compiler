@@ -691,7 +691,18 @@ EqualityExpression:
 	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
 	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
 	
+(* 15.22 Bitwise and Logical Operators *)
+andExpression:
+	  ee=equalityExpression { ee }
+	| ae=andExpression AND ee=equalityExpression { ae^" & "^ee }
 
+exclusiveOrExpression:
+	  ae=andExpression { ae }
+	| eoe=exclusiveOrExpression EXCLUSIVEOR ae=andExpression { eoe^" ^ "^ae }
+
+inclusiveOrExpression:
+	  eoe=exclusiveOrExpression { eoe }
+	| ioe=inclusiveOrExpression INCLUSIVEOR eoe=exclusiveOrExpression { ioe^" | "^eoe }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
