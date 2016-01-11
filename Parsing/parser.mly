@@ -677,12 +677,12 @@ shiftExpression:
 	
 (* 15.20 Relational Operators *)
 relationalExpression:
-	  ShiftExpression
-	| re=relationalExpression INF se=shiftExpression { 
-	| re=relationalExpression SUP se=shiftExpression
-	| re=relationalExpression INFEQUAL se=shiftExpression
-	| re=relationalExpression SUPEQUAL se=shiftExpression
-	| re=relationalExpression INSTANCEOF rt=referenceType
+	  se=shiftExpression {se }
+	| re=relationalExpression INF se=shiftExpression { re^" < "^se }
+	| re=relationalExpression SUP se=shiftExpression { re^" > "^se }
+	| re=relationalExpression INFEQUAL se=shiftExpression { re^" <= "^se }
+	| re=relationalExpression SUPEQUAL se=shiftExpression { re^" >= "^se }
+	| re=relationalExpression INSTANCEOF rt=referenceType { re^" instanceof "^rt }
 
 (*15.26 Assignment Operators *)
 assignmentExpression:
