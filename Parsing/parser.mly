@@ -173,15 +173,20 @@ arrayType:
 	jt=jType LBRACK RBRACK { "["^jt^"]" }
 
 (* 6.5 Meaning of a name *)
+
+(* Not called by other rules
 packageName:
     TODO { "" }
+*)
 
 methodName:
     id=identifier { id }
     | an=ambiguousName PERIOD id=identifier { an^"."^id }
 
-packageOrTypeName:
+(* Not called by other rules
+ * packageOrTypeName:
     TODO { "" }
+*)
 
 expressionName:
     id=identifier { id }
