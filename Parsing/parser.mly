@@ -43,7 +43,7 @@ TRUEEQUAL NOTEQUAL AND EXCLUSIVEOR INCLUSIVEOR CONDITIONALAND CONDITIONALOR COND
 
 (* keyword *)
 %token ABSTRACT CLASS SHORT BYTE INT LONG FLOAT DOUBLE VOID FINAL NATIVE PRIVATE PROTECTED PUBLIC STATIC STRICTFP 
-SYNCHRONIZED NEW SUPER THIS INSTANCEOF TRANSIENT VOLATILE
+SYNCHRONIZED NEW SUPER THIS INSTANCEOF TRANSIENT VOLATILE IMPORT
 
 (* statemeknts *)
 %token IF ELSE ASSERT SWITCH CASE DEFAULT WHILE DO FOR BREAK CONTINUE RETURN THROW 
@@ -181,13 +181,8 @@ packageName:
 *)
 
 methodName:
-    id=identifier { id }
+      id=identifier { id }
     | an=ambiguousName PERIOD id=identifier { an^"."^id }
-
-(* Not called by other rules
- * packageOrTypeName:
-    TODO { "" }
-*)
 
 expressionName:
     id=identifier { id }
@@ -200,10 +195,23 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 compilationUnit: 
       tps=typeDeclarations EOF { tps } 
+    | ids=importDeclarations tps=typeDeclarations EOF { ids^"\n"^tps }
 
 typeDeclarations:
       tp=typeDeclaration { tp }
     | tps=typeDeclarations tp=typeDeclaration { tps^"\n"^tp }
+
+(* 7.5 Import Declarations *)
+importDeclarations:
+      id=importDeclaration { id }
+    | ids=importDeclarations id=importDeclaration { ids^"\n"^id }
+
+importDeclaration:
+    stid=singleTypeImportDeclaration { stid }
+
+singleTypeImportDeclaration:
+      IMPORT tn=typeName SEMICOLON { "import "^tn^";" }
+    | IMPORT STATIC tn=typeName SEMICOLON { "import static "^tn^";" }
 
 (* 7.6 Top Level Type Declarations *)
 typeDeclaration:
