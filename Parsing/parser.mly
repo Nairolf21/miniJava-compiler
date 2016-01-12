@@ -61,7 +61,7 @@ TRY CATCH FINALLY
 %%
 
 (* 3.8 identifiers *)
-identifier:
+%inline identifier:
     id=IDENT { id }
     
 (* 3.10 Literals *)
@@ -130,9 +130,9 @@ floatingPointType:
     FLOAT { "float" } 
     | DOUBLE { "double" }
     
-(* resultType:
+%inline resultType:
     jt=jType { jt }
-    | VOID { "void" } *)
+    | VOID { "void" }
 
 primitiveType:
     nt=numericType { nt }
@@ -219,10 +219,10 @@ typeDeclaration:
     | SEMICOLON { ";" } 
 
 (* 8.1 Class Declaration *)
-classDeclaration:
+%inline classDeclaration:
     ncd=normalClassDeclaration { ncd }
 
-normalClassDeclaration:
+%inline normalClassDeclaration:
       CLASS id=identifier cb=classBody { "class "^id^" "^cb } 
     | cms=classModifiers CLASS id=identifier cb=classBody { cms^" class "^id^" "^cb }
 
@@ -239,51 +239,70 @@ classModifier:
     | FINAL { "final" }
     | STRICTFP { "strictfp" }
 
-classBody:
+%inline classBody:
       LBRACE cbds=classBodyDeclarations RBRACE { " {"^cbds^" }" }
     | LBRACE RBRACE { " {} "}
 
-classBodyDeclarations:
-      cbd=classBodyDeclaration { cbd }
-    | cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }
+%inline classBodyDeclarations:
+      cbdl=nonempty_list(classBodyDeclaration) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^"\n"^print_list tl
+    in print_list cbdl }
+    (*| cbds=classBodyDeclarations cbd=classBodyDeclaration { cbds^"\n"^cbd }*)
 
-classBodyDeclaration:
+%inline classBodyDeclaration:
 	cmd=classMemberDeclaration { cmd }
     | ii=instanceInitializer {ii}
     | si=staticInitializer {si}
     | cd=constructorDeclaration { cd }
 
-classMemberDeclaration:
+%inline classMemberDeclaration:
       fd=fieldDeclaration { fd }
     | md=methodDeclaration { md }
     | SEMICOLON { ";" } 
     
 (* 8.3 Field Declarations *)
-fieldDeclaration:
+%inline fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
     | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
 
-variableDeclarators:
-      vd=variableDeclarator { vd }
-    | vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }
+%inline variableDeclarators:
+      lvd=separated_nonempty_list(COMMA,variableDeclarator) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^", "^print_list tl
+    in print_list lvd}
+    (*| vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }*)
 
-variableDeclarator:
+%inline variableDeclarator:
     vdi=variableDeclaratorId { vdi }
     | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
 
-variableDeclaratorId:
-      id=identifier { id }
-    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
+%inline variableDeclaratorId:
+      id=identifier lbrack=list(pair(LBRACK,RBRACK)) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> "[]"^print_list tl
+    in
+     id^print_list(lbrack) }
+    (*| vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }*)
 
-variableInitializer:
+%inline variableInitializer:
       e=expression { e } 
     | ai=arrayInitializer { ai } 
 
-fieldModifiers:
-     fm=fieldModifier { fm }
-   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
+%inline fieldModifiers:
+     lfm=nonempty_list(fieldModifier) { 
+     let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(lfm) }
+  (* | fms=fieldModifiers fm=fieldModifier { fms^" "^fm } *)
    
-fieldModifier:
+%inline fieldModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -294,26 +313,30 @@ fieldModifier:
     | VOLATILE { "volatiLe" }
 
 (* 8.4 Method Declarations *)
-methodDeclaration:
+%inline methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
-methodHeader:
-    jt=jType md=methodDeclarator { jt^" "^md } 
-    | mms=methodModifiers jt=jType md=methodDeclarator { mms^" "^jt^" "^md } 
-    | VOID md=methodDeclarator { "void "^md } 
-    | mms=methodModifiers VOID md=methodDeclarator { mms^" void "^md } 
+%inline methodHeader:
+    rt=resultType md=methodDeclarator { rt^" "^md } 
+    | mms=methodModifiers rt=resultType md=methodDeclarator { mms^" "^rt^" "^md } 
 
 
-methodDeclarator:
+%inline methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
 
-methodModifiers:
-      mm=methodModifier { mm }
-    | mms=methodModifiers mm=methodModifier { mms^" "^mm }
+%inline methodModifiers:
+      lmm=nonempty_list(methodModifier) { 
+     let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(lmm) }
+   (* | mms=methodModifiers mm=methodModifier { mms^" "^mm } *)
 
-methodModifier:
+%inline methodModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -324,7 +347,7 @@ methodModifier:
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
 
-methodBody:
+%inline methodBody:
 	SEMICOLON { ";" }
 	| b=block { b }
 
@@ -333,101 +356,105 @@ formalParameterList:
 	lfp = lastFormalParameter {lfp}
 	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
 
-formalParameters:
+%inline formalParameters:
 	fp=formalParameter {fp}
 	|fps=formalParameters COMMA fp=formalParameter {fps^" , "^fps}
 
-formalParameter:
+%inline formalParameter:
 	  jt=jType vdi=variableDeclaratorId {jt^" "^vdi}
 	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
 
-variableModifiers:
+%inline variableModifiers:
 	vm=variableModifier {vm}
 	| vms=variableModifiers vm=variableModifier {vms^" "^vm}
 
-variableModifier:
+%inline variableModifier:
 	| FINAL { "final" }
 
-lastFormalParameter:
+%inline lastFormalParameter:
 	|vms=variableModifiers vdi=variableDeclaratorId {vms^" "^vdi}
 	|fp = formalParameter {fp}
 
 (* 8.6 Instance Initializers *)
-instanceInitializer:
+%inline instanceInitializer:
 	b=block {b}
 
 (* 8.7 Static Initializers *)
-staticInitializer:
+%inline staticInitializer:
 	STATIC b=block {"static "^b}
 
 (* 8.8 Constructor Declarations *)
-constructorDeclaration:
+%inline constructorDeclaration:
 	|cd=constructorDeclarator cb=constructorBody {cd^" "^cb}
 	|cm=constructorModifiers cd=constructorDeclarator cb=constructorBody {cm^" "^cd^" "^cb}
 
-constructorDeclarator:
+%inline constructorDeclarator:
 	|stn=simpleTypeName LPAREN RPAREN {stn^" ( )"}
 	|stn=simpleTypeName LPAREN fpl=formalParameterList RPAREN {stn^" ("^fpl^")"}
 
 (* todo : simpleTypeName has to be the name of the class that contains the identifier *)
-simpleTypeName:
+%inline simpleTypeName:
 	i=identifier {i}
 
-constructorBody:
+%inline constructorBody:
 	LBRACE RBRACE { " {} "}
 	| LBRACE bs=blockStatements RBRACE { " {\n"^bs^"\n}" }
 
-constructorModifiers:
+%inline constructorModifiers:
 	cm=constructorModifier {cm}
 	| cms=constructorModifiers cm=constructorModifier {cms^" "^cm}
 
-constructorModifier:
+%inline constructorModifier:
 	| PUBLIC {"public"}
 	| PROTECTED {"protected"}
 	| PRIVATE {"private"}
 	
-nonWildTypeArguments:
+%inline nonWildTypeArguments:
     INF rtl=referenceTypeList SUP { "< "^rtl^" >" }
 
-referenceTypeList:
+%inline referenceTypeList:
     rt=referenceType { rt }
     | rtl=referenceTypeList COMMA rt=referenceType { rtl^", "^rt }
 
 (* 10.6 Array Initializers *)
-arrayInitializer:
+%inline arrayInitializer:
 	  LBRACE RBRACE { "{}" }
 	| LBRACE vis=variableInitializers  RBRACE { "{"^vis^"}" }
 	| LBRACE COMMA RBRACE { "{,}" }
 	| LBRACE vis=variableInitializers COMMA RBRACE { "{"^vis^",}" }
 
-variableInitializers:
-	  vi=variableInitializer { vi }
-	| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi }
+%inline variableInitializers:
+	  lvi=separated_nonempty_list(COMMA,variableInitializer) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^", "^print_list tl
+    in print_list lvi }
+	(*| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi } *)
 
 (* 14.2 Blocks *)    
-block:
+%inline block:
 	  LBRACE bss=blockStatements RBRACE { " {\n"^bss^"\n}" }
 	| LBRACE RBRACE { " {} "}
 
-blockStatements:
+%inline blockStatements:
 	  bs=blockStatement { bs }
 	| bss=blockStatements bs=blockStatement { bss^"\n"^bs }
 
-blockStatement:
+%inline blockStatement:
 	  lvds=localVariableDeclarationStatement { lvds }
 	| cd=classDeclaration { cd }
 	| s=statement { s }
 
 (* 14.4 Local Variable Declaration Statements *)
-localVariableDeclarationStatement:
+%inline localVariableDeclarationStatement:
 	lvd=localVariableDeclaration SEMICOLON { lvd^";" }
 
-localVariableDeclaration:
+%inline localVariableDeclaration:
 	  vm=variableModifiers jt=jType vds=variableDeclarators { vm^" "^jt^" "^vds }
 	| jt=jType vds=variableDeclarators { jt^" "^vds }
 
 (* 14.5 Statements *)
-statement:
+%inline statement:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| ls=labeledStatement { ls }
 	| its=ifThenStatement { its }
@@ -435,7 +462,7 @@ statement:
 	| ws=whileStatement { ws }
 	| fs=forStatement { fs }
 	
-statementWithoutTrailingSubstatement:
+%inline statementWithoutTrailingSubstatement:
 	  b=block { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
@@ -449,7 +476,7 @@ statementWithoutTrailingSubstatement:
 	| ts=throwStatement { ts }
 	| ts=tryStatement { ts }
 	
-statementNoShortIf:
+%inline statementNoShortIf:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
@@ -457,21 +484,21 @@ statementNoShortIf:
 	| fsnsi=forStatementNoShortIf { fsnsi }
 
 (* 14.6 Empty Statement *)
-emptyStatement:
+%inline emptyStatement:
 	SEMICOLON { ";" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
 	i=identifier COLON s=statement { i^" : "^s }
 
-labeledStatementNoShortIf:
+%inline labeledStatementNoShortIf:
 	i=identifier COLON snsi=statementNoShortIf { i^" : "^snsi }
 	
 (* 14.8 Expression Statement *)
-expressionStatement:
+%inline expressionStatement:
 	se=statementExpression SEMICOLON { se^" ;" }
 	
-statementExpression:
+%inline statementExpression:
 	  a=assignment { a }
 	| pie=preIncrementExpression { pie }
 	| pde=preDecrementExpression { pde }
@@ -481,67 +508,67 @@ statementExpression:
 	| cce=classInstanceCreationExpression { cce }
 
 (* 14.9 The if Statement *)
-ifThenStatement:
+%inline ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
 
-ifThenElseStatement:
+%inline ifThenElseStatement:
 	IF LPAREN e=expression RPAREN snsi=statementNoShortIf ELSE s=statement { "if ("^e^")\n"^snsi^"\nelse\n"^s }
 
-ifThenElseStatementNoShortIf:
+%inline ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
 
 
 (* 14.10 The assert Statement *)
-assertStatement:
+%inline assertStatement:
 	  ASSERT e=expression SEMICOLON { "assert "^e^" ;" }
 	| ASSERT e1=expression COLON e2=expression SEMICOLON { "assert "^e1^" : "^e2^" ;" }
 	
 (* 14.11 The switch Statement *)
-switchStatement:
+%inline switchStatement:
 	SWITCH LPAREN e=expression RPAREN sb=switchBlock { "switch ("^e^") "^sb }
 	
-switchBlock:
+%inline switchBlock:
 	  LBRACE RBRACE { "{}" }
 	| LBRACE sbsgs=switchBlockStatementGroups RBRACE { "{ "^sbsgs^"}" }
 	| LBRACE sls=switchLabels RBRACE { "{"^sls^"}" }
 	| LBRACE sbsg=switchBlockStatementGroups sls=switchLabels RBRACE { "{"^sbsg^" "^sls^"}" }
 	
-switchBlockStatementGroups:
+%inline switchBlockStatementGroups:
 	  sbsg=switchBlockStatementGroup { sbsg }
 	| sbsgs=switchBlockStatementGroups sbsg=switchBlockStatementGroup { sbsgs^"\n"^sbsg }
 	
-switchBlockStatementGroup:
+%inline switchBlockStatementGroup:
 	sls=switchLabels bss=blockStatements { sls^"\n"^bss }
 
-switchLabels:
+%inline switchLabels:
 	  sl=switchLabel { sl }
 	| sls=switchLabels sl=switchLabel { sls^"\n"^sl }
 
-switchLabel:
+%inline switchLabel:
 	  CASE ce=constantExpression COLON { "case "^ce^" :" }
 	| CASE ecn=enumConstantName COLON { "case "^ecn^" :" }
 	| DEFAULT COLON { "default :" }
 	
-enumConstantName:
+%inline enumConstantName:
 	id=identifier { id }
 
 (* 14.12 The while Statement *)
-whileStatement:
+%inline whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
 	
-whileStatementNoShortIf:
+%inline whileStatementNoShortIf:
 	WHILE LPAREN e=expression RPAREN snsi=statementNoShortIf { "while ("^e^")\n"^snsi }
 	
 (* 14.13 The do Statement *)
-doStatement:
+%inline doStatement:
 	DO s=statement WHILE LPAREN e=expression RPAREN { "do\n"^s^"\nwhile ("^e^")" }
 	
 (* 14.14 The for Statement *)
-forStatement:
+%inline forStatement:
 	  bfs=basicForStatement { bfs }
 	| efs=enhancedForStatement { efs }
 	
-basicForStatement:
+%inline basicForStatement:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN s=statement { "for (;;)\n"^s }
 	| FOR LPAREN fi=forInit SEMICOLON SEMICOLON RPAREN s=statement { "for ("^fi^";;)\n"^s }
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON RPAREN s=statement { "for (;"^e^";)\n"^s }
@@ -551,7 +578,7 @@ basicForStatement:
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN s=statement { "for (;"^e^";"^fu^")\n"^s }
 	| FOR LPAREN fi=forInit SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN s=statement { "for ("^fi^";"^e^";"^fu^")\n"^s }
 
-forStatementNoShortIf:
+%inline forStatementNoShortIf:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN snsi=statementNoShortIf { "for (;;)\n"^snsi }
 	| FOR LPAREN fi=forInit SEMICOLON SEMICOLON RPAREN snsi=statementNoShortIf { "for ("^fi^";;)\n"^snsi }
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON RPAREN snsi=statementNoShortIf { "for (;"^e^";)\n"^snsi }
@@ -561,62 +588,62 @@ forStatementNoShortIf:
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN snsi=statementNoShortIf { "for (;"^e^";"^fu^")\n"^snsi }
 	| FOR LPAREN fi=forInit SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN snsi=statementNoShortIf { "for ("^fi^";"^e^";"^fu^")\n"^snsi }
 
-forInit:
+%inline forInit:
 	  sel=statementExpressionList { sel }
 	| lvd=localVariableDeclaration { lvd }
 
-forUpdate:
+%inline forUpdate:
 	sel=statementExpressionList { sel }
 
-statementExpressionList:
+%inline statementExpressionList:
 	  se=statementExpression { se }
 	| sel=statementExpressionList COMMA se=statementExpression { sel^" , "^se }
 	
-enhancedForStatement:
+%inline enhancedForStatement:
 	  FOR LPAREN jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^jt^" "^id^" : "^e^")\n"^s }
 	| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }
 
 (* 14.15 The break Statement *)
-breakStatement:
+%inline breakStatement:
 	  BREAK SEMICOLON { "break ;" }
 	| BREAK id=identifier SEMICOLON { "break "^id^" ;" }
 	
 (* 14.16 The continue Statement *)
-continueStatement:
+%inline continueStatement:
 	CONTINUE SEMICOLON { "continue ;" }
 	| CONTINUE id=identifier SEMICOLON { "continue "^id^" ;" }
 	
 (* 14.17 The return statement *)
-returnStatement:
+%inline returnStatement:
 	RETURN SEMICOLON { "return ;" }
 	| RETURN e=expression SEMICOLON { "return "^e^" ;" }
 	
 (* 14.18 The throw Statement *)
-throwStatement:
+%inline throwStatement:
 	THROW e=expression SEMICOLON { "throw "^e^" ;" }
 	
 (* 14.19 The synchronized Statement *)
-synchronizedStatement:
+%inline synchronizedStatement:
 	SYNCHRONIZED LPAREN e=expression RPAREN b=block { "synchronized ("^e^")\n"^b }
 
 (* 14.20 The try Statement *)
-tryStatement:
+%inline tryStatement:
 	  TRY b=block c=catches { "try \n"^b^"\n"^c }
 	| TRY b=block f=finally { "try \n"^b^"\n"^f }
 	| TRY b=block c=catches f=finally { "try \n"^b^"\n"^c^"\n"^f }
 
-catches:
+%inline catches:
 	  cc=catchClause { cc }
 	| c=catches cc=catchClause { c^"\n"^cc }
 
-catchClause:
+%inline catchClause:
 	CATCH LPAREN fp=formalParameter RPAREN b=block { "catch ("^fp^")\n"^b }
 
-finally:
+%inline finally:
 	FINALLY b=block { "finally\n"^b }
 
 (* 15.8 Primary Expressions *)
-primary:
+%inline primary:
 	  pnna=primaryNoNewArray { pnna }
 	| ace=arrayCreationExpression { ace }
 
@@ -633,7 +660,7 @@ primaryNoNewArray:
 	| aa=arrayAccess { aa }
 
 (* 15.9 Class Instance Creation Expressions *)
-classInstanceCreationExpression:
+%inline classInstanceCreationExpression:
 	  NEW tas=typeArguments coit=classOrInterfaceType LPAREN RPAREN { "new "^tas^" "^coit^"()" }
 	| NEW coit=classOrInterfaceType LPAREN al=argumentList RPAREN { "new "^coit^"("^al^")" }
 	| NEW coit=classOrInterfaceType LPAREN RPAREN cb=classBody { "new "^coit^"() "^cb }
@@ -658,15 +685,19 @@ classInstanceCreationExpression:
 	| p=primary PERIOD NEW id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^id^" "^ta2^" ("^al^") "^cb }
 	| p=primary PERIOD NEW ta1=typeArguments id=identifier ta2=typeArguments LPAREN al=argumentList RPAREN cb=classBody { p^". new "^ta1^" "^id^" "^ta2^" ("^al^") "^cb }
 	
-argumentList:
-	  e=expression { e }
-	| al=argumentList COMMA e=expression { al^" , "^e }
+%inline argumentList:
+	  le=separated_nonempty_list(COMMA,expression) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^", "^print_list tl
+    in print_list le }
+	(*| al=argumentList COMMA e=expression { al^" , "^e }*)
 	
 typeArguments:
 	TODO { "" }
 
 (* 15.10 Array Creation Expressions *)
-arrayCreationExpression:
+%inline arrayCreationExpression:
 	  NEW pt=primitiveType des=dimExprs { pt^des }
 	| NEW pt=primitiveType des=dimExprs ds=dims { pt^des^ds }
 	| NEW coit=classOrInterfaceType des=dimExprs { coit^des }
@@ -674,19 +705,27 @@ arrayCreationExpression:
 	| NEW pt=primitiveType ds=dims ai=arrayInitializer { pt^ds^" "^ai }
 	| NEW coit=classOrInterfaceType ds=dims ai=arrayInitializer { coit^ds^" "^ai }
 
-dimExprs:
-	  de=dimExpr { de }
-	| des=dimExprs de=dimExpr { des^de }
+%inline dimExprs:
+	  del=nonempty_list(dimExpr) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in print_list del }
+	(*| des=dimExprs de=dimExpr { des^de } *)
 
-dimExpr:
+%inline dimExpr:
 	LBRACK e=expression RBRACK { "["^e^"]" }
 
-dims:
-	  LBRACK RBRACK { "[]" }
-	| d=dims LBRACK RBRACK { d^"[]" }
+%inline dims:
+	  dl=nonempty_list(pair(LBRACK,RBRACK)) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> "[]"^print_list tl
+    in print_list dl }
+	(*| d=dims LBRACK RBRACK { d^"[]" }*)
 
 (* 15.11 Field Access Expressions *)
-fieldAccess:
+%inline fieldAccess:
     p=primary PERIOD id=identifier { p^"."^id }
     | SUPER PERIOD id=identifier { "super."^id }
     | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
@@ -695,7 +734,7 @@ className:
     TODO { "" }
 
 (* 15.12 Method invocation *)
-methodInvocation:
+%inline methodInvocation:
     mn=methodName LPAREN al=argumentList? RPAREN { mn^"("^(string_of_option al)^")"  }
    | p=primary PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { p^"."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
    | SUPER PERIOD nwta=nonWildTypeArguments? id=identifier LPAREN al=argumentList? RPAREN { "super."^(string_of_option nwta)^" "^id^"("^(string_of_option al)^")" }
@@ -705,21 +744,21 @@ methodInvocation:
 
    
 (* 15.13 Array Access Expressions *)
- arrayAccess:
+ %inline arrayAccess:
 	  en=expressionName LBRACK e=expression RBRACK { en^" ["^e^"]" }
 	| pnna=primaryNoNewArray LBRACK e=expression RBRACK { pnna^" ["^e^"]" }
 	
 (* 15.14 Postfix Expressions *)
-postfixExpression:
+%inline postfixExpression:
 	  p=primary { p }
 	| en=expressionName { en }
 	| pie=postIncrementExpression { pie }
 	| pde=postDecrementExpression { pde }
 	
-postIncrementExpression:
+%inline postIncrementExpression:
 	pfe=postfixExpression INCR { pfe^" ++" }
 	
-postDecrementExpression:
+%inline postDecrementExpression:
 	pfe=postfixExpression DECR { pfe^" --" }
 
 (* 15.15 Unary operators *)
@@ -731,13 +770,13 @@ unaryExpression:
     | MINUS ue=unaryExpression { "-"^ue }
     | uenpm=unaryExpressionNotPlusMinus { uenpm }
 
-preIncrementExpression:
+%inline preIncrementExpression:
     INCR ue=unaryExpression { "++"^ue }
 
-preDecrementExpression:
+%inline preDecrementExpression:
     DECR ue=unaryExpression { "--"^ue }
 
-unaryExpressionNotPlusMinus:
+%inline unaryExpressionNotPlusMinus:
     pe=postfixExpression { pe }
     | TILDE ue=unaryExpression { "~"^ue }
     | EXCL ue=unaryExpression { "!"^ue }
@@ -745,7 +784,7 @@ unaryExpressionNotPlusMinus:
     (*| error { print_error "error: unaryExpressionNotPlusMinus" }*)
 
 (* 15.16 Cast expression *)
-castExpression:
+%inline castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
@@ -814,19 +853,19 @@ conditionalExpression:
 	| coe=conditionalOrExpression CONDITIONAL e=expression COLON ce=conditionalExpression { coe^" ? "^e^" : "^ce }
 
 (*15.26 Assignment Operators *)
-assignmentExpression:
+%inline assignmentExpression:
     ce=conditionalExpression { ce } 
     | a=assignment { a }
 
 assignment:
     lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
 
-leftHandSide:
+%inline leftHandSide:
     en=expressionName { en }
     | fa=fieldAccess { fa }
     | aa=arrayAccess { aa }
 
-assignmentOperator:
+%inline assignmentOperator:
     EQUAL { "=" }
     | MULTEQUAL { "*=" }
     | DIVEQUAL { "/=" }
@@ -841,11 +880,11 @@ assignmentOperator:
     | BITOREQUAL { "|=" }
 
 (*15.27 Expression*)
-expression:
+%inline expression:
     ae=assignmentExpression { ae }
 
 (* 15.28 Constant Expression *)
-constantExpression:
+%inline constantExpression:
 	e=expression { e }
 
 %%
