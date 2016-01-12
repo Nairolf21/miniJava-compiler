@@ -61,7 +61,7 @@ TRY CATCH FINALLY
 %%
 
 (* 3.8 identifiers *)
-identifier:
+%inline identifier:
     id=IDENT { id }
     
 (* 3.10 Literals *)
@@ -130,9 +130,9 @@ floatingPointType:
     FLOAT { "float" } 
     | DOUBLE { "double" }
     
-(* resultType:
+%inline resultType:
     jt=jType { jt }
-    | VOID { "void" } *)
+    | VOID { "void" }
 
 primitiveType:
     nt=numericType { nt }
@@ -251,31 +251,46 @@ classMemberDeclaration:
     | SEMICOLON { ";" } 
     
 (* 8.3 Field Declarations *)
-fieldDeclaration:
+%inline fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
     | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
 
-variableDeclarators:
-      vd=variableDeclarator { vd }
-    | vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }
+%inline variableDeclarators:
+      lvd=separated_nonempty_list(COMMA,variableDeclarator) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^", "^print_list tl
+    in print_list lvd}
+    (*| vds=variableDeclarators COMMA vd=variableDeclarator { vds^", "^vd }*)
 
-variableDeclarator:
+%inline variableDeclarator:
     vdi=variableDeclaratorId { vdi }
     | vdi=variableDeclaratorId EQUAL vi=variableInitializer { vdi^" = "^vi }
 
-variableDeclaratorId:
-      id=identifier { id }
-    | vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }
+%inline variableDeclaratorId:
+      id=identifier lbrack=list(pair(LBRACK,RBRACK)) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> "[]"^print_list tl
+    in
+     id^print_list(lbrack) }
+    (*| vdi=variableDeclaratorId LBRACK RBRACK { vdi^"[ ]" }*)
 
-variableInitializer:
+%inline variableInitializer:
       e=expression { e } 
     | ai=arrayInitializer { ai } 
 
-fieldModifiers:
-     fm=fieldModifier { fm }
-   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
+%inline fieldModifiers:
+     lfm=nonempty_list(fieldModifier) { 
+     let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(lfm) }
+  (* | fms=fieldModifiers fm=fieldModifier { fms^" "^fm } *)
    
-fieldModifier:
+%inline fieldModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -286,26 +301,30 @@ fieldModifier:
     | VOLATILE { "volatiLe" }
 
 (* 8.4 Method Declarations *)
-methodDeclaration:
+%inline methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
-methodHeader:
-    jt=jType md=methodDeclarator { jt^" "^md } 
-    | mms=methodModifiers jt=jType md=methodDeclarator { mms^" "^jt^" "^md } 
-    | VOID md=methodDeclarator { "void "^md } 
-    | mms=methodModifiers VOID md=methodDeclarator { mms^" void "^md } 
+%inline methodHeader:
+    rt=resultType md=methodDeclarator { rt^" "^md } 
+    | mms=methodModifiers rt=resultType md=methodDeclarator { mms^" "^rt^" "^md } 
 
 
-methodDeclarator:
+%inline methodDeclarator:
     id=identifier LPAREN RPAREN { id^" ( )" } 
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
 
-methodModifiers:
-      mm=methodModifier { mm }
-    | mms=methodModifiers mm=methodModifier { mms^" "^mm }
+%inline methodModifiers:
+      lmm=nonempty_list(methodModifier) { 
+     let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(lmm) }
+   (* | mms=methodModifiers mm=methodModifier { mms^" "^mm } *)
 
-methodModifier:
+%inline methodModifier:
       PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
@@ -316,7 +335,7 @@ methodModifier:
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
 
-methodBody:
+%inline methodBody:
 	SEMICOLON { ";" }
 	| b=block { b }
 
@@ -386,15 +405,19 @@ referenceTypeList:
     | rtl=referenceTypeList COMMA rt=referenceType { rtl^", "^rt }
 
 (* 10.6 Array Initializers *)
-arrayInitializer:
+%inline arrayInitializer:
 	  LBRACE RBRACE { "{}" }
 	| LBRACE vis=variableInitializers  RBRACE { "{"^vis^"}" }
 	| LBRACE COMMA RBRACE { "{,}" }
 	| LBRACE vis=variableInitializers COMMA RBRACE { "{"^vis^",}" }
 
-variableInitializers:
-	  vi=variableInitializer { vi }
-	| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi }
+%inline variableInitializers:
+	  lvi=separated_nonempty_list(COMMA,variableInitializer) { let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^", "^print_list tl
+    in print_list lvi }
+	(*| vis=variableInitializers COMMA vi=variableInitializer { vis^" , "^vi } *)
 
 (* 14.2 Blocks *)    
 block:
@@ -818,7 +841,7 @@ leftHandSide:
     | fa=fieldAccess { fa }
     | aa=arrayAccess { aa }
 
-assignmentOperator:
+%inline assignmentOperator:
     EQUAL { "=" }
     | MULTEQUAL { "*=" }
     | DIVEQUAL { "/=" }
@@ -833,7 +856,7 @@ assignmentOperator:
     | BITOREQUAL { "|=" }
 
 (*15.27 Expression*)
-expression:
+%inline expression:
     ae=assignmentExpression { ae }
 
 (* 15.28 Constant Expression *)
