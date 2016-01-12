@@ -796,7 +796,7 @@ unaryExpression:
     (*| error { print_error "error: unaryExpressionNotPlusMinus" }*)
 
 (* 15.16 Cast expression *)
-%inline castExpression:
+castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
