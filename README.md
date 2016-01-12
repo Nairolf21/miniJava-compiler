@@ -21,6 +21,15 @@ ocamlfind tool :
 and you must add the library to the file `_tags`, for example : 
 `true: package(ANSITerminal)`
 
+## Files
+
+* Parsing/parser.mly: parser, written for *Menhir*
+* Parsing/lexer.mll: lexer, written for *ocamllex*
+* Utils/Error.ml: defines error handling fonctions
+* Main/Compile.ml: Puts together the lexer and the parser
+
+* Tests/Summary.java: file summarizing what our lexer/parser is able to parse. Unfortunately,
+the output is in text form, not as AST.
 
 ## Workflow
 
