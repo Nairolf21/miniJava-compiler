@@ -755,7 +755,7 @@ className:
 
 (* 15.15 Unary operators *)
 
-%inline unaryExpression:
+unaryExpression:
     pie=preIncrementExpression { pie }
     | pde=preDecrementExpression { pde }
     | PLUS ue=unaryExpression { "+"^ue }
@@ -782,27 +782,27 @@ className:
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
 	
 (* 15.17 Multiplicative Operators *)
-%inline multiplicativeExpression:
+multiplicativeExpression:
 	  ue=unaryExpression { ue }
 	| me=multiplicativeExpression MULT ue=unaryExpression { me^" * "^ue }
 	| me=multiplicativeExpression DIV ue=unaryExpression { me^" / "^ue }
 	| me=multiplicativeExpression MOD ue=unaryExpression { me^" % "^ue }
 	
 (* 15.18 Additive Operators *)
-%inline additiveExpression:
+additiveExpression:
 	  me=multiplicativeExpression { me }
 	| ae=additiveExpression PLUS me=multiplicativeExpression { ae^" + "^me }
 	| ae=additiveExpression MINUS me=multiplicativeExpression { ae^" - "^me }
 	
 (* 15.19 Shift Operators *)
-%inline shiftExpression:
+shiftExpression:
 	  ae=additiveExpression { ae }
 	| es=shiftExpression LSHIFT ae=additiveExpression { es^" << "^ae }
 	| es=shiftExpression RSHIFT ae=additiveExpression { es^" >> "^ae }
 	| es=shiftExpression USHIFT ae=additiveExpression  { es^" >>> "^ae }
 	
 (* 15.20 Relational Operators *)
-%inline relationalExpression:
+relationalExpression:
 	  se=shiftExpression { se }
 	| re=relationalExpression INF se=shiftExpression { re^" < "^se }
 	| re=relationalExpression SUP se=shiftExpression { re^" > "^se }
@@ -811,36 +811,36 @@ className:
 	| re=relationalExpression INSTANCEOF rt=referenceType { re^" instanceof "^rt }
 	
 (* 15.21 Equality Operators *)
-%inline equalityExpression:
+equalityExpression:
 	  re=relationalExpression { re }
 	| ee=equalityExpression TRUEEQUAL re=relationalExpression { ee^" == "^re }
 	| ee=equalityExpression NOTEQUAL re=relationalExpression { ee^" != "^re }
 	
 (* 15.22 Bitwise and Logical Operators *)
-%inline andExpression:
+andExpression:
 	  ee=equalityExpression { ee }
 	| ae=andExpression AND ee=equalityExpression { ae^" & "^ee }
 
-%inline exclusiveOrExpression:
+exclusiveOrExpression:
 	  ae=andExpression { ae }
 	| eoe=exclusiveOrExpression EXCLUSIVEOR ae=andExpression { eoe^" ^ "^ae }
 
-%inline inclusiveOrExpression:
+inclusiveOrExpression:
 	  eoe=exclusiveOrExpression { eoe }
 	| ioe=inclusiveOrExpression INCLUSIVEOR eoe=exclusiveOrExpression { ioe^" | "^eoe }
 	
 (* 15.23 Conditional-And Operator && *)
-%inline conditionalAndExpression:
+conditionalAndExpression:
 	  ioe=inclusiveOrExpression { ioe }
 	| cae=conditionalAndExpression CONDITIONALAND ioe=inclusiveOrExpression { cae^" && "^ioe }
 
 (* 15.24 Conditional-Or Operator || *)
-%inline conditionalOrExpression:
+conditionalOrExpression:
 	  cae=conditionalAndExpression { cae }
 	| coe=conditionalOrExpression CONDITIONALOR cae=conditionalAndExpression { coe^" || "^cae }
 
 (* 15.25 Conditional Operator ? *)
-%inline conditionalExpression:
+conditionalExpression:
 	  coe=conditionalOrExpression { coe }
 	| coe=conditionalOrExpression CONDITIONAL e=expression COLON ce=conditionalExpression { coe^" ? "^e^" : "^ce }
 
@@ -849,7 +849,7 @@ className:
     ce=conditionalExpression { ce } 
     | a=assignment { a }
 
-%inline assignment:
+assignment:
     lhs=leftHandSide ao=assignmentOperator ae=assignmentExpression { lhs^" "^ao^" "^ae }
 
 %inline leftHandSide:
