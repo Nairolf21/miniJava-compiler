@@ -200,10 +200,22 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 compilationUnit: 
       tps=typeDeclarations EOF { tps } 
+    | ids=importDeclarations tps=typeDeclarations EOF { ids^" "^tps }
 
 typeDeclarations:
       tp=typeDeclaration { tp }
     | tps=typeDeclarations tp=typeDeclaration { tps^"\n"^tp }
+
+(* 7.5 Import Declarations *)
+importDeclarations:
+      id=importDeclaration { id }
+    | ids=importDeclarations id=importDeclaration { ids^"\n"^id }
+
+importDeclaration:
+    stid=singleTypeImportDeclaration { stid }
+
+singleTypeImportDeclaration:
+    IMPORT tn=typeName SEMICOLON { "import "^tn^";" }
 
 (* 7.6 Top Level Type Declarations *)
 typeDeclaration:
