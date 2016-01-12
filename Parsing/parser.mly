@@ -356,7 +356,7 @@ formalParameterList:
 	lfp = lastFormalParameter {lfp}
 	| fp=formalParameters COMMA lfp = lastFormalParameter {fp^", "^lfp} 
 
-%inline formalParameters:
+formalParameters:
 	fp=formalParameter {fp}
 	|fps=formalParameters COMMA fp=formalParameter {fps^" , "^fps}
 
@@ -365,8 +365,14 @@ formalParameterList:
 	| vm = variableModifiers jt=jType vdi=variableDeclaratorId {vm^" "^jt^" "^vdi}
 
 %inline variableModifiers:
-	vm=variableModifier {vm}
-	| vms=variableModifiers vm=variableModifier {vms^" "^vm}
+	vml=nonempty_list(variableModifier) {
+	let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(vml) }
+	(*| vms=variableModifiers vm=variableModifier {vms^" "^vm}*)
 
 %inline variableModifier:
 	| FINAL { "final" }
@@ -401,8 +407,14 @@ formalParameterList:
 	| LBRACE bs=blockStatements RBRACE { " {\n"^bs^"\n}" }
 
 %inline constructorModifiers:
-	cm=constructorModifier {cm}
-	| cms=constructorModifiers cm=constructorModifier {cms^" "^cm}
+	cml=nonempty_list(constructorModifier) {
+	let rec print_list l =
+    match l with
+    | [] -> ""
+    | hd :: tl -> hd^" "^print_list tl
+    in
+     print_list(cml)}
+	(*| cms=constructorModifiers cm=constructorModifier {cms^" "^cm}*)
 
 %inline constructorModifier:
 	| PUBLIC {"public"}
@@ -412,7 +424,7 @@ formalParameterList:
 %inline nonWildTypeArguments:
     INF rtl=referenceTypeList SUP { "< "^rtl^" >" }
 
-%inline referenceTypeList:
+referenceTypeList:
     rt=referenceType { rt }
     | rtl=referenceTypeList COMMA rt=referenceType { rtl^", "^rt }
 
@@ -436,7 +448,7 @@ formalParameterList:
 	  LBRACE bss=blockStatements RBRACE { " {\n"^bss^"\n}" }
 	| LBRACE RBRACE { " {} "}
 
-%inline blockStatements:
+blockStatements:
 	  bs=blockStatement { bs }
 	| bss=blockStatements bs=blockStatement { bss^"\n"^bs }
 
@@ -454,7 +466,7 @@ formalParameterList:
 	| jt=jType vds=variableDeclarators { jt^" "^vds }
 
 (* 14.5 Statements *)
-%inline statement:
+statement:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| ls=labeledStatement { ls }
 	| its=ifThenStatement { its }
@@ -462,7 +474,7 @@ formalParameterList:
 	| ws=whileStatement { ws }
 	| fs=forStatement { fs }
 	
-%inline statementWithoutTrailingSubstatement:
+statementWithoutTrailingSubstatement:
 	  b=block { b }
 	| es=emptyStatement { es }
 	| es=expressionStatement { es }
@@ -476,7 +488,7 @@ formalParameterList:
 	| ts=throwStatement { ts }
 	| ts=tryStatement { ts }
 	
-%inline statementNoShortIf:
+statementNoShortIf:
 	  swts=statementWithoutTrailingSubstatement { swts }
 	| lsnsi=labeledStatementNoShortIf { lsnsi }
 	| itesnsi=ifThenElseStatementNoShortIf { itesnsi }
@@ -484,21 +496,21 @@ formalParameterList:
 	| fsnsi=forStatementNoShortIf { fsnsi }
 
 (* 14.6 Empty Statement *)
-%inline emptyStatement:
+emptyStatement:
 	SEMICOLON { ";" }
 
 (* 14.7 Labeled Statement *)
 labeledStatement:
 	i=identifier COLON s=statement { i^" : "^s }
 
-%inline labeledStatementNoShortIf:
+labeledStatementNoShortIf:
 	i=identifier COLON snsi=statementNoShortIf { i^" : "^snsi }
 	
 (* 14.8 Expression Statement *)
-%inline expressionStatement:
+expressionStatement:
 	se=statementExpression SEMICOLON { se^" ;" }
 	
-%inline statementExpression:
+statementExpression:
 	  a=assignment { a }
 	| pie=preIncrementExpression { pie }
 	| pde=preDecrementExpression { pde }
@@ -508,43 +520,43 @@ labeledStatement:
 	| cce=classInstanceCreationExpression { cce }
 
 (* 14.9 The if Statement *)
-%inline ifThenStatement:
+ifThenStatement:
 	IF LPAREN e=expression RPAREN s=statement { "if ("^e^")\n"^s }
 
-%inline ifThenElseStatement:
+ifThenElseStatement:
 	IF LPAREN e=expression RPAREN snsi=statementNoShortIf ELSE s=statement { "if ("^e^")\n"^snsi^"\nelse\n"^s }
 
-%inline ifThenElseStatementNoShortIf:
+ifThenElseStatementNoShortIf:
 	IF LPAREN e=expression RPAREN snsi1=statementNoShortIf ELSE snsi2=statementNoShortIf { "if ("^e^")\n"^snsi1^"\nelse\n"^snsi2 }
 
 
 (* 14.10 The assert Statement *)
-%inline assertStatement:
+assertStatement:
 	  ASSERT e=expression SEMICOLON { "assert "^e^" ;" }
 	| ASSERT e1=expression COLON e2=expression SEMICOLON { "assert "^e1^" : "^e2^" ;" }
 	
 (* 14.11 The switch Statement *)
-%inline switchStatement:
+switchStatement:
 	SWITCH LPAREN e=expression RPAREN sb=switchBlock { "switch ("^e^") "^sb }
 	
-%inline switchBlock:
+switchBlock:
 	  LBRACE RBRACE { "{}" }
 	| LBRACE sbsgs=switchBlockStatementGroups RBRACE { "{ "^sbsgs^"}" }
 	| LBRACE sls=switchLabels RBRACE { "{"^sls^"}" }
 	| LBRACE sbsg=switchBlockStatementGroups sls=switchLabels RBRACE { "{"^sbsg^" "^sls^"}" }
 	
-%inline switchBlockStatementGroups:
+switchBlockStatementGroups:
 	  sbsg=switchBlockStatementGroup { sbsg }
 	| sbsgs=switchBlockStatementGroups sbsg=switchBlockStatementGroup { sbsgs^"\n"^sbsg }
 	
-%inline switchBlockStatementGroup:
+switchBlockStatementGroup:
 	sls=switchLabels bss=blockStatements { sls^"\n"^bss }
 
-%inline switchLabels:
+switchLabels:
 	  sl=switchLabel { sl }
 	| sls=switchLabels sl=switchLabel { sls^"\n"^sl }
 
-%inline switchLabel:
+switchLabel:
 	  CASE ce=constantExpression COLON { "case "^ce^" :" }
 	| CASE ecn=enumConstantName COLON { "case "^ecn^" :" }
 	| DEFAULT COLON { "default :" }
@@ -553,22 +565,22 @@ labeledStatement:
 	id=identifier { id }
 
 (* 14.12 The while Statement *)
-%inline whileStatement:
+whileStatement:
 	WHILE LPAREN e=expression RPAREN s=statement { "while ("^e^")\n"^s }
 	
-%inline whileStatementNoShortIf:
+whileStatementNoShortIf:
 	WHILE LPAREN e=expression RPAREN snsi=statementNoShortIf { "while ("^e^")\n"^snsi }
 	
 (* 14.13 The do Statement *)
-%inline doStatement:
+doStatement:
 	DO s=statement WHILE LPAREN e=expression RPAREN { "do\n"^s^"\nwhile ("^e^")" }
 	
 (* 14.14 The for Statement *)
-%inline forStatement:
+forStatement:
 	  bfs=basicForStatement { bfs }
 	| efs=enhancedForStatement { efs }
 	
-%inline basicForStatement:
+basicForStatement:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN s=statement { "for (;;)\n"^s }
 	| FOR LPAREN fi=forInit SEMICOLON SEMICOLON RPAREN s=statement { "for ("^fi^";;)\n"^s }
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON RPAREN s=statement { "for (;"^e^";)\n"^s }
@@ -578,7 +590,7 @@ labeledStatement:
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN s=statement { "for (;"^e^";"^fu^")\n"^s }
 	| FOR LPAREN fi=forInit SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN s=statement { "for ("^fi^";"^e^";"^fu^")\n"^s }
 
-%inline forStatementNoShortIf:
+forStatementNoShortIf:
 	  FOR LPAREN SEMICOLON SEMICOLON RPAREN snsi=statementNoShortIf { "for (;;)\n"^snsi }
 	| FOR LPAREN fi=forInit SEMICOLON SEMICOLON RPAREN snsi=statementNoShortIf { "for ("^fi^";;)\n"^snsi }
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON RPAREN snsi=statementNoShortIf { "for (;"^e^";)\n"^snsi }
@@ -588,62 +600,62 @@ labeledStatement:
 	| FOR LPAREN SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN snsi=statementNoShortIf { "for (;"^e^";"^fu^")\n"^snsi }
 	| FOR LPAREN fi=forInit SEMICOLON e=expression SEMICOLON fu=forUpdate RPAREN snsi=statementNoShortIf { "for ("^fi^";"^e^";"^fu^")\n"^snsi }
 
-%inline forInit:
+forInit:
 	  sel=statementExpressionList { sel }
 	| lvd=localVariableDeclaration { lvd }
 
-%inline forUpdate:
+forUpdate:
 	sel=statementExpressionList { sel }
 
-%inline statementExpressionList:
+statementExpressionList:
 	  se=statementExpression { se }
 	| sel=statementExpressionList COMMA se=statementExpression { sel^" , "^se }
 	
-%inline enhancedForStatement:
+enhancedForStatement:
 	  FOR LPAREN jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^jt^" "^id^" : "^e^")\n"^s }
 	| FOR LPAREN vm=variableModifiers jt=jType id=identifier COLON e=expression RPAREN s=statement { "for ("^vm^" "^jt^" "^id^" : "^e^")\n"^s }
 
 (* 14.15 The break Statement *)
-%inline breakStatement:
+breakStatement:
 	  BREAK SEMICOLON { "break ;" }
 	| BREAK id=identifier SEMICOLON { "break "^id^" ;" }
 	
 (* 14.16 The continue Statement *)
-%inline continueStatement:
+continueStatement:
 	CONTINUE SEMICOLON { "continue ;" }
 	| CONTINUE id=identifier SEMICOLON { "continue "^id^" ;" }
 	
 (* 14.17 The return statement *)
-%inline returnStatement:
+returnStatement:
 	RETURN SEMICOLON { "return ;" }
 	| RETURN e=expression SEMICOLON { "return "^e^" ;" }
 	
 (* 14.18 The throw Statement *)
-%inline throwStatement:
+throwStatement:
 	THROW e=expression SEMICOLON { "throw "^e^" ;" }
 	
 (* 14.19 The synchronized Statement *)
-%inline synchronizedStatement:
+synchronizedStatement:
 	SYNCHRONIZED LPAREN e=expression RPAREN b=block { "synchronized ("^e^")\n"^b }
 
 (* 14.20 The try Statement *)
-%inline tryStatement:
+tryStatement:
 	  TRY b=block c=catches { "try \n"^b^"\n"^c }
 	| TRY b=block f=finally { "try \n"^b^"\n"^f }
 	| TRY b=block c=catches f=finally { "try \n"^b^"\n"^c^"\n"^f }
 
-%inline catches:
+catches:
 	  cc=catchClause { cc }
 	| c=catches cc=catchClause { c^"\n"^cc }
 
-%inline catchClause:
+catchClause:
 	CATCH LPAREN fp=formalParameter RPAREN b=block { "catch ("^fp^")\n"^b }
 
-%inline finally:
+finally:
 	FINALLY b=block { "finally\n"^b }
 
 (* 15.8 Primary Expressions *)
-%inline primary:
+primary:
 	  pnna=primaryNoNewArray { pnna }
 	| ace=arrayCreationExpression { ace }
 
@@ -749,16 +761,16 @@ className:
 	| pnna=primaryNoNewArray LBRACK e=expression RBRACK { pnna^" ["^e^"]" }
 	
 (* 15.14 Postfix Expressions *)
-%inline postfixExpression:
+postfixExpression:
 	  p=primary { p }
 	| en=expressionName { en }
 	| pie=postIncrementExpression { pie }
 	| pde=postDecrementExpression { pde }
 	
-%inline postIncrementExpression:
+postIncrementExpression:
 	pfe=postfixExpression INCR { pfe^" ++" }
 	
-%inline postDecrementExpression:
+postDecrementExpression:
 	pfe=postfixExpression DECR { pfe^" --" }
 
 (* 15.15 Unary operators *)
@@ -784,7 +796,7 @@ unaryExpression:
     (*| error { print_error "error: unaryExpressionNotPlusMinus" }*)
 
 (* 15.16 Cast expression *)
-%inline castExpression:
+castExpression:
 	  LPAREN pt=primitiveType RPAREN ue=unaryExpression { "("^pt^") "^ue }
 	| LPAREN pt=primitiveType ds=dims RPAREN ue=unaryExpression { "("^pt^ds^") "^ue }
 	| LPAREN rt=referenceType RPAREN uenpm=unaryExpressionNotPlusMinus { "("^rt^") "^uenpm }
