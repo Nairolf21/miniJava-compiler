@@ -722,7 +722,7 @@ typeArguments:
     | [] -> ""
     | hd :: tl -> "[]"^print_list tl
     in print_list dl }
-	| d=dims LBRACK RBRACK { d^"[]" }
+	(*| d=dims LBRACK RBRACK { d^"[]" }*)
 
 (* 15.11 Field Access Expressions *)
 %inline fieldAccess:
