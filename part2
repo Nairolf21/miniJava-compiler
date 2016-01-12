@@ -1,0 +1,23 @@
+1 groupe type
+1 groupe compile/exec
+
+
+deuxieme partie; on oublie
+* généricité
+* interface/enum
+* annotations
+* plus de classes internes
+* strictfp, volatile, synchronize, transient, native
+
+pas indispensable
+* do while
+* switch
+* les opérateurs de merde : shift etc...
+
+on va (entre autres):
+* gérer les exceptions
+
+thumb rule: si c'est pas dans la solution de Dagnat, c'est que c'est peut être pas si important. Peut être les array quand même.
+
+
+outer: on garde notion de package et de classe, en gros
