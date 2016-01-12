@@ -1,5 +1,13 @@
 class Summary {
 
+    //This file serves as a demonstration of the Java features our compiler is able to parse
+    //This file can be parsed by our compiler
+    
+    
+    //Comments: we only authorize one line comments. They start with "//" and finish with a line return (\010 or \013)
+    //All ASCII characters are allowed in the comments
+    //Comments are not tokenized by the lexer, they are stripped out.
+
     A(){}
     B(){}
     
