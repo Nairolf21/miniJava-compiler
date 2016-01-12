@@ -90,6 +90,7 @@ rule nexttoken = parse
     | "synchronized" { SYNCHRONIZED }
     | "transient" { TRANSIENT }
     | "volatile" { VOLATILE }
+    | "import" { IMPORT }
     | "new" { NEW }
     | "this" { THIS }
 	| "if" { IF }
@@ -188,6 +189,7 @@ let printtoken = function
     | SYNCHRONIZED -> print_string "synchronized"
     | TRANSIENT -> print_string "transient"
     | VOLATILE -> print_string "volatile"
+    | IMPORT -> print_string "import"
     | NEW -> print_string "new"
     | THIS -> print_string "this"
 	| IF -> print_string "if"
