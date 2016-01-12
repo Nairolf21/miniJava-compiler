@@ -8,14 +8,29 @@ class Summary {
     //All ASCII characters are allowed in the comments
     //Comments are not tokenized by the lexer, they are stripped out.
 
-    A(){}
-    B(){}
     
+    static int staticField;
+
+    static {
+        staticField = 2; 
+    
+    }
+
+    public static final int STATIC_CONST = 12;
+
+
     public A(){}
     private B(){}
     protected B(){}
 
-    void foo() {
+    int a;
+
+    private int a = 2;
+    
+    protected final int a, b;
+
+
+    void assignment() {
         
         a *= 12;
         a /= 12;
@@ -34,6 +49,16 @@ class Summary {
 
         
         }
+
+    private void unary() {
+    
+        //We only succedeed to make pre increment and decrement pass
+        ++a;
+        --a;
+
+
+
+    }
         
     void fieldAccess() {
         super.x=2;
@@ -67,10 +92,15 @@ class Summary {
         }
         
         void switchStatement() {
-            switch (aa) {}
+            switch (aa) {
+            
+            
+            }
             
             switch (i) {
                     case 1 :
+                        a = 2;
+                        method();
             }
             switch (i) {
                     case j :
@@ -91,6 +121,7 @@ class Summary {
             }
             switch (i) {
                     default :
+                        a <<= 2;
                             ;
             }
             switch (i) {
@@ -142,6 +173,8 @@ class Summary {
                     default :
                             ;
             }
+
+            method(a, b);
         }
         
         void locaVariableDeclaration() {
@@ -233,7 +266,17 @@ class Summary {
             for (;;)
                     ;
             for (i=0;;)
-                    ;
+            {
+                method();
+                a += 1;
+                return; 
+
+                if(a == b) {
+                    a = 2;
+                    continue;
+                }
+
+            }
             for (int i =0;;)
                     ;
             for (i = 0, j = 0;;)
@@ -285,20 +328,20 @@ class Summary {
         }
         
         void ifStatements() {
-                if (i==0)
-                        ;
-                if (i==0)
-                        ;
-                else
-                        ;
-        }
-        
-        void continueStatement() {
-            int i;
-            continue;
-            continue i;
-        
-        
+                if (i==0){
+                
+                    a = 32;
+                    b = method(a);
+                    
+                }
+                if (i==0){
+                    continue;
+                
+                }
+                else {
+                
+                     
+                }
         }
         
         void throwStatement() {
@@ -309,16 +352,7 @@ class Summary {
         void emptyStatement() {
             ;
         }
-        
-        static {}
-        
-        int a;
-        
-        int a = 2;
-        
-        int a, b;
-        
-        {}
+       
 }
 
 
