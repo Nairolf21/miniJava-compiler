@@ -251,7 +251,7 @@ classMemberDeclaration:
     | SEMICOLON { ";" } 
     
 (* 8.3 Field Declarations *)
-fieldDeclaration:
+%inline fieldDeclaration:
     jt=jType vdl=variableDeclarators SEMICOLON { jt^" "^vdl^";"}
     | fm=fieldModifiers jt=jType vdl=variableDeclarators SEMICOLON { fm^" "^jt^" "^vdl^";" }
 
@@ -271,22 +271,25 @@ variableInitializer:
       e=expression { e } 
     | ai=arrayInitializer { ai } 
 
-fieldModifiers:
+%inline fieldModifiers:
      fm=fieldModifier { fm }
-   | fms=fieldModifiers fm=fieldModifier { fms^" "^fm }
+   (*| fms=fieldModifiers fm=fieldModifier { fms^" "^fm }*)
    
-fieldModifier:
-      PUBLIC { "public" }
+%inline fieldModifier:
+      fomm=fieldOrMethodModifier { fomm }
+    | TRANSIENT { "transient" }
+    | VOLATILE { "volatiLe" }
+
+%inline fieldOrMethodModifier:
+	  PUBLIC { "public" }
     | PROTECTED { "protected" }
     | PRIVATE { "private" }
     | ABSTRACT { "abstract" }
     | STATIC { "static" }
     | FINAL { "final" }
-    | TRANSIENT { "transient" }
-    | VOLATILE { "volatiLe" }
-
+    
 (* 8.4 Method Declarations *)
-methodDeclaration:
+%inline methodDeclaration:
       mh=methodHeader mb=methodBody { mh^" "^mb }
 
 methodHeader:
@@ -301,17 +304,12 @@ methodDeclarator:
     | id=identifier LPAREN fpl=formalParameterList RPAREN { id^" ("^fpl^")" }
     
 
-methodModifiers:
+%inline methodModifiers:
       mm=methodModifier { mm }
-    | mms=methodModifiers mm=methodModifier { mms^" "^mm }
+    (*| mms=methodModifiers mm=methodModifier { mms^" "^mm }*)
 
-methodModifier:
-      PUBLIC { "public" }
-    | PROTECTED { "protected" }
-    | PRIVATE { "private" }
-    | ABSTRACT { "abstract" }
-    | STATIC { "static" }
-    | FINAL { "final" }
+%inline methodModifier:
+      fomm=fieldOrMethodModifier { fomm }
     | SYNCHRONIZED { "synchronized" } 
     | NATIVE { "native" } 
     | STRICTFP { "strictfp" }
