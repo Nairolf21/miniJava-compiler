@@ -184,10 +184,6 @@ methodName:
       id=identifier { id }
     | an=ambiguousName PERIOD id=identifier { an^"."^id }
 
-packageOrTypeName:
-      id=identifier { id }
-    | potn=packageOrTypeName PERIOD id=identifier { potn^"."^id }
-
 expressionName:
     id=identifier { id }
     | an=ambiguousName PERIOD id=identifier { an^"."^id }
@@ -211,18 +207,11 @@ importDeclarations:
     | ids=importDeclarations id=importDeclaration { ids^"\n"^id }
 
 importDeclaration:
-      IMPORT ii=importIdentifier SEMICOLON { "import "^ii^";" }
-    | IMPORT ii=importIdentifier PERIOD MULT SEMICOLON { "import "^ii^".*;" }
+    stid=singleTypeImportDeclaration { stid }
 
-importIdentifier:
-      id=identifier { id }
-    | id=importIdentifier SEMICOLON ii=identifier { id^"."^ii }
-
-(*singleTypeImportDeclaration:
-    IMPORT tn=typeName SEMICOLON { "import "^tn^";" }
-
-typeImportOnDemandeDeclaration:
-    IMPORT potn=packageOrTypeName PERIOD MULT SEMICOLON { "import "^potn^".* ;" }*)
+singleTypeImportDeclaration:
+      IMPORT tn=typeName SEMICOLON { "import "^tn^";" }
+    | IMPORT STATIC tn=typeName SEMICOLON { "import static "^tn^";" }
 
 (* 7.6 Top Level Type Declarations *)
 typeDeclaration:
