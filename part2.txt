@@ -21,3 +21,5 @@ thumb rule: si c'est pas dans la solution de Dagnat, c'est que c'est peut être 
 
 
 outer: on garde notion de package et de classe, en gros
+
+Gros conseil : On travaille de manière incrémentale en testant *immédiatement* chaque nouvelle fonctionnalitée introduite
