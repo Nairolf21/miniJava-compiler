@@ -29,7 +29,7 @@ and you must add the library to the file `_tags`, for example :
 * Main/Compile.ml: Puts together the lexer and the parser
 
 * Tests/Summary.java: file summarizing what our lexer/parser is able to parse. Unfortunately,
-the output is in text form, not as AST.
+the output is in text form, not as AST. To test, place yourself at the root of the project and execute `ocamlbuild Main.byte -- Tests/Summary.java`.
 
 ## Workflow
 
