@@ -8,9 +8,17 @@ class Summary {
     //All ASCII characters are allowed in the comments
     //Comments are not tokenized by the lexer, they are stripped out.
 
-    A(){}
-    B(){}
     
+    static int staticField;
+
+    static {
+        staticField = 2; 
+    
+    }
+
+    public static final int STATIC_CONST = 12;
+
+
     public A(){}
     private B(){}
     protected B(){}
@@ -20,6 +28,7 @@ class Summary {
     private int a = 2;
     
     protected final int a, b;
+
 
     void assignment() {
         
@@ -343,10 +352,6 @@ class Summary {
         void emptyStatement() {
             ;
         }
-        
-        static {}
-        
-        
        
 }
 
