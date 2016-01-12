@@ -639,7 +639,7 @@ labeledStatement:
 	  pnna=primaryNoNewArray { pnna }
 	| ace=arrayCreationExpression { ace }
 
-%inline primaryNoNewArray:
+primaryNoNewArray:
 	  l=literal { l }
 	| jt=jType PERIOD CLASS { jt^".class" }
 	| VOID PERIOD CLASS { "void.class" }
@@ -703,7 +703,7 @@ typeArguments:
     | [] -> ""
     | hd :: tl -> hd^" "^print_list tl
     in print_list del }
-	| des=dimExprs de=dimExpr { des^de }
+	(*| des=dimExprs de=dimExpr { des^de } *)
 
 %inline dimExpr:
 	LBRACK e=expression RBRACK { "["^e^"]" }
