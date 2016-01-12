@@ -200,7 +200,7 @@ ambiguousName:
 (* 7.3 Compilation Units *)
 compilationUnit: 
       tps=typeDeclarations EOF { tps } 
-    | ids=importDeclarations tps=typeDeclarations EOF { ids^" "^tps }
+    | ids=importDeclarations tps=typeDeclarations EOF { ids^"\n"^tps }
 
 typeDeclarations:
       tp=typeDeclaration { tp }
