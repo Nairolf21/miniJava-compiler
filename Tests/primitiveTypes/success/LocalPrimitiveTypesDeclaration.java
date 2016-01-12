@@ -7,11 +7,11 @@ public class LocalPrimitiveTypesDeclaration {
         int a = 12;
 
 
-        float f1 = 12.5f;
-        float f2 = 45.6F;
+        float f1 = 12.5;
+        float f2 = 45.6;
 
-        double d1 = 456.4564d;
-        double d2 = 45.48534D;
+        double d1 = 456.4564;
+        double d2 = 45.48534;
          
     
     }

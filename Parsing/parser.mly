@@ -57,7 +57,6 @@ TRY CATCH FINALLY
 %token TRUE FALSE NULL
 
 %start <string> compilationUnit
-
 %%
 
 (* 3.8 identifiers *)
@@ -622,10 +621,11 @@ primary:
 
 primaryNoNewArray:
 	  l=literal { l }
+    | id=identifier { id }
 	| jt=jType PERIOD CLASS { jt^".class" }
 	| VOID PERIOD CLASS { "void.class" }
 	| THIS { "this" }
-	| cn=className PERIOD THIS { cn^".this" }
+	| id=identifier PERIOD THIS { id^".this" }
 	| LPAREN e=expression RPAREN { "("^e^")" }
 	| cice=classInstanceCreationExpression { cice }
 	| fa=fieldAccess { fa }
@@ -686,13 +686,14 @@ dims:
 	| d=dims LBRACK RBRACK { d^"[]" }
 
 (* 15.11 Field Access Expressions *)
+className:
+    id=identifier { id }
 fieldAccess:
     p=primary PERIOD id=identifier { p^"."^id }
     | SUPER PERIOD id=identifier { "super."^id }
-    | cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }
+    | id1=identifier PERIOD SUPER PERIOD id2=identifier { id1^".super."^id2 }
+    (*| cn=className PERIOD SUPER PERIOD id=identifier { cn^".super."^id }*)
 
-className:
-    TODO { "" }
 
 (* 15.12 Method invocation *)
 methodInvocation:

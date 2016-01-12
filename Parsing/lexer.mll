@@ -12,7 +12,6 @@ let digit = ['0'-'9']
 let ident = letter ( letter | digit | '_')*
 let newline = ('\010' | '\013' | "\013\010")
 let blank = [' ' '\009']
-let onelinecomment = "//" (letter | digit | blank)* newline
 let onelinecomment = "//" ([^'\010' '\013'])* newline
 
 rule nexttoken = parse 
